@@ -1,0 +1,80 @@
+name: 'Quality Checks'
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
+
+concurrency: 
+  group: ${{ github.workflow }}-${{ github.event.pull_request.head.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Checks
+    runs-on: zondax-runners
+    container:
+      image: node:18-bookworm
+      env:
+        PROJECT: web-beryx
+        NAMESPACE: web-beryx
+        HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        HEAD_BRANCH_NAME: ${{ github.head_ref }}
+        GHOST_API_URL: ${{ secrets.GHOST_API_URL }}
+        GHOST_API_KEY: ${{ secrets.GHOST_API_KEY }}
+        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
+        TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+        TURBO_TEAM: zondax
+        NEXT_PUBLIC_NAT_SERVER_CREDENTIAL: ${{ secrets.NEXT_PUBLIC_NAT_SERVER_CREDENTIAL }}
+        NEXT_PUBLIC_NAT_SERVER: ${{ secrets.NEXT_PUBLIC_NAT_SERVER }}
+        NEXT_PUBLIC_MUI_GRID_LICENSE: ${{ secrets.NEXT_PUBLIC_MUI_GRID_LICENSE }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0 # Perform a deep clone (fetch all history)
+          submodules: 'recursive' # Fetch Git submodules recursively
+
+      # Related to https://github.com/actions/runner/issues/2033
+      - name: Patch git clone
+        run: git config --system --add safe.directory '*'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run formatter
+        run: npx turbo format:check
+
+      - name: Run linter
+        run: npx turbo lint
+
+      - name: Ensure we can generate docs
+        run: yarn docs
+
+      - name: Ensure we can generate ladle
+        run: yarn ladle build
+
+      - name: Run build
+        run: npx turbo build
+
+      - name: Run Tests
+        run: npx turbo test
+        env:
+          CLOUDFLARE_PROTECTED_API_CLIENT_ID: ${{ secrets.CLOUDFLARE_PROTECTED_API_CLIENT_ID }}
+          CLOUDFLARE_PROTECTED_API_CLIENT_SECRET: ${{ secrets.CLOUDFLARE_PROTECTED_API_CLIENT_SECRET }}
+
+      - name: Install deepsource
+        run: curl -L deepsource.io/cli | sh
+        # we need the -L because cloudflare may apply a redirect
+
+      - name: Send coverage to deepsource
+        run: ./bin/deepsource report --analyzer test-coverage --key javascript --value-file $(pwd)/coverage/cobertura-coverage.xml
+        env:
+          DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}

@@ -1,0 +1,54 @@
+# Contratos Inteligentes
+
+En Beryx, puedes ver detalles e interactuar con contratos inteligentes de Filecoin.
+
+## Buscando un Contrato Inteligente
+
+Al buscar un contrato inteligente, puedes acceder al código fuente del contrato, `ABI` (Interfaz Binaria de Aplicación) y métodos disponibles.
+
+![Buscando por hash de transacción](../assets/image-7.webp)
+
+## Página de Contrato Inteligente
+
+La página de Contrato Inteligente contiene información similar a la página de Dirección, pero con características adicionales específicas para contratos inteligentes. Incluye las siguientes pestañas:
+
+- **Resumen**: Proporciona un resumen del contrato inteligente, incluyendo su ID de dirección, tipo de actor, saldo y número de transacciones.
+- **Todas las Transacciones**: Muestra una tabla con todas las transacciones relacionadas con el contrato inteligente. Cada entrada en la tabla incluye detalles como el hash de la transacción, fecha y hora, cantidad y estado.
+- **Mempool**: Muestra una tabla con todas las transacciones pendientes para el contrato inteligente. Estas son transacciones que se han iniciado pero aún no se han incluido en un bloque.
+- **Estadísticas**: Proporciona gráficos que visualizan la actividad del contrato inteligente. Esto incluye el consumo de gas a lo largo del tiempo, transacciones recibidas, transacciones enviadas, saldo a lo largo del tiempo y contratos creados.
+- **Código**: Permite ver el código fuente del contrato inteligente, así como su `ABI` (Interfaz Binaria de Aplicación).
+- **Interactuar**: Te permite interactuar directamente con el contrato inteligente, llamando a sus métodos o funciones.
+
+## Buscando un Contrato Inteligente
+
+Puedes buscar un contrato inteligente específico utilizando su dirección y ver sus detalles y funcionalidades. Encuentra un ejemplo de contrato [aquí](https://beryx.zondax.ch/v1/search/fil/mainnet/address/f410fg6dyyyr5q7k6tg7kmavzw4uimz3phxxqmfk2mky?tab=overview).
+
+## Interactuando con un Contrato Inteligente
+
+Además de ver el código fuente y `ABI`, puedes interactuar directamente con contratos inteligentes, llamando a métodos o funciones del contrato.
+
+Interactúa con el contrato `f410f...urctq` [aquí](https://beryx.zondax.ch/v1/search/fil/calibration/address/f410fc4oqz4o47leiyhmo5ynji2k4iyxmuxozj4urctq?tab=interact).
+
+![Buscando por hash de transacción](../assets/image-8.webp)
+
+## Verificando un Contrato Inteligente
+
+Verificar contratos inteligentes es clave para asegurarse de que los contratos con los que estás tratando son legítimos. Beryx se asegura de que el contrato desplegado coincida con su código fuente.
+
+Visita [Verificador de Contratos de Beryx](https://beryx.zondax.ch/contract_verifier) para verificar tu contrato o para ver la lista de contratos verificados.
+
+![Buscando por hash de transacción](../assets/image-9.webp)
+
+## Pasos para Verificar un Contrato Inteligente
+
+Para verificar un contrato inteligente, necesitas seguir 3 sencillos pasos:
+
+1. **Subir el código fuente**: Tienes que subir el código fuente. Esto puede ser un único archivo .sol, o en caso de que tengas un contrato más complejo, comprímelo en un formato .zip y luego súbelo.
+2. **Subir el archivo de metadatos**: Selecciona si tienes un archivo .json de metadatos o no. Este archivo se puede encontrar en Remix después de haber compilado un contrato y contiene los metadatos de la salida de la compilación de Solidity: versión del compilador, licencia, número de pasos de optimización, etc. Si tienes el archivo, simplemente sube el archivo .json y estarás listo. En caso de que no tengas el archivo, tienes que especificar el nombre del archivo de entrada, la versión del compilador, la licencia y la optimización deseada.
+3. **Verificar el contrato**: Si toda la información está establecida, entonces el botón se volverá azul, lo que significa que estás listo para verificar tu contrato.
+
+## Éxito en la Verificación
+
+Si el proceso de verificación fue exitoso, verás una marca de verificación verde al lado de la dirección de tu contrato inteligente, y podrás visualizar y descargar el código fuente.
+
+![Buscando por hash de transacción](../assets/image-10.webp)

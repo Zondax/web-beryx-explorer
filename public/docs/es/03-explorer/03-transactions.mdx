@@ -1,0 +1,56 @@
+# Transacciones
+
+Con Beryx, puedes buscar transacciones específicas dentro de la red de Filecoin.
+
+Simplemente ingresa los identificadores relevantes, como el hash de la transacción, la dirección de la cuenta (si conoces el remitente o destinatario), o el tipset, en la barra de búsqueda.
+
+![Buscando por hash de transacción](../assets/image-3.webp)
+
+Al usar la función de búsqueda de Beryx, es importante tener en cuenta la selección de la red en la barra de navegación. Asegúrate de haber elegido la red adecuada antes de buscar.
+
+Ejemplo de transacción [aquí](https://beryx.zondax.ch/v1/search/fil/mainnet/txs/bafy2bzaceab3xcn7qkcuj5oyifa6dn3ihke55bdmerphef4r6aorjdhk3uriq?tab=overview).
+
+La página de Transacción contiene:
+
+- **Resumen de la Transacción**
+- **Mensajes Internos**
+- **Registros**
+
+## Pestaña de Resumen
+
+Echemos un vistazo a cada elemento en la Pestaña de Resumen:
+
+- **Cantidad**: La cantidad de tokens de Filecoin involucrados en la transacción.
+- **Canónico**: Indica si la transacción es parte de la cadena canónica.
+- **Gas utilizado**: El valor que representa la cantidad de gas utilizado (attoFIL) en la transacción.
+- **Hash**: Es un identificador único de cadena para la transacción.
+- **Altura**: Altura en la que se ejecutó la transacción.
+- **Estado**: Esta cadena describe el estado de la transacción, indicando si está confirmada, fallida o en el mempool.
+- **Desde**: Representa la dirección o cuenta del emisor desde la cual se origina la transacción.
+- **Hacia**: La dirección o cuenta del destinatario a la que se dirige la transacción.
+- **Tipo de Transacción**: Especifica el tipo/categoría/método de la transacción.
+- **Timestamp de la Transacción**: (cadena) Indica el momento en que ocurrió la transacción.
+- **Hash de la Transacción**: Identifica de manera única la transacción.
+- **Parámetros de la Transacción**: Puede ser una cadena o un valor nulo y representa los parámetros o datos adicionales proporcionados con la transacción.
+- **Retorno de la Transacción**: Esta cadena representa el valor de retorno o resultado de la transacción.
+
+![Buscando por hash de transacción](../assets/image-2.webp)
+
+## Pestaña de Mensajes Internos
+
+La pestaña de Mensajes Internos contiene una tabla con mensajes internos asociados con la transacción. Cada entrada en la tabla muestra:
+
+- **Hash de la Transacción**: Un identificador único para cada mensaje interno.
+- **Timestamp**: El momento en que se registró el mensaje interno.
+- **Altura**: La altura de la cadena de bloques en la que se incluyó el mensaje interno.
+- **Desde**: La dirección del emisor.
+- **Hacia**: La dirección del destinatario.
+- **Método**: El tipo de mensaje interno.
+- **Cantidad**: La cantidad de tokens FIL transferidos.
+- **Gas Utilizado**: La cantidad de gas consumido.
+
+## Pestaña de Registros
+
+Aquí encontrarás los registros de la transacción.
+
+

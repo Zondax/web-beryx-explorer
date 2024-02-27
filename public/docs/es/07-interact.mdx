@@ -1,0 +1,41 @@
+ # Interactuar con Contratos Inteligentes
+ Invoca métodos en la red de Filecoin llamando a contratos inteligentes. Después de ejecutar un método, puedes ver la respuesta y los detalles de la transacción directamente.
+ 
+ ## Cómo interactuar con un contrato inteligente
+ Primero, encuentra tu contrato utilizando su dirección y ve a la pestaña `Interactuar`. En el lado derecho, encontrarás un panel para ejecutar un método, y en el lado izquierdo, una lista de las últimas transacciones.
+
+
+ ### Paso 1: Decodificar Funciones del Contrato
+ En la sección de interacción, decodificamos automáticamente las funciones de tu contrato inteligente basándonos en su bytecode. Esto te permite visualizar y elegir los métodos que deseas llamar.
+
+![Comprobar si el contrato fue decodificado correctamente](./assets/image-14.webp)
+
+ ### Paso 1*: Verificar tu contrato para tener acceso a todos los métodos
+ Para verificar tu contrato, puedes pulsar el botón de verificar en la parte superior o dirigirte a la página de verificación de contratos que se encuentra en la barra lateral izquierda. 
+
+ 1. Sube el archivo de código fuente (.sol) o el archivo de proyecto (.zip).
+ 2. Si tienes el archivo de metadatos generado en el momento de la compilación, súbelo.
+ 3. Si no tienes el archivo de metadatos, rellena el formulario manualmente. Necesitarás especificar:
+    - La versión del compilador
+    - La licencia
+    - El nombre del contrato
+    - Detalles de la optimización
+
+![Formulario de verificación de contrato](./assets/image-15.webp)
+
+ ### Paso 2: Elegir el Tipo de Método
+ Los métodos están agrupados por tipo: `leer`, `escribir`, `pagar`, `puro`.
+
+ ### Paso 3: Elegir el Método
+ Después de elegir el tipo, verás un menú desplegable con una lista de métodos y seleccionarás uno.
+
+ ### Paso 4: Añadir parámetros
+ Algunos métodos pueden necesitar parámetros. Abajo, encontrarás una tabla con todos los métodos. Esta vista es fácil de entender y rápida de rellenar, gracias al ABI y al proceso de verificación. Si prefieres añadir todos los parámetros de una vez, simplemente pulsa el botón "Cambiar a Entrada de Texto". Este botón cambiará la tabla por una entrada de texto.
+
+ ### Paso 4: Ejecutar/llamar al método
+ Para llamar al método seleccionado, necesitarás conectar tu cartera. Esto asegura que tienes los fondos y permisos para ejecutar métodos de escritura. Si te faltan fondos, no te preocupes – puedes visitar nuestro faucet de testnet [aquí](https://beryx.zondax.ch/faucet) para obtener algo de FIL de prueba. El faucet para la Calibración de Filecoin se encuentra en la barra lateral. También puedes conectar tu cartera desde la barra superior. Allí, encontrarás tu saldo y transacciones.
+ 
+![Cómo ejecutar un método](./assets/image-16.webp)
+
+ ## Revisando Respuestas y Detalles de la Transacción
+ La respuesta de la llamada al método aparecerá en el panel derecho. Para los métodos de escritura, los detalles de la transacción también se mostrarán en una tabla. Si quieres profundizar en la transacción, haz clic en el botón "vista de código" en una fila en particular para ver los detalles completos de la transacción.

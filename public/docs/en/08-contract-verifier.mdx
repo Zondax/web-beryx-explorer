@@ -1,0 +1,38 @@
+# Contract verifier
+
+## Verifying a Smart Contract
+
+Verifying smart contracts is key to making sure the contracts you're dealing with are legit. Beryx makes sure that the deployed contract matches its source code. 
+
+This verification process gives you peace of mind and helps you avoid unpleasant surprises. Transparency is super important when you're dealing with smart contracts. Beryx's contract verification feature boosts contract transparency by giving you all the details about the contract's source code, including the ability to view individual methods.
+
+Visit [Beryx Contract Verifier](https://beryx.zondax.ch/contract_verifier) to verify your contract or to see the list of verified contracts.
+
+## Verification process:
+
+First, search your contract by address and click on `Verify` button.
+
+![Contract verification form](./assets/image-15.webp)
+
+**Verification Form:**
+
+- **Upload Source Code**: First, upload the source code file (.sol) or the project archive (.zip).
+- **Metadata File**: If you have the metadata file generated at compilation time, simply upload it.
+- **Manual Entry**: If you don't have the metadata file, manually fill out the form with the following details:
+  - **Compiler Version**: Specify the version of the compiler used.
+  - **License**: Indicate the license under which the contract is released.
+  - **Contract Name**: Provide the name of the smart contract.
+  - **Optimization**: State whether optimization was enabled or not during compilation.
+
+After the verification, you will see in the [Beryx Contract Verifier](https://beryx.zondax.ch/contract_verifier) your contract listed. Each entry in the list includes the following details:
+
+- Contract address
+- Contract name
+- Compiler used
+- Optimization setting
+- Licenses
+- The last time when it was verified
+- Source code
+
+Please note that only contracts that have been successfully verified will appear in this table. If a contract is not listed, it may not have been verified yet, or the verification may have failed.
+

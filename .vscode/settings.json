@@ -1,0 +1,12 @@
+{
+  "debug.javascript.autoAttachFilter": "onlyWithFlag",
+  "javascript.referencesCodeLens.enabled": true,
+  "javascript.referencesCodeLens.showOnAllFunctions": true,
+  "jest.coverageFormatter": "GutterFormatter",
+  "jest.showCoverageOnLoad": true,
+  "jestrunner.codeLensSelector": "**/*.{test,spec,pwtest}.{js,jsx,ts,tsx}",
+  "terminal.integrated.defaultProfile.osx": "zsh",
+  "typescript.implementationsCodeLens.enabled": true,
+  "typescript.referencesCodeLens.enabled": true,
+  "typescript.referencesCodeLens.showOnAllFunctions": true
+}

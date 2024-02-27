@@ -1,0 +1,6 @@
+projectName: web-beryx
+localPath: ~/zondax/templates
+templates:
+  - template: templates/basic-nextjs
+  - template: templates/earthly-nextjs
+  - template: templates/publish-earthly

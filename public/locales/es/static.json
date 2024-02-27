@@ -1,0 +1,16 @@
+{
+    "The Beryx dev suite": "Suite desarrollador de Beryx",
+    "About FVM & FEVM": "Acerca de FVM & FEVM",
+    "Other resources": "Otros recursos",
+    "Indexes and exposes via a public API Filecoin historical and real-time data.": "Indexa y expone a través de una API pública datos históricos y en tiempo real de Filecoin.",
+    "Get your free token": "Obtén tu token gratuito",
+    "Beryx Client Tool for JS": "Herramienta Beryx Client para JS",
+    "Use beryx-client in your project. It is super fast and will give you access to the entire API.": "Usa beryx-client en tu proyecto. Es super rápido y te dará acceso a toda la API.",
+    "Learn about the first hackathon on the Filecoin Virtual Machine.": "Conoce el primer hackathon en la Máquina Virtual de Filecoin.",
+    "The goal of the FVM project is to add general programmability to the Filecoin blockchain.": "El objetivo del proyecto FVM es agregar programabilidad general a la cadena de bloques Filecoin.",
+    "The library that allows Solidity smart contracts to seamlessly call methods on Filecoin built-in actors, as well as to access Filecoin specific syscalls idiomatically.": "La biblioteca que permite que los contratos inteligentes de Solidity llamen sin problemas a los métodos de los actores integrados de Filecoin, así como para acceder a las llamadas al sistema específicas de Filecoin de manera idiomática.",
+    "Learn more": "Conoce más",
+    "Install the npm package": "Instala el paquete npm",
+    "Try it now": "Pruébalo ahora",
+    "If your project requires data retrieval, you can refer to our publicly available hosted endpoint of Lotus.": "Si tu proyecto requiere recuperación de datos, puedes consultar nuestro punto final alojado públicamente de Lotus."
+}

@@ -1,0 +1,46 @@
+/**
+ * @file This file contains the measures used in the styles.
+ * 
+ * @var {string} $spacing-01 - Defines the spacing of 2px.
+ * @var {string} $spacing-02 - Defines the spacing of 4px.
+ * @var {string} $spacing-03 - Defines the spacing of 8px.
+ * @var {string} $spacing-04 - Defines the spacing of 12px.
+ * @var {string} $spacing-05 - Defines the spacing of 16px.
+ * @var {string} $spacing-06 - Defines the spacing of 24px.
+ * @var {string} $spacing-07 - Defines the spacing of 32px.
+ * @var {string} $spacing-08 - Defines the spacing of 40px.
+ * @var {string} $spacing-09 - Defines the spacing of 48px.
+ * @var {string} $spacing-10 - Defines the spacing of 64px.
+ * @var {string} $spacing-11 - Defines the spacing of 80px.
+ * @var {string} $spacing-12 - Defines the spacing of 96px.
+ * @var {string} $spacing-13 - Defines the spacing of 128px.
+ * @var {string} $spacing-14 - Defines the spacing of 160px.
+ * @var {string} $spacing-15 - Defines the spacing of 192px.
+ * @var {string} $spacing-16 - Defines the spacing of 256px.
+ * @var {string} $spacing-17 - Defines the spacing of 288px.
+ * 
+ * @var {string} $navbar-height - Defines the height of the navbar.
+ * @var {string} $statusbar-height - Defines the height of the status bar.
+ * @var {string} $sidebar-width - Defines the width of the sidebar.
+ */
+$spacing-01: 0.125rem; // 2px
+$spacing-02: 0.25rem; // 4px
+$spacing-03: 0.5rem; // 8px
+$spacing-04: 0.75rem; // 12px
+$spacing-05: 1rem; // 16px
+$spacing-06: 1.5rem; // 24px
+$spacing-07: 2rem; // 32px
+$spacing-08: 2.5rem; // 40px
+$spacing-09: 3rem; // 48px
+$spacing-10: 4rem; // 64px
+$spacing-11: 5rem; // 80px
+$spacing-12: 6rem; // 96px
+$spacing-13: 8rem; // 128px
+$spacing-14: 10rem; // 160px
+$spacing-15: 12rem; // 192px
+$spacing-16: 16rem; // 256px
+$spacing-17: 18rem; // 288px
+
+$navbar-height: 48px;
+$statusbar-height: 24px;
+$sidebar-width: 88px;

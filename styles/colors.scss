@@ -1,0 +1,43 @@
+/**
+ * @file This file contains color definitions for the application.
+ * 
+ * @var {string} $background-1 - The first background color.
+ * @var {string} $background-2 - The second background color.
+ * @var {string} $white - The white color.
+ * @var {string} $blue-1 - The first blue color.
+ * @var {string} $border-light - The light border color.
+ * @var {string} $border-dark - The dark border color.
+ * @var {string} $background-light-1 - The first light background color.
+ * @var {string} $background-light-2 - The second light background color.
+ * 
+ * @note Please use these
+ * 
+ * @var {string} $light-1 - The first light color.
+ * @var {string} $light-2 - The second light color.
+ * @var {string} $light-3 - The third light color.
+ * @var {string} $light-4 - The fourth light color.
+ * @var {string} $dark-1 - The first dark color.
+ * @var {string} $dark-2 - The second dark color.
+ * @var {string} $dark-3 - The third dark color.
+ * @var {string} $dark-4 - The fourth dark color.
+ * @var {string} $error - The error color.
+ */
+$background-1: #23252c;
+$background-2: #2e313a;
+$white: #f0f0f0;
+$blue-1: #2872e4;
+$border-light: #c6c8ce;
+$border-dark: #3a3d48;
+$background-light-1: #f0f0f0;
+$background-light-2: #dadee9;
+
+// please use these
+$light-1: #f9f9f9;
+$light-2: #f1f2f2;
+$light-3: #cdd1d7;
+$light-4: #6c717d;
+$dark-1: #191b20;
+$dark-2: #1f2126;
+$dark-3: #292c34;
+$dark-4: #3a3d48;
+$error: #e93959;

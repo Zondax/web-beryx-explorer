@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "removeComments": true,
+    "useDefineForClassFields": false,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "baseUrl": ".",
+    "incremental": true,
+    "sourceMap": true,
+    "paths": {
+      "@/": ["src/"],
+      "@/*": ["src/*"]
+    },
+    "types": ["@tanstack/react-query"]
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "i18n.js"],
+  "exclude": ["node_modules"]
+}

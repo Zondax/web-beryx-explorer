@@ -1,0 +1,55 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": ["next/core-web-vitals", "prettier", "turbo"],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "plugins": ["unused-imports", "@typescript-eslint", "eslint-plugin-tsdoc", "react", "promise"],
+  "rules": {
+    "tsdoc/syntax": "off",
+    "no-restricted-imports": [
+      "warn",
+      {
+        "patterns": [
+          {
+            "group": ["@mui/(?!material/styles/createTypography)\\w+/\\w+/\\w+"],
+            "message": "Importing from subdirectories is restricted. Use top-level exports where available."
+          }
+        ],
+        "paths": [
+          {
+            "name": "@reduxjs/toolkit",
+            "message": "Please do not use Redux Toolkit, migrate to zustand."
+          },
+          {
+            "name": "react-transition-group",
+            "message": "Migrate to MUI or similar. This package is not well maintained."
+          }
+        ]
+      }
+    ],
+    "curly": "error",
+    "prefer-const": "error",
+    "no-else-return": "error",
+    "complexity": ["error", 40],
+    "no-unneeded-ternary": "error",
+    "no-alert": "error",
+    "no-empty": "error",
+    "no-useless-catch": "error",
+    "require-await": "error",
+    "no-continue": "error",
+    "react/no-unescaped-entities": "error",
+    "promise/prefer-await-to-then": "error",
+    "react-hooks/exhaustive-deps": "error",
+    ///
+    "no-console": "error",
+    "unused-imports/no-unused-imports": "error",
+    //    "@typescript-eslint/naming-convention": "warn",
+    "no-magic-numbers": "off"
+  }
+}

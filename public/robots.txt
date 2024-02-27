@@ -1,0 +1,3 @@
+User-agent: *
+
+Sitemap: https://beryx.zondax.ch/sitemap.xml

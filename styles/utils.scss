@@ -1,0 +1,26 @@
+/**
+ * @file This file contains utility styles.
+ *
+ * @class .button - Defines the styles for a button.
+ * @property height - The height of the button.
+ * @property background-color - The background color of the button.
+ * @property color - The text color of the button.
+ * @property text-transform - The text transformation of the button.
+ *
+ * @class &:hover - Defines the styles for a button when hovered.
+ * @property border-color - The border color of the button when hovered.
+ * @property background-color - The background color of the button when hovered.
+ * @property color - The text color of the button when hovered.
+ */
+.button {
+  height: 38px;
+  background-color: #2872e4;
+  color: white;
+  text-transform: none;
+
+  &:hover {
+    border-color: #2872e4;
+    background-color: #90caf9;
+    color: black;
+  }
+}

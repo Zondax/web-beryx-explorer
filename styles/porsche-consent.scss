@@ -1,0 +1,61 @@
+/**
+ * @file This file contains the styles for the cookie consent banner.
+ * 
+ * @var {string} --cookie-consent-banner-colors-primary - The primary color for the banner.
+ * @var {string} --cookie-consent-banner-colors-primary-border - The border color for the primary elements.
+ * @var {string} --cookie-consent-banner-colors-primary-content - The content color for the primary elements.
+ * @var {string} --cookie-consent-banner-colors-secondary - The secondary color for the banner.
+ * @var {string} --cookie-consent-banner-colors-secondary-border - The border color for the secondary elements.
+ * @var {string} --cookie-consent-banner-colors-secondary-content - The content color for the secondary elements.
+ * @var {string} --cookie-consent-banner-colors-background-body - The background color for the body of the banner.
+ * @var {string} --cookie-consent-banner-colors-text - The text color for the banner.
+ * @var {string} --cookie-consent-banner-border-radius-buttons - The border radius for the buttons.
+ * @var {string} --cookie-consent-banner-border-radius-body - The border radius for the body of the banner.
+ * @var {string} --cookie-consent-banner-spacings-container-padding-top - The top padding for the container.
+ * @var {string} --cookie-consent-banner-spacings-container-padding-left - The left padding for the container.
+ * @var {string} --cookie-consent-banner-spacings-container-padding-bottom - The bottom padding for the container.
+ * @var {string} --cookie-consent-banner-spacings-container-padding-right - The right padding for the container.
+ * @var {string} --cookie-consent-banner-spacings-body-padding-top - The top padding for the body.
+ * @var {string} --cookie-consent-banner-spacings-body-padding-left - The left padding for the body.
+ * @var {string} --cookie-consent-banner-spacings-body-padding-bottom - The bottom padding for the body.
+ * @var {string} --cookie-consent-banner-spacings-body-padding-right - The right padding for the body.
+ * @var {number} --cookie-consent-banner-z-index-container - The z-index for the container.
+ * @var {string} --cookie-consent-banner-font-family-headline - The font family for the headline.
+ * @var {string} --cookie-consent-banner-font-size-headline - The font size for the headline.
+ * @var {string} --cookie-consent-banner-font-family-body - The font family for the body.
+ * @var {string} --cookie-consent-banner-font-size-body - The font size for the body.
+ */
+:root {
+  /* COLORS */
+  --cookie-consent-banner-colors-primary: #3651dc;
+  --cookie-consent-banner-colors-primary-border: #81c784;
+  --cookie-consent-banner-colors-primary-content: #fff;
+  --cookie-consent-banner-colors-secondary: transparent;
+  --cookie-consent-banner-colors-secondary-border: #73777d;
+  --cookie-consent-banner-colors-secondary-content: #73777d;
+  --cookie-consent-banner-colors-background-body: rgb(26 27 31 / 100%);
+  --cookie-consent-banner-colors-text: #73777d;
+
+  /* BORDER-RADIUS */
+  --cookie-consent-banner-border-radius-buttons: 8px;
+  --cookie-consent-banner-border-radius-body: 8px;
+
+  /* SPACINGS */
+  --cookie-consent-banner-spacings-container-padding-top: 1rem;
+  --cookie-consent-banner-spacings-container-padding-left: 0.5rem;
+  --cookie-consent-banner-spacings-container-padding-bottom: 0.5rem;
+  --cookie-consent-banner-spacings-container-padding-right: 0.5rem;
+  --cookie-consent-banner-spacings-body-padding-top: 0;
+  --cookie-consent-banner-spacings-body-padding-left: 2rem;
+  --cookie-consent-banner-spacings-body-padding-bottom: 0;
+  --cookie-consent-banner-spacings-body-padding-right: 2rem;
+
+  /* Z-INDEX */
+  --cookie-consent-banner-z-index-container: 211;
+
+  /* FONTS */
+  --cookie-consent-banner-font-family-headline: inherit;
+  --cookie-consent-banner-font-size-headline: 1.5rem;
+  --cookie-consent-banner-font-family-body: inherit;
+  --cookie-consent-banner-font-size-body: 0.875rem;
+}

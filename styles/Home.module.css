@@ -1,0 +1,222 @@
+/**
+ * @class .container
+ * @description Sets the padding of the container.
+ */
+
+.container {
+  padding: 0 2rem;
+}
+
+/**
+ * @class .main
+ * @description Sets the main content area. It has a minimum height of 100vh and is centered.
+ */
+
+.main {
+  min-height: 100vh;
+  padding: 4rem 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/**
+ * @class .footer
+ * @description Sets the footer area. It is a flex container with a top border.
+ */
+
+.footer {
+  display: flex;
+  flex: 1;
+  padding: 2rem 0;
+  border-top: 1px solid #eaeaea;
+  justify-content: center;
+  align-items: center;
+}
+
+/**
+ * @class .footer a
+ * @description Sets the style for links in the footer. They are centered and can grow.
+ */
+
+.footer a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+}
+
+/**
+ * @class .title a
+ * @description Sets the style for links in the title. They are blue and have no text decoration.
+ */
+
+.title a {
+  color: #0070f3;
+  text-decoration: none;
+}
+
+/**
+ * @class .title a:hover, .title a:focus, .title a:active
+ * @description Sets the style for hovered, focused, and active links in the title. They are underlined.
+ */
+
+.title a:hover,
+.title a:focus,
+.title a:active {
+  text-decoration: underline;
+}
+
+/**
+ * @class .title
+ * @description Sets the style for the title. It is centered and has a font size of 4rem.
+ */
+
+.title {
+  margin: 0;
+  line-height: 1.15;
+  font-size: 4rem;
+}
+
+/**
+ * @class .title, .description
+ * @description Sets the text alignment for the title and description. They are centered.
+ */
+
+.title,
+.description {
+  text-align: center;
+}
+
+/**
+ * @class .description
+ * @description Sets the style for the description. It is centered and has a font size of 1.5rem.
+ */
+
+.description {
+  margin: 4rem 0;
+  line-height: 1.5;
+  font-size: 1.5rem;
+}
+
+/**
+ * @class .code
+ * @description Sets the style for code blocks. They have a light background and a specific font family.
+ */
+
+.code {
+  background: #fafafa;
+  border-radius: 5px;
+  padding: 0.75rem;
+  font-size: 1.1rem;
+  font-family: Menlo, Monaco, 'Lucida Console', 'Liberation Mono', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Courier New', monospace;
+}
+
+/**
+ * @class .grid
+ * @description Sets the style for the grid. It is a flex container that is centered and can wrap.
+ */
+
+.grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 800px;
+}
+
+/**
+ * @class .card
+ * @description Sets the style for cards. They have a border and a transition for color and border color.
+ */
+
+.card {
+  margin: 1rem;
+  padding: 1.5rem;
+  text-align: left;
+  color: inherit;
+  text-decoration: none;
+  border: 1px solid #eaeaea;
+  border-radius: 10px;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+  max-width: 300px;
+}
+
+/**
+ * @class .card:hover, .card:focus, .card:active
+ * @description Sets the style for hovered, focused, and active cards. They turn blue.
+ */
+
+.card:hover,
+.card:focus,
+.card:active {
+  color: #0070f3;
+  border-color: #0070f3;
+}
+
+/**
+ * @class .card h2
+ * @description Sets the style for h2 elements in cards. They have a margin bottom of 1rem and a font size of 1.5rem.
+ */
+
+.card h2 {
+  margin: 0 0 1rem;
+  font-size: 1.5rem;
+}
+
+/**
+ * @class .card p
+ * @description Sets the style for paragraphs in cards. They have a font size of 1.25rem and a line height of 1.5.
+ */
+
+.card p {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.5;
+}
+
+/**
+ * @class .logo
+ * @description Sets the style for the logo. It has a height of 1em and a left margin of 0.5rem.
+ */
+
+.logo {
+  height: 1em;
+  margin-left: 0.5rem;
+}
+
+/**
+ * @media (width <= 600px)
+ * @description Sets the style for screens with a width of 600px or less. The grid becomes a column.
+ */
+
+@media (width <= 600px) {
+  .grid {
+    width: 100%;
+    flex-direction: column;
+  }
+}
+
+/**
+ * @media (prefers-color-scheme: dark)
+ * @description Sets the style for dark mode. The card and footer borders become darker, the code background becomes darker, and the logo image is inverted.
+ */
+
+@media (prefers-color-scheme: dark) {
+  .card,
+  .footer {
+    border-color: #222;
+  }
+
+  .code {
+    background: #111;
+  }
+
+  .logo img {
+    filter: invert(1);
+  }
+}

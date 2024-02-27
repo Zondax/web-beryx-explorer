@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+  <loc>https://beryx.zondax.ch/</loc>
+  <lastmod>2022-04-12</lastmod>
+</url>
+<url>
+  <loc>https://beryx.zondax.ch/recent_activity</loc>
+  <lastmod>2023-03-21</lastmod>
+</url>
+<url>
+  <loc>https://beryx.zondax.ch/dashboard</loc>
+  <lastmod>2023-03-21</lastmod>
+</url>
+<url>
+  <loc>https://beryx.zondax.ch/v1/mempool</loc>
+  <lastmod>2023-03-21</lastmod>
+</url>
+<url>
+  <loc>https://beryx.zondax.ch/faucet</loc>
+  <lastmod>2023-03-21</lastmod>
+</url>
+<url>
+  <loc>https://beryx.zondax.ch/address_converter</loc>
+  <lastmod>2023-03-21</lastmod>
+</url>
+</urlset>

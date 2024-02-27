@@ -1,0 +1,33 @@
+import { render, screen } from '@testing-library/react'
+
+import UserResources from './Resources'
+
+// FIXME: This cannot be tested because of Article.tsx
+
+describe.skip('UserResources', () => {
+  it('renders without crashing', () => {
+    await renderWithProviders(<UserResources />)
+    expect(screen.getByText('Resources')).toBeInTheDocument()
+  })
+
+  it('renders contracts page when currentPage is "contracts"', () => {
+    useResourcesStore.setState({ currentPage: 'contracts' })
+    await renderWithProviders(<UserResources />)
+    expect(screen.getByText('Contracts')).toBeInTheDocument()
+  })
+
+  it('renders contract page when currentPage is "contract"', () => {
+    await renderWithProviders(<UserResources currentPage="contract" />)
+    expect(screen.getByText('Contract')).toBeInTheDocument()
+  })
+
+  it('renders documentation page when currentPage is "documentation"', () => {
+    await renderWithProviders(<UserResources currentPage="documentation" />)
+    expect(screen.getByText('Documentation')).toBeInTheDocument()
+  })
+
+  it('renders TOC page by default', () => {
+    await renderWithProviders(<UserResources />)
+    expect(screen.getByText('TOC')).toBeInTheDocument()
+  })
+})

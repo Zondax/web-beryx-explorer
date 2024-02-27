@@ -1,0 +1,8 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "Code Documentation",
+  "entryPoints": ["src"],
+  "entryPointStrategy": "expand",
+  "tsconfig": "./tsconfig.json",
+  "out": "output/docs"
+}

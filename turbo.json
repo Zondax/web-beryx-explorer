@@ -1,0 +1,27 @@
+{
+  "globalEnv": [
+    "BUNDLE_ANALYZE",
+    "CI",
+    "CLOUDFLARE_PROTECTED_API_*",
+    "CLOUDFLARE_TURNSTILE_SECRET_KEY",
+    "GHOST_API_*",
+    "NEXT_PUBLIC_*",
+    "NODE_ENV",
+    "PLAYWRIGHT_CONFIG",
+    "SENTRY_DSN",
+    "VERCEL_ENV",
+    "VERIFIER_CONTRACT_URL",
+    "BERYX_API_TOKEN"
+  ],
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "build": {
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+    },
+    "lint": {},
+    "dev": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}

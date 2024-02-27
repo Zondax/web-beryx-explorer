@@ -1,0 +1,155 @@
+/**
+ * @file This file contains the main styles for the application.
+ *
+ * @import './colors.scss' - Imports the color styles.
+ * @import './utils.scss' - Imports the utility styles.
+ * @import './porsche-consent.scss' - Imports the Porsche consent styles.
+ *
+ * @class html, body - Defines the styles for the html and body elements.
+ * @property font-size - The font size of the elements.
+ * @property padding - The padding of the elements.
+ * @property margin - The margin of the elements.
+ * @property font-family - The font family of the elements.
+ *
+ * @class .layout[data-theme='dark'] - Defines the styles for the layout when the theme is dark.
+ * @property background-color - The background color of the layout.
+ * @property color - The text color of the layout.
+ *
+ * @class a - Defines the styles for the anchor elements.
+ * @property color - The text color of the anchor elements.
+ * @property text-decoration - The text decoration of the anchor elements.
+ *
+ * @class * - Defines the styles for all elements.
+ * @property box-sizing - The box sizing of the elements.
+ * @property -webkit-font-smoothing - The font smoothing of the elements for Webkit browsers.
+ * @property -moz-osx-font-smoothing - The font smoothing of the elements for Mozilla browsers.
+ * @property text-rendering - The text rendering of the elements.
+ * @property text-shadow - The text shadow of the elements.
+ *
+ * @class img - Defines the styles for the image elements.
+ * @property image-rendering - The image rendering of the elements.
+ *
+ * @media (prefers-color-scheme: dark) - Defines the styles for when the user prefers a dark color scheme.
+ *
+ * @class .react-reflex-splitter - Defines the styles for the react reflex splitter.
+ * @property transition - The transition of the splitter.
+ * @property width - The width of the splitter.
+ * @property height - The height of the splitter.
+ * @property background-color - The background color of the splitter.
+ * @property border-right - The right border of the splitter.
+ * @property border-left - The left border of the splitter.
+ * @property display - The display of the splitter.
+ * @property align-items - The alignment of items in the splitter.
+ * @property justify-content - The justification of content in the splitter.
+ */
+@use './colors.scss' as *;
+@use './utils.scss' as *;
+@use './porsche-consent.scss' as *;
+
+html,
+body {
+  font-size: 14px;
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+
+  .layout[data-theme='dark'] {
+    background-color: $background-1;
+    color: $white;
+  }
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizelegibility;
+  text-shadow: rgb(0 0 0 / 1%) 0 0 1px;
+}
+
+img {
+  image-rendering: crisp-edges;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    color: white;
+    background: black;
+  }
+}
+
+.react-reflex-splitter {
+  transition: border 0.2s ease-in !important;
+  width: 0.65rem !important;
+  height: calc(100%);
+  background-color: transparent !important;
+  border-right: none !important;
+  border-left: none !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    .react-reflex-splitter-handle {
+      height: 7.5rem;
+
+      &.handle-dark {
+        background-color: #e2e4ec;
+        width: 0.26rem;
+      }
+
+      &.handle-light {
+        background-color: #14161c;
+        width: 0.29rem;
+      }
+    }
+  }
+
+  &:active {
+    .react-reflex-splitter-handle {
+      height: 6.9rem;
+      transition:
+        background-color 0.07s ease-in,
+        height 0.07s ease-in,
+        width 0.07s ease-in;
+
+      &.handle-dark {
+        background-color: #3651dc;
+        width: 0.3rem;
+      }
+
+      &.handle-light {
+        background-color: #3252c7;
+        width: 0.3rem;
+      }
+    }
+  }
+
+  & .react-reflex-splitter-handle {
+    width: 0.3rem;
+    height: 4.5rem;
+    border-radius: 1rem;
+    transition:
+      background-color 0.15s ease-in,
+      height 0.15s ease-in,
+      width 0.15s ease-in;
+
+    &.handle-dark {
+      background-color: #343a43;
+    }
+
+    &.handle-light {
+      background-color: #c7cbd2;
+    }
+  }
+}
