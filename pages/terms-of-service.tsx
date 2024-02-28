@@ -25,8 +25,6 @@ export const getStaticProps: GetStaticProps = async () => {
   }
 }
 
-// Leaderboard view component
-
 /**
  * Controller for the Leaderboard page.
  * Handles the side-effects involved in setting up the page.
@@ -34,7 +32,7 @@ export const getStaticProps: GetStaticProps = async () => {
  */
 export default function TermsOfServiceController({ terms }: InferGetStaticPropsType<typeof getStaticProps>) {
   const metaData = getPageMetaData(PAGES.TERMS_OF_SERVICE) // Page metadata
-  const { network } = useAppSettingsStore(state => ({ network: state.network })) // Network state
+  const network = useAppSettingsStore(state => state.network) // Network state
 
   // Subscribes to NATS when network or connections updates
   useEffect(() => {
