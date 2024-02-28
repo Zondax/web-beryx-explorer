@@ -3,13 +3,15 @@ on:
   push:
     branches:
       - main
+      - master
       - dev
   pull_request:
     branches:
       - main
+      - master
       - dev
 
-concurrency: 
+concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.head.ref }}
   cancel-in-progress: true
 
