@@ -11,7 +11,6 @@ _Please visit our website at [zondax.ch](https://zondax.ch)_
 
 ---
 
-
 Welcome to Beryx, your one-stop hub for everything Filecoin. This guide will help you explore Beryx and find cool features and useful tools. Beryx is for everyone - developers, network users, or anyone interested in blockchain. It's packed with developer insights.
 
 To start exploring Beryx, visit the [Beryx Home Page](https://beryx.io/).
@@ -46,8 +45,6 @@ To start exploring Beryx, visit the [Beryx Home Page](https://beryx.io/).
 ## :book: Docs
 
 Please visit our [docs website](https://docs.zondax.ch/beryx-explorer) to find more information about the project.
-
-
 
 ## 🧑‍💻 Develop
 
