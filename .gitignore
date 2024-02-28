@@ -72,8 +72,6 @@ yarn-error.log
 
 .idea
 
-.yarn
-
 npm/**/lib
 npm/**/public
 npm/**/scss
