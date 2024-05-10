@@ -118,7 +118,7 @@
     "monaco-editor": "^0.45.0",
     "monaco-editor-webpack-plugin": "^7.1.0",
     "nats.ws": "^1.20.0",
-    "next": "14.1.0",
+    "next": "14.1.1",
     "next-mdx-remote": "^4.4.1",
     "ni18n": "^1.1.0",
     "notistack": "^3.0.1",
