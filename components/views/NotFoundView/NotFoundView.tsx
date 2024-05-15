@@ -6,8 +6,9 @@ import { Networks } from '@/config/networks'
 import { ObjectType } from '@/routes/parsing'
 import { useLatestStore } from '@/store/data/latest'
 import { useSearchStore } from '@/store/data/search'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import { startsWithFAndNumber } from '@/utils/inputDetection'
+import { Edit } from '@carbon/icons-react'
 import { Box, Divider, Grid, Unstable_Grid2 as Grid2, Typography, alpha, useTheme } from '@mui/material'
 
 import { FourZeroFourIcon } from '../../common/Icons'
@@ -54,7 +55,7 @@ const NotFoundView: React.FC = () => {
    * @returns
    */
   const getRefreshUrl = useCallback(() => {
-    router.push(`/v1/search/fil/${network.name}/${searchType}/${searchValue}`)
+    router.push(`/search/fil/${network.name}/${searchType}/${searchValue}`)
   }, [router, network, searchType, searchValue])
 
   /**
@@ -72,7 +73,7 @@ const NotFoundView: React.FC = () => {
    * @returns
    */
   const handleSearchValue = useCallback(() => {
-    router.push(`/v1/search/fil/${anotherNetwork.name}/${searchType}/${searchValue}`)
+    router.push(`/search/fil/${anotherNetwork.name}/${searchType}/${searchValue}`)
   }, [router, anotherNetwork, searchType, searchValue])
 
   // Define the type and description that will be showed
@@ -215,7 +216,7 @@ const NotFoundView: React.FC = () => {
       }}
     >
       <Box position={'absolute'} top={{ xs: 50, md: 100 }} zIndex={0}>
-        <FourZeroFourIcon size={332} color={alpha(theme.palette.background.level2, 0.6)} />
+        <FourZeroFourIcon size={332} color={alpha(theme.palette.border?.level0, 0.6)} />
       </Box>
       <Grid2
         container
@@ -247,7 +248,7 @@ const NotFoundView: React.FC = () => {
             </Typography>
           ) : null}
         </Grid>
-        <Divider light sx={{ width: '100%', mb: '5rem' }} orientation={'horizontal'} />
+        <Divider sx={{ width: '100%', mb: '5rem', borderColor: theme.palette.border?.level0 }} orientation={'horizontal'} />
 
         {errorDescription}
 
@@ -258,7 +259,12 @@ const NotFoundView: React.FC = () => {
         ) : null}
 
         <Typography variant={'subtitle1'} sx={{ margin: '1rem 0 5rem 0', maxWidth: '40ch', textAlign: 'center' }}>
-          {t('To report a bug please use the Feedback tool from the right side of the screen.')}
+          <Box component={'span'} pr={'0.35rem'}>
+            {t('To report a bug please use the Feedback button in the navbar')}
+          </Box>
+          <Box component={'span'} position={'absolute'}>
+            <Edit size="16" />
+          </Box>
         </Typography>
       </Grid2>
     </Grid2>

@@ -18,8 +18,9 @@ const DashboardView = () => {
       gap={'2rem'}
       alignItems="center"
       sx={{
+        height: { xs: 'fit-content', md: 'calc(100dvh - 6rem - 1.75rem)' },
         zIndex: 1,
-        padding: { md: '3rem 2rem' },
+        padding: { xs: '0.5rem', md: '3rem 1rem' },
         alignItems: 'flex-start',
       }}
     >

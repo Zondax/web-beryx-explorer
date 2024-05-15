@@ -48,7 +48,7 @@ export const Tutorial = ({ steps }: { steps: StepsParams[] }) => {
       <Box sx={{ maxWidth: 400 }} mb={'2rem'}>
         <Typography variant="body1" mb={1} textAlign={'start'}>
           {t(
-            'Verifying a contract means that we&apos;ll check for you if the source code provided is matching the bytecode from the blockchain.'
+            "Verifying a contract means that we'll check for you if the source code provided is matching the bytecode from the blockchain."
           )}
         </Typography>
         <Typography variant="body1" mb={1} textAlign={'start'}>

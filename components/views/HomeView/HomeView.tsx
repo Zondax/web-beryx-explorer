@@ -1,8 +1,8 @@
 import dynamic from 'next/dynamic'
-import React, { useMemo } from 'react'
+import React from 'react'
 
-import { useAppSettingsStore } from '@/store/ui/settings'
-import { Box, Grid } from '@mui/material'
+import useAppSettingsStore from '@/store/ui/settings'
+import { Grid } from '@mui/material'
 
 import { LinkCardProps } from '../../common/LinkCard'
 import LatestItems from '../../widgets/LatestItems'
@@ -36,29 +36,6 @@ interface HomeViewProps {
 const HomeView: React.FC<HomeViewProps> = ({ resourcesMetaInfo }) => {
   const { network } = useAppSettingsStore(state => ({ network: state.network }))
 
-  const HeroComponent = useMemo(() => {
-    return (
-      <Box
-        sx={{
-          position: 'relative',
-          width: '100%',
-          margin: { xs: '4rem 0rem 4rem 0rem', md: '2.5rem 0rem 4rem 0rem', lg: '2.5rem 6.5rem 4rem 6.5rem' },
-        }}
-      >
-        <Box
-          sx={{
-            position: 'relative',
-            zIndex: 200,
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        >
-          <HeroSection />
-        </Box>
-      </Box>
-    )
-  }, [])
-
   const GridComponent = (
     <Grid
       container
@@ -86,12 +63,9 @@ const HomeView: React.FC<HomeViewProps> = ({ resourcesMetaInfo }) => {
         zIndex: 1,
         width: '100%',
         height: 'fit-content',
-        borderRadius: '8px',
-        // overflow: 'hidden',
-        // contain: 'paint',
       }}
     >
-      {HeroComponent}
+      <HeroSection />
       {GridComponent}
     </Grid>
   )

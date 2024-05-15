@@ -1,4 +1,5 @@
-import { NetworkType } from '@/config/networks'
+import { NetworkType, projectIcons } from '@/config/networks'
+import { truncateMiddleOfString } from '@/utils/text'
 
 import BeryxLogo from '../Icons/BeryxLogo'
 import Checkmark from '../Icons/Checkmark'
@@ -14,6 +15,7 @@ import OgImageItem from './OgImageItem'
  * @param items An array of objects containing label, value and value type information
  */
 export interface OgImageProps {
+  input: string
   chain: string
   network: NetworkType
   title: string
@@ -27,13 +29,14 @@ export interface OgImageProps {
  * @param props The arguments to build open graph image which includes chain, network, title, isVerified and items
  * @returns Returns a JSX.Element that represents an open graph image
  */
-const OgImage = ({ chain, network, title, isVerified, items }: OgImageProps): JSX.Element => {
+const OgImage = ({ input, chain, network, title, isVerified, items }: OgImageProps): JSX.Element => {
   /**
    * ChainNetwork component.
    * This component is responsible for rendering the chain and network information.
    */
   const ChainNetwork = () => (
-    <div style={{ justifyContent: 'flex-start', alignItems: 'center', gap: '8px', display: 'flex' }}>
+    <div style={{ justifyContent: 'flex-start', alignItems: 'center', gap: '8px', display: 'flex', marginBottom: '4px' }}>
+      {projectIcons[network.project] ? projectIcons[network.project]({ size: 32 }) : null}
       <span style={{ color: '#7F8599', fontSize: '28px', fontFamily: 'DM Sans', fontWeight: '400', wordWrap: 'break-word' }}>{chain}</span>
       <span
         style={{ color: 'rgba(127, 133, 153, 0.70)', fontSize: '28px', fontFamily: 'DM Sans', fontWeight: '400', wordWrap: 'break-word' }}
@@ -60,9 +63,16 @@ const OgImage = ({ chain, network, title, isVerified, items }: OgImageProps): JS
    * This component is responsible for rendering the title and checkmark.
    */
   const TitleCheckmark = () => (
-    <div style={{ justifyContent: 'flex-start', alignItems: 'center', gap: '32px', display: 'flex' }}>
+    <div style={{ justifyContent: 'flex-start', alignItems: 'baseline', gap: '24px', display: 'flex' }}>
       <span style={{ color: '#1A1B1F', fontSize: '52px', fontFamily: 'Sora', fontWeight: '800', wordWrap: 'break-word' }}>{title}</span>
-      {isVerified ? <Checkmark size={45} /> : null}
+      {isVerified ? (
+        <span style={{ alignSelf: 'center' }}>
+          <Checkmark size={45} />
+        </span>
+      ) : null}
+      <span style={{ color: '#1A1B1F', fontSize: '40px', fontFamily: '"B612 Mono"', fontWeight: '500', wordWrap: 'break-word' }}>
+        {truncateMiddleOfString(input, 16)}
+      </span>
     </div>
   )
 
@@ -150,7 +160,7 @@ const OgImage = ({ chain, network, title, isVerified, items }: OgImageProps): JS
           gap: '40px',
         }}
       >
-        <div style={{ width: '100%', height: '96px', justifyContent: 'space-between', alignItems: 'flex-start', display: 'flex' }}>
+        <div style={{ width: '100%', height: '90px', justifyContent: 'space-between', alignItems: 'flex-start', display: 'flex' }}>
           <div
             style={{
               flexDirection: 'column',

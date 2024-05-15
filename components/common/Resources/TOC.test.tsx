@@ -30,7 +30,7 @@ describe('TOC', () => {
    * Test case to verify that the TOC component renders without crashing
    */
   it('renders without crashing', async () => {
-    await renderWithProviders(<TOC />)
+    await renderWithProviders(<TOC resourcesMetaInfo={[]} />)
     expect(screen.getByText('Resources')).toBeInTheDocument()
   })
 
@@ -38,7 +38,7 @@ describe('TOC', () => {
    * Test case to ensure that the TOC component renders the correct number of resource tiles
    */
   it('renders the correct number of resource tiles', async () => {
-    await renderWithProviders(<TOC />)
+    await renderWithProviders(<TOC resourcesMetaInfo={[]} />)
     const resourceTiles = screen.getAllByTestId('resource-tile')
     expect(resourceTiles).toHaveLength(resources.length)
   })

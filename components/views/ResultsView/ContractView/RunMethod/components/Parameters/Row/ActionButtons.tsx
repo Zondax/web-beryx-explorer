@@ -111,8 +111,8 @@ const ActionButtons = ({ action, indexes, formik }: ActionButtonsParams) => {
     case 'add':
       return (
         <IconButton
-          color="inherit"
           data-testid="add-button"
+          color="info"
           sx={{
             width: buttonWidth,
             height: '100%',
@@ -132,7 +132,7 @@ const ActionButtons = ({ action, indexes, formik }: ActionButtonsParams) => {
     case 'delete':
       return (
         <IconButton
-          color="inherit"
+          color="info"
           data-testid="delete-button"
           sx={{
             width: buttonWidth,

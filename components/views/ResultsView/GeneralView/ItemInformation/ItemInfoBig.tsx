@@ -51,10 +51,10 @@ const ItemInfoBig = ({ label, content, icon, clipFractionalPart = false }: ItemI
         return (
           <Tooltip title={content} arrow disableInteractive>
             <Grid container flexWrap={'nowrap'} alignItems={'baseline'}>
-              <Typography variant="h5" component={'h5'} color={'text.primary'} fontSize={contentFontSize}>
+              <Typography variant="h5" component={'p'} color={'text.primary'} fontSize={contentFontSize}>
                 {wholePart}
               </Typography>
-              <Typography variant="h5" component={'h5'} color={'text.primary'} fontSize={contentFontSize}>
+              <Typography variant="h5" component={'p'} color={'text.primary'} fontSize={contentFontSize}>
                 .
               </Typography>
               <Typography
@@ -71,7 +71,7 @@ const ItemInfoBig = ({ label, content, icon, clipFractionalPart = false }: ItemI
         )
       }
       return (
-        <Typography variant="h5" component={'h5'} color={'text.primary'} fontSize={contentFontSize}>
+        <Typography variant="h5" component={'p'} color={'text.primary'} fontSize={contentFontSize}>
           {content}
         </Typography>
       )

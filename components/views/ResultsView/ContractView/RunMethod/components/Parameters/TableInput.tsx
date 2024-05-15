@@ -185,7 +185,7 @@ const TableInput = ({ formik }: SearchTablesProps) => {
         </Typography>
       ) : null}
       <Button
-        variant={'text'}
+        variant={'outlined'}
         color={'primary'}
         size={'small'}
         endIcon={<Download size={16} />}
@@ -203,11 +203,12 @@ const TableInput = ({ formik }: SearchTablesProps) => {
         container
         flexDirection={'column'}
         height={'100%'}
+        minHeight={'15rem'}
         mt={'0.5rem'}
-        border={`1px solid ${theme.palette.tableBorder}`}
         borderRadius={'0.5rem'}
         gap={`${rowGap}px`}
         p={'0 6px 6px'}
+        sx={{ backgroundColor: theme.palette.background.level0 }}
       >
         {renderHeader()}
         {renderBody()}

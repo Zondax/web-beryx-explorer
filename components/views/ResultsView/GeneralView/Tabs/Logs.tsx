@@ -45,7 +45,7 @@ function DetailPanelContent({ row }: DetailPanelContentProps) {
       bgcolor={'background.level1'}
       className={'detail-panel'}
       sx={{
-        border: `1px solid ${theme.palette.tableBorder}`,
+        border: `1px solid ${theme.palette.border?.level0}`,
         borderTop: 'none',
         borderRadius: '0px 6px 0 6px',
         padding: '1rem',
@@ -54,7 +54,7 @@ function DetailPanelContent({ row }: DetailPanelContentProps) {
       <Box
         height={'max-content'}
         sx={{
-          border: `1px solid ${theme.palette.tableBorder}`,
+          border: `1px solid ${theme.palette.border?.level0}`,
           borderRadius: '6px',
           display: 'flex',
           flexDirection: 'column',
@@ -107,6 +107,7 @@ const Logs = () => {
         noRowsText={'No logs'}
         noRowsIcon={<InspectData color={theme.palette.text.secondary} />}
         getDetailPanelContent={getDetailPanelContent}
+        hideBorder
       />
     </Box>
   )

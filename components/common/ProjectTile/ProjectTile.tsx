@@ -37,7 +37,7 @@ const ProjectTile = ({ title, description, linkDesc, linkUrl }: ProjectInterface
   )
 
   const titleElement = (
-    <Typography variant="h5" gutterBottom>
+    <Typography variant="h5" component={'p'} gutterBottom>
       {title}
     </Typography>
   )

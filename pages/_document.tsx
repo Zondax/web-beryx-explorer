@@ -11,10 +11,10 @@ export default function Document() {
     <Html lang="en">
       <Head>
         {/* Link to various version of the website's favicon */}
-        <link rel="icon" href="/favicon_white.svg" type="image/svg+xml" />
-        <link rel="alternate icon" href="/favicon_white.ico" />
-        <link rel="mask-icon" href="/favicon_white.svg" />
-        <link rel="apple-touch-icon" href="/pwa_signet_white.png" />
+        <link rel="icon" href="/favicon-192.svg" type="image/svg+xml" />
+        <link rel="alternate icon" href="/favicon.ico" />
+        <link rel="mask-icon" href="/favicon-192.svg" />
+        <link rel="apple-touch-icon" href="/favicon-192.png" />
 
         {/* Preconnect to Google fonts for performance optimization */}
         <link rel="preconnect" href="https://fonts.googleapis.com?display=optional" />
@@ -24,7 +24,7 @@ export default function Document() {
         <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
         {/* <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" /> */}
-        <link href="https://fonts.googleapis.com/css2?family=B612+Mono&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Fragment+Mono&display=swap" rel="stylesheet" />
       </Head>
       <body>
         {/* Main document body with Next.js Main and NextScript component for handling SSR pages */}

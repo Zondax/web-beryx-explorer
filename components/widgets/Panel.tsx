@@ -100,6 +100,8 @@ interface PanelProps {
   contentToDownload?: any
   floatingActionButtons?: boolean
   tabs?: PanelTab[]
+  tabBackgroundColor?: string
+  tabBorderColor?: string
   children?: React.JSX.Element | React.JSX.Element[]
   noTopbar?: boolean
   initialTab?: string
@@ -136,6 +138,8 @@ const Panel = ({
   contentToDownload,
   floatingActionButtons = false,
   tabs,
+  tabBackgroundColor,
+  tabBorderColor,
   children,
   noTopbar = false,
   initialTab,
@@ -197,15 +201,15 @@ const Panel = ({
 
   return (
     <TabContext value={activeTab}>
-      <Card sx={{ boxShadow: 'none', height: '100%', width: '100%', contain: 'paint', background: 'none' }}>
+      <Card sx={{ boxShadow: 'none', height: '100%', width: '100%', contain: 'paint', background: 'none', borderRadius: '0' }}>
         {!noTopbar && (
           <Box
-            bgcolor="background.level1"
+            bgcolor={tabBackgroundColor ? tabBackgroundColor : theme.palette.background.level0}
             sx={{
               display: 'flex',
               justifyContent: title ? 'space-between' : 'flex-start',
               alignItems: 'center',
-              borderBottom: `1px solid ${theme.palette.tableBorder}`,
+              borderBottom: `1px solid ${tabBorderColor ? tabBorderColor : theme.palette.border?.level0}`,
               height: '3rem',
               padding: '0.25rem 0.25rem',
               position: 'relative',
@@ -278,7 +282,13 @@ const Panel = ({
               return (
                 <TabPanel
                   value={index.toString()}
-                  sx={{ padding, height: 'calc(100% - 2.25rem - 0.5rem)', overflow: 'hidden', position: 'relative' }}
+                  sx={{
+                    padding,
+                    height: `calc(100% - 3rem)`,
+                    overflow: 'hidden',
+                    position: 'relative',
+                    backgroundColor: theme.palette.background.level1,
+                  }}
                   key={key}
                 >
                   {child}

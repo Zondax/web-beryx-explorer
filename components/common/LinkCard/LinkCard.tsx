@@ -17,21 +17,24 @@ import { LinkCardProps } from './types'
  *
  * @returns The rendered JSX element.
  */
-const LinkCard: React.FC<LinkCardProps> = ({ title, description, url, imageUrl, domain }: LinkCardProps) => {
+const LinkCard: React.FC<LinkCardProps & { hasHoverEffect: boolean }> = ({ title, description, url, imageUrl, domain, hasHoverEffect }) => {
   const theme = useTheme()
   const cardRef = useRef<HTMLDivElement | null>(null)
   const upMd = theme.breakpoints.up('md')
 
   useEffect(() => {
+    if (!hasHoverEffect) {
+      return
+    }
     const el = cardRef.current
     if (el) {
       const cardHalo = el.querySelector('.card-halo') as HTMLElement
 
       el.style.zIndex = 'auto'
 
-      hoverEffect(el, cardHalo, el.clientHeight, el.clientWidth, theme.palette.mode)
+      hoverEffect(el, cardHalo, el.clientHeight, el.clientWidth, theme)
     }
-  }, [theme.palette.mode, upMd])
+  }, [hasHoverEffect, theme, upMd])
 
   /**
    * CardContentSection is a functional component that renders the content section of the card.
@@ -40,7 +43,7 @@ const LinkCard: React.FC<LinkCardProps> = ({ title, description, url, imageUrl, 
    * @returns The rendered JSX element.
    */
   const CardContentSection = () => (
-    <CardContent sx={{ minHeight: '10rem', borderTop: `1px solid ${theme.palette.tableBorder}` }}>
+    <CardContent sx={{ minHeight: '10rem', borderTop: `1px solid ${theme.palette.border?.level0}` }}>
       <Typography variant="caption" component="p" color="text.secondary" sx={{ marginBottom: '0.25rem', textTransform: 'uppercase' }}>
         {domain}
       </Typography>
@@ -89,12 +92,17 @@ const LinkCard: React.FC<LinkCardProps> = ({ title, description, url, imageUrl, 
    * @returns The rendered JSX element.
    */
   const CardMediaComponent = () => (
-    <CardMedia className="card-image" sx={{ height: 160, backgroundColor: 'background.level2', position: 'relative' }} title="image alt">
+    <CardMedia
+      className="card-image"
+      sx={{ height: 160, backgroundColor: 'background.level2', position: 'relative', filter: 'brightness(0.98) contrast(0.95)' }}
+      title="image alt"
+    >
       <Image
         src={imageUrl}
         alt={title}
         fill
-        sizes={'100vh'}
+        sizes="20rem"
+        quality={55}
         style={{
           objectFit: 'cover',
         }}
@@ -115,7 +123,11 @@ const LinkCard: React.FC<LinkCardProps> = ({ title, description, url, imageUrl, 
           transition: 'box-shadow 0.1s, transform 0.1s',
           cursor: 'pointer',
           ':hover': {
-            boxShadow: boxShadow(theme.palette.mode),
+            boxShadow: hasHoverEffect ? boxShadow(theme.palette.mode) : 'none',
+            background: !hasHoverEffect ? theme.palette.background.level0 : 'none',
+            '& .card-image': {
+              filter: 'brightness(1.05) contrast(1.01) saturate(1.01)',
+            },
           },
         }}
       >

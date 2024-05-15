@@ -1,126 +1,123 @@
-import { SyntheticEvent, useCallback, useEffect, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { useCallback, useState } from 'react'
 
-import { TabContext, TabList } from '@mui/lab'
-import TabPanel from '@mui/lab/TabPanel'
-import { GlobalStyles, Unstable_Grid2 as Grid2, Grow, Tab, useTheme } from '@mui/material'
+import { Box, GlobalStyles, useTheme } from '@mui/material'
 
-import { PAGES } from '../../Layout/components/Sidebar'
-import { LatestInfo, MenuPanel, SettingsPanel, TopSection } from './components'
+import Height from 'components/Layout/components/TopBar/Stats/Height'
+import Price from 'components/Layout/components/TopBar/Stats/Price'
+import TipsetTimestamp from 'components/Layout/components/TopBar/Stats/TipsetTimestamp'
 
-interface MobileMenuProps {
-  hasSearchBar?: boolean
-  activeTab?: PAGES
-}
+import Footer from '../footer/Footer'
+import { MenuItemsMobile, SettingsPanel, TopSection } from './components'
+import MobileSearch from './components/MobileSearch'
 
 /**
  * Defines the component
  */
-const MobileMenu = ({ activeTab }: MobileMenuProps) => {
+const MobileMenu = () => {
   /** Creates necessary state variables */
   const theme = useTheme()
-  const { t } = useTranslation()
-  const topHeaderRef = useRef<HTMLDivElement>(null)
-  const tabRef = useRef<HTMLDivElement>(null)
 
-  const [topSectionHeight, setTopSectionHeight] = useState(0)
-  const [tabsHeight, setTabsHeight] = useState<number | undefined>(() => {
-    return tabRef.current?.getBoundingClientRect().height
-  })
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const [activeMenuTab, setActiveMenuTab] = useState<string>('menu')
 
   const toggleMenu = useCallback(() => {
-    setIsSearchOpen(prevState => !isMenuOpen ?? !prevState)
+    if (isSearchOpen) {
+      setIsSearchOpen(false)
+    }
     setIsMenuOpen(prevState => !prevState)
-  }, [isMenuOpen])
+  }, [isSearchOpen])
 
-  const handleTabChange = useCallback((event: SyntheticEvent<Element, Event>, value: unknown) => {
-    setActiveMenuTab(value as string)
-  }, [])
-
-  const getContainerHeight = useCallback(() => {
+  const toggleSearch = useCallback(() => {
     if (isMenuOpen) {
-      return '100vh'
+      setIsMenuOpen(false)
     }
-    return isSearchOpen ? '14rem' : '6rem'
-  }, [isMenuOpen, isSearchOpen])
-
-  useEffect(() => {
-    if (!topHeaderRef?.current || !tabRef?.current) {
-      return
-    }
-    setTopSectionHeight(topHeaderRef.current?.getBoundingClientRect().height)
-    setTabsHeight(tabRef.current?.getBoundingClientRect().height)
-  }, [isMenuOpen, tabRef.current?.clientHeight])
+    setIsSearchOpen(prevState => !prevState)
+  }, [isMenuOpen])
 
   /** Returns the rendered component */
   const GlobalStylesComponent = <GlobalStyles styles={{ body: { overflow: isMenuOpen ? 'hidden' : '' } }} />
-  const LatestInfoComponent = <LatestInfo />
-  const TopSectionComponent = (
-    <Grid2
-      container
-      ref={topHeaderRef}
-      sx={{
-        gap: '1rem',
-      }}
-    >
-      <TopSection isMenuOpen={isMenuOpen} isSearchOpen={isSearchOpen} toggleMenu={toggleMenu} setIsSearchOpen={setIsSearchOpen} />
-    </Grid2>
-  )
-  const TabContextComponent = (
-    <TabContext value={activeMenuTab}>
-      <Grow in>
-        <Grid2
-          container
-          sx={{
-            display: isMenuOpen ? 'auto' : 'none',
-            flexDirection: 'column',
-            alignItems: 'center',
-            height: `calc(100vh - ${topSectionHeight}px - 37px - 1rem)`,
-            width: '100%',
-          }}
-        >
-          <TabList onChange={handleTabChange} aria-label="mobile menu tabs" ref={tabRef}>
-            <Tab label={t('Menu')} id={'topbar-menu-button'} value={'menu'} />
-            <Tab label={t('Settings')} id={'topbar-settings-button'} value={'settings'} />
-          </TabList>
-          <TabPanel value={'menu'} sx={{ padding: '0', height: `calc(100% - ${tabsHeight}px)` }}>
-            <MenuPanel activeTab={activeTab} tabsHeight={tabsHeight} toggleMenu={toggleMenu} />
-          </TabPanel>
-
-          <TabPanel value={'settings'} sx={{ padding: '0', width: '100%', height: `calc(100% - ${tabsHeight}px)` }}>
-            <SettingsPanel activeTab={activeTab} />
-          </TabPanel>
-        </Grid2>
-      </Grow>
-    </TabContext>
-  )
 
   return (
-    <Grid2
-      container
+    <Box
       sx={{
         position: 'fixed',
-        right: 0,
-        zIndex: 200,
+        left: 0,
+        top: 0,
+        zIndex: 1000,
         display: 'flex',
         flexDirection: 'column',
-        height: getContainerHeight(),
-        gap: '1rem',
-        width: 'calc(100%)',
-        padding: theme.spacing(1),
-        background: `linear-gradient(180deg, ${theme.palette.background.level0}FF 0%, ${theme.palette.background.level0}99 100%)`,
-        backdropFilter: 'saturate(2) blur(20px)',
-        transition: '200ms ease-in-out',
+        flexWrap: 'nowrap',
+        height: isMenuOpen || isSearchOpen ? '100dvh' : 'fit-content',
+        width: '100%',
+        backgroundColor: theme.palette.background.level1,
+        borderBottom: '1px solid',
+        borderColor: theme.palette.border?.level0,
+        overflowY: 'auto',
       }}
     >
       {GlobalStylesComponent}
-      {LatestInfoComponent}
-      {TopSectionComponent}
-      {TabContextComponent}
-    </Grid2>
+
+      {/* Logo and buttons */}
+      <TopSection isMenuOpen={isMenuOpen} isSearchOpen={isSearchOpen} toggleMenu={toggleMenu} setIsSearchOpen={toggleSearch} />
+
+      {/* Search bar */}
+      <Box
+        sx={{
+          display: isSearchOpen && !isMenuOpen ? 'flex' : 'none',
+          flexDirection: 'column',
+          flexWrap: 'nowrap',
+          gap: '1rem',
+        }}
+      >
+        <MobileSearch />
+      </Box>
+
+      {/* Menu items and settings */}
+      <Box
+        sx={{
+          display: isMenuOpen ? 'flex' : 'none',
+          flexDirection: 'column',
+          flexWrap: 'nowrap',
+          gap: '1rem',
+          height: '100%',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            flexWrap: 'nowrap',
+            gap: '1rem',
+          }}
+        >
+          <MenuItemsMobile handleCloseTopMenu={toggleMenu} />
+          <SettingsPanel setIsMenuOpen={setIsMenuOpen} />
+        </Box>
+
+        <Footer />
+      </Box>
+
+      {/* Live Stats */}
+      <Box
+        sx={{
+          display: isMenuOpen || isSearchOpen ? 'none' : 'flex',
+          alignItems: 'baseline',
+          gap: '0.75rem',
+          padding: '0.5rem',
+          borderTop: '1px solid',
+          borderColor: theme.palette.border?.level0,
+          overflowX: 'auto',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          '&::-webkit-scrollbar': { display: 'none' },
+        }}
+      >
+        <Price />
+        <Height />
+        <TipsetTimestamp />
+      </Box>
+    </Box>
   )
 }
 

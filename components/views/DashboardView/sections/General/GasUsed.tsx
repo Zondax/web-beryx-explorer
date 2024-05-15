@@ -2,7 +2,7 @@ import dynamic from 'next/dynamic'
 import { useMemo } from 'react'
 
 import { useGasUsed } from '@/data/beryx'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import { getGasUsedCurrentWeek } from '@/utils/dashboardFormatter'
 import { getLoadingStatus } from '@/utils/loadingStatus'
 import { formatFilValue } from '@/utils/numbers'

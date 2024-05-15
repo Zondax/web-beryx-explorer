@@ -43,11 +43,11 @@ const BannerTile = ({
         direction={{ xs: 'column-reverse', md: 'row' }}
         flexWrap={'nowrap'}
         sx={{
-          borderRadius: '8px',
+          borderRadius: '12px',
           overflow: 'hidden',
           height: { xs: '40rem', md: '28rem' },
           margin: { xs: '0 1rem', md: 'unset' },
-          border: `1px solid ${theme.palette.tableBorder}`,
+          border: `1px solid ${theme.palette.border?.level0}`,
         }}
       >
         <Grid
@@ -57,7 +57,7 @@ const BannerTile = ({
           height={{ xs: '25rem', md: '100%' }}
           gap={{ xs: '3rem', md: '4rem' }}
           md={7}
-          bgcolor="background.level1"
+          bgcolor="background.level0"
           sx={{ padding: { xs: '1rem', md: '2rem' } }}
         >
           <Grid>

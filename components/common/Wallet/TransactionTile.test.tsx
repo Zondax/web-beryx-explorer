@@ -81,7 +81,8 @@ describe('TransactionTile', () => {
       />
     )
     expect(screen.getByText('bafy2bza...qwrl6232')).toBeInTheDocument()
-    expect(screen.getByText(`${newDateFormat(mempoolTx.first_seen, 'UTC', true)} • ${mempoolTx.method_name}`)).toBeInTheDocument()
+    expect(screen.getByText(`${newDateFormat(mempoolTx.first_seen, undefined, false)}`)).toBeInTheDocument()
+    expect(screen.getByText(`• ${mempoolTx.method_name}`)).toBeInTheDocument()
     expect(screen.getByText('-0.00 FIL')).toBeInTheDocument()
   })
 
@@ -101,7 +102,8 @@ describe('TransactionTile', () => {
     )
 
     expect(screen.getByText('bafy2bza...wj7ber7y')).toBeInTheDocument()
-    expect(screen.getByText(`${newDateFormat(incomingTx.tx_timestamp, 'UTC', true)} • ${incomingTx.tx_type}`)).toBeInTheDocument()
+    expect(screen.getByText(`${newDateFormat(incomingTx.tx_timestamp, undefined, false)}`)).toBeInTheDocument()
+    expect(screen.getByText(`• ${incomingTx.tx_type}`)).toBeInTheDocument()
     expect(screen.getByText('+0.00 FIL')).toBeInTheDocument()
   })
 
@@ -120,7 +122,8 @@ describe('TransactionTile', () => {
       />
     )
     expect(screen.getByText('bafy2bza...hkfmspty')).toBeInTheDocument()
-    expect(screen.getByText(`${newDateFormat(incomingTx.tx_timestamp, 'UTC', true)} • ${outgoingTx.tx_type}`)).toBeInTheDocument()
+    expect(screen.getByText(`${newDateFormat(incomingTx.tx_timestamp, undefined, false)}`)).toBeInTheDocument()
+    expect(screen.getByText(`• ${outgoingTx.tx_type}`)).toBeInTheDocument()
     expect(screen.getByText('-0.00 FIL')).toBeInTheDocument()
   })
 })

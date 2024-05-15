@@ -4,7 +4,7 @@
 import { SyntheticEvent, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { StatsFrequency } from '@/store/data/mempool'
+import { StatsFrequency } from '@/config/config'
 import { ToggleButton, ToggleButtonGroup } from '@mui/material'
 
 /**
@@ -58,7 +58,7 @@ const RangeSwitch = ({
    * Returns the switch component.
    */
   return (
-    <ToggleButtonGroup size="small" color="primary" value={rangeSelected} exclusive onChange={handleSwitch} aria-label="range-selector">
+    <ToggleButtonGroup size="medium" color="primary" value={rangeSelected} exclusive onChange={handleSwitch} aria-label="range-selector">
       {rangeButtons}
     </ToggleButtonGroup>
   )

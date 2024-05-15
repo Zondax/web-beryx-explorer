@@ -12,8 +12,8 @@ export const SupportedActorTypeColors: { [key: string]: { light: string; dark: s
     dark: 'rgb(255, 102, 0)', // Orange
   },
   MethodsAccount: {
-    light: 'rgb(0, 153, 76)', // Dark Green
-    dark: 'rgb(23, 160, 91)', // Green
+    light: 'rgb(0, 120, 255)', // Light Blue
+    dark: 'rgb(0, 100, 255)', // Dark Blue
   },
   MethodsInit: {
     light: 'rgb(255, 102, 204)', // Dark Pink
@@ -60,8 +60,8 @@ export const SupportedActorTypeColors: { [key: string]: { light: string; dark: s
     dark: 'rgb(12, 182, 80)', // Light Green
   },
   Default: {
-    light: 'rgba(117, 117, 117, 0.537)', // Dark Gray
-    dark: 'rgba(189, 189, 189, 0.537)', // Gray
+    light: 'rgba(120, 120, 120)', // Darker Gray
+    dark: 'rgba(150, 150, 150)', // Dark Gray
   },
 }
 
@@ -81,7 +81,9 @@ const ActorTypeLabelColors: { [key: string]: { light: string; dark: string } } =
   payment_channel: SupportedActorTypeColors.MethodsPaymentChannel,
   verified_registry: SupportedActorTypeColors.MethodsVerifiedRegistry,
   evm: SupportedActorTypeColors.MethodsEVM,
+  ethaccount: SupportedActorTypeColors.MethodsEVM,
   datacap: SupportedActorTypeColors.MethodsDatacap,
+  placeholder: SupportedActorTypeColors.Default,
 }
 
 /**

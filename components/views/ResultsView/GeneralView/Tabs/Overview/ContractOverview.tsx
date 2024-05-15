@@ -41,7 +41,13 @@ const ContractOverview = () => {
    */
   useEffect(() => {
     if (searchResultJson?.balances) {
-      setBalance(BigNumber(formatBalance(searchResultJson?.balances)).toFormat(2, amountFormat))
+      const balance = BigNumber(formatBalance(searchResultJson?.balances))
+
+      if (balance.isLessThan(BigNumber(0.01))) {
+        setBalance(balance.toFormat(amountFormat))
+      } else {
+        setBalance(balance.dp(2, BigNumber.ROUND_DOWN).toFormat(2, amountFormat))
+      }
     }
   }, [searchResultJson])
 
@@ -122,7 +128,15 @@ const ContractOverview = () => {
       ) : null}
 
       {searchResultJson?.created_at ? (
-        <OverviewItem label={t('Created at')} content={newDateFormat(searchResultJson?.created_at, 'UTC', true)} icon={undefined} />
+        <OverviewItem
+          label={t('Created at')}
+          content={
+            <Tooltip title={`${newDateFormat(searchResultJson?.created_at, 'UTC', true)}`} arrow disableInteractive>
+              <Typography variant="caption">{`${newDateFormat(searchResultJson?.created_at, undefined, false)}`}</Typography>
+            </Tooltip>
+          }
+          icon={undefined}
+        />
       ) : null}
 
       {searchResultJson?.creator_address ? (

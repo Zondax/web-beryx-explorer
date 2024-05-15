@@ -49,7 +49,7 @@ const LeaderboardView = () => {
   return (
     <Box
       sx={{
-        height: { xs: 'calc(100dvh - 6.75rem)', md: 'calc(100dvh - 2.25rem - 4rem)' },
+        height: { xs: 'calc(100dvh - 6.75rem)', md: 'calc(100dvh - 6rem - 1.75rem)' },
         minHeight: '40rem',
         transition: { xs: 'height 0.2s ease-in-out', md: 'none' },
         width: '100%',
@@ -73,8 +73,10 @@ const LeaderboardView = () => {
         <Panel
           contentToDownload={''}
           tabs={leaderboardTabs.map((item: TabProps) => ({ name: item.name, disabled: !item.show }))}
+          tabBackgroundColor={theme.palette.background.level1}
+          tabBorderColor={theme.palette.border?.level1}
           currentTab={activeTab}
-          padding="0.65rem 0.5rem 0.7rem 0.5rem"
+          padding="0.5rem"
           onTabChange={handleTabChange}
         >
           {leaderboardTabs.map(({ id, content }) => (

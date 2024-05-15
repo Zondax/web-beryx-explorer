@@ -77,7 +77,7 @@ const BottomBar = () => {
   return (
     <Grid2
       container
-      bgcolor="background.level1"
+      bgcolor="background.level0"
       sx={{
         position: 'fixed',
         bottom: 0,

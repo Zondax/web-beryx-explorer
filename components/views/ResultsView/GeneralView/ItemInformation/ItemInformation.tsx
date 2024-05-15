@@ -22,15 +22,19 @@ interface ItemInformationProps {
 const ItemInformation = ({ searchItemType }: ItemInformationProps) => {
   // media query for responsiveness
   const upMd = useMediaQuery(useTheme().breakpoints.up('md'))
+  const theme = useTheme()
 
   return (
     <Grid
       container
       height={upMd ? '6rem' : 'fit-content'}
       justifyContent={'space-between'}
-      padding={upMd ? '1rem 1rem 1rem 1rem' : '1rem 0.5rem 1rem 0.5rem'}
+      padding={upMd ? '1.5rem 1rem 1rem 1rem' : '1rem 0.5rem 1rem 0.5rem'}
       alignItems={'center'}
       gap={'1rem'}
+      sx={{
+        backgroundColor: theme.palette.background.level1,
+      }}
     >
       {/* Box for item information */}
       <Box

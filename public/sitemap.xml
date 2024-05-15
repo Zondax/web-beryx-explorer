@@ -3,26 +3,54 @@
       xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
   <loc>https://beryx.zondax.ch/</loc>
-  <lastmod>2022-04-12</lastmod>
+  <lastmod>2023-03-27</lastmod>
 </url>
 <url>
   <loc>https://beryx.zondax.ch/recent_activity</loc>
-  <lastmod>2023-03-21</lastmod>
+  <lastmod>2023-03-27</lastmod>
 </url>
 <url>
   <loc>https://beryx.zondax.ch/dashboard</loc>
-  <lastmod>2023-03-21</lastmod>
+  <lastmod>2023-03-27</lastmod>
 </url>
 <url>
-  <loc>https://beryx.zondax.ch/v1/mempool</loc>
-  <lastmod>2023-03-21</lastmod>
+  <loc>https://beryx.zondax.ch/mempool</loc>
+  <lastmod>2023-03-27</lastmod>
 </url>
 <url>
   <loc>https://beryx.zondax.ch/faucet</loc>
-  <lastmod>2023-03-21</lastmod>
+  <lastmod>2023-03-27</lastmod>
 </url>
 <url>
   <loc>https://beryx.zondax.ch/address_converter</loc>
-  <lastmod>2023-03-21</lastmod>
+  <lastmod>2023-03-27</lastmod>
+</url>
+<url>
+  <loc>https://beryx.zondax.ch/contract_verifier</loc>
+  <lastmod>2023-03-27</lastmod>
+</url>
+<url>
+  <loc>https://beryx.zondax.ch/changelog</loc>
+  <lastmod>2023-03-27</lastmod>
+</url>
+<url>
+  <loc>https://beryx.zondax.ch/terms_of_service</loc>
+  <lastmod>2023-03-27</lastmod>
+</url>
+<url>
+  <loc>https://beryx.zondax.ch/rpc</loc>
+  <lastmod>2023-03-27</lastmod>
+</url>
+<url>
+  <loc>https://beryx.zondax.ch/estimate_gas</loc>
+  <lastmod>2023-03-27</lastmod>
+</url>
+<url>
+  <loc>https://beryx.zondax.ch/interact</loc>
+  <lastmod>2023-03-27</lastmod>
+</url>
+<url>
+  <loc>https://beryx.zondax.ch/leaderboard</loc>
+  <lastmod>2023-03-27</lastmod>
 </url>
 </urlset>

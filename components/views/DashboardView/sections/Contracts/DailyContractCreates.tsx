@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { ContractsProps } from '@/api-client/beryx.types'
 import { useContractsCreates } from '@/data/beryx'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import { getDateUTC } from '@/utils/dates'
 import { getLoadingStatus } from '@/utils/loadingStatus'
 import { Grid, useTheme } from '@mui/material'

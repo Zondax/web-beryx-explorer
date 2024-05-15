@@ -1,6 +1,6 @@
 import { ObjectType } from '@/routes/parsing'
 import { useLatestStore } from '@/store/data/latest'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import { timeSince } from '@/utils/dates'
 import { CircularProgress, Grid, Grow, Typography } from '@mui/material'
 import { Transaction } from '@zondax/beryx/dist/filecoin/api/types'
@@ -44,13 +44,17 @@ const QuickExamples = () => {
   return (
     <Grid container gap={{ xs: 6, md: 4, xl: 7 }} direction="row" justifyContent="center" sx={{ marginTop: '-2rem' }}>
       <Grid item xs={10} sm={7} md={4} lg={3} xl={3}>
-        <Typography variant="h5">Latest tipsets</Typography>
+        <Typography variant="h5" component={'h1'}>
+          Latest tipsets
+        </Typography>
         {tipsetsStatus === 'loading' && <CircularProgress size="small" thickness={4} />}
         {tipsetItems}
         {!latestTipsets && !tipsetsStatus && <Typography variant="body1">We could not get the information</Typography>}
       </Grid>
       <Grid item xs={10} sm={7} md={4} lg={3} xl={3}>
-        <Typography variant="h5">Latest transactions</Typography>
+        <Typography variant="h5" component={'h1'}>
+          Latest transactions
+        </Typography>
         {transactionsStatus === 'loading' && <CircularProgress size="small" thickness={4} />}
         {transactionItems}
         {!latestTransactions && !transactionsStatus && <Typography variant="h5">We could not get the information</Typography>}

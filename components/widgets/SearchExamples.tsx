@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { getNetworkExamples } from '@/config/data'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import { Button, Grid, Typography, useTheme } from '@mui/material'
 
 /**
@@ -30,22 +30,28 @@ const SearchExamples = ({ properties }: SearchExamplesProps) => {
   const examplesData = useMemo(() => getNetworkExamples(network), [network])
 
   const ExamplesTitle = (
-    <Typography variant="body1" color={theme.palette.text.primary} mt={'0.5rem'} sx={{ opacity: 0.8 }}>
+    <Typography variant="body1" color={theme.palette.common.black} mt={'0.5rem'} sx={{ opacity: 0.8 }}>
       {t('Search examples')}
     </Typography>
   )
 
   const ExampleButtons = examplesData.map(({ name, data, type }) => (
-    <Link href={`/v1/search/${network.slug}/${type}/${data}`} key={`${name}-${data}`}>
+    <Link href={`/search/${network.slug}/${type}/${data}`} key={`${name}-${data}`} passHref>
       <Button
         size="small"
-        variant={'inputType'}
+        variant={'outlined'}
         sx={{
-          minWidth: 'unset',
-          height: 'unset',
-          padding: '0.4rem 0.75rem',
-          backgroundColor: theme.palette.background.level1,
-          border: `1px solid ${theme.palette.tableChildRowBackgroundFocused}`,
+          minWidth: { xs: 'fit-content', md: 'unset' }, // Set minimum width for small devices and up
+          maxWidth: { xs: '20rem', md: 'unset' }, // Set maximum width for small devices and up
+          height: 'auto',
+          padding: '0.4rem 0.5rem',
+          backgroundColor: '#0090FF',
+          border: '1px solid #0090FF',
+          color: theme.palette.common.white,
+          whiteSpace: 'normal', // Allow text wrapping
+          textAlign: 'center', // Center the text
+          overflow: 'hidden', // Prevent overflow
+          textOverflow: 'ellipsis', // Add ellipsis to overflowed text
         }}
       >
         {t(name)}
@@ -56,17 +62,16 @@ const SearchExamples = ({ properties }: SearchExamplesProps) => {
   return (
     <Grid
       container
-      gap={'0.5rem'}
+      gap={'0.25rem'}
       alignItems={'flex-start'}
       mt={{ xs: '1rem', md: '0.5rem' }}
       sx={{ width: { xs: '100%', md: properties?.width ?? '44rem' } }}
       justifyContent={'flex-start'}
-      pl={{ xs: '1rem', md: '0' }}
       width={'100%'}
       maxWidth={'40rem'}
     >
       {ExamplesTitle}
-      <Grid container item gap={'0.5rem'} alignItems={'center'} justifyContent={'center'} mt={'0.5rem'} width={'fit-content'}>
+      <Grid container item gap={'0.5rem'} alignItems={'center'} justifyContent={'flex-start'} mt={'0.25rem'} width={'100%'}>
         {ExampleButtons}
       </Grid>
     </Grid>

@@ -26,11 +26,14 @@ const Endpoints = () => {
   const { t } = useTranslation()
 
   return (
-    <Paper
-      variant={'elevation'}
-      elevation={2}
+    <Box
+      // variant={'elevation'}
+      // elevation={2}
       sx={{
         padding: { xs: '1rem', md: '1.5rem' },
+        borderRadius: '12px',
+        border: `1px solid ${theme.palette.border?.level0}`,
+        overflow: 'hidden',
       }}
     >
       <Grid container spacing={'3rem'} justifyContent={'center'}>
@@ -81,7 +84,7 @@ const Endpoints = () => {
           </Grid>
         </Grid>
       </Grid>
-    </Paper>
+    </Box>
   )
 }
 

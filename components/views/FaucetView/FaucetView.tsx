@@ -7,7 +7,7 @@ import { useBeryxApiToken } from '@/api-client/apiTokens'
 import { BeryxToken } from '@/api-client/auth'
 import { fetchAddressValid, fetchFilForm } from '@/api-client/beryx'
 import { getBeryxUrl } from '@/config/config'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import useWalletStore from '@/store/wallets/wallet'
 import { Button, CircularProgress, Grid, Unstable_Grid2 as Grid2, Typography, useTheme } from '@mui/material'
 
@@ -19,7 +19,7 @@ type faucetErrors = 'too_many_requests' | 'default'
 
 const faucter_error_messages: { [key in faucetErrors]: string } = {
   too_many_requests: "Kindly hold on for a moment, it seems you've made a recent token request.",
-  default: 'There was an error in the Faucet. Please use the feedback tool on the right to report it.',
+  default: 'There was an error in the Faucet. Please use the feedback tool in the navbar to report it.',
 }
 
 /**
@@ -197,14 +197,14 @@ const FaucetView = () => {
     <Grid2 container direction="column" sx={{ width: '100%', display: 'flex', alignItems: 'center', padding: '0 1rem' }}>
       <Grid2
         container
-        bgcolor="background.level1"
+        bgcolor="background.level0"
         sx={{
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
-          width: '35rem',
+          width: '40rem',
           maxWidth: '100%',
-          borderRadius: theme.spacing(1),
+          borderRadius: '12px',
           marginTop: '5rem',
         }}
       >
@@ -218,9 +218,11 @@ const FaucetView = () => {
             justifyContent: 'center',
             flex: '1 0 0',
             minHeight: '12rem',
-            borderRadius: theme.spacing(1),
+            borderRadius: '12px 12px 0 0',
             padding: '2rem',
             overflow: 'hidden',
+            borderBottom: '1px solid',
+            borderColor: theme.palette.border?.level0,
           }}
         >
           <Image
@@ -239,7 +241,7 @@ const FaucetView = () => {
         </Grid2>
         <Grid2
           container
-          bgcolor="background.level2"
+          bgcolor="background.level0"
           sx={{
             zIndex: 101,
             display: 'flex',
@@ -248,10 +250,10 @@ const FaucetView = () => {
             width: '100%',
             minHeight: '16rem',
             borderRadius: '0 0 8px 8px',
-            padding: '2rem',
+            padding: '2rem 3rem',
           }}
         >
-          <Grid container spacing={0} width={'100%'} maxWidth={'21.5rem'}>
+          <Grid container spacing={0} width={'100%'}>
             <Grid item xs={12}>
               <Typography variant="body1" sx={{ textAlign: 'center', marginBottom: '0.2rem', zIndex: 99, textTransform: 'capitalize' }}>
                 {network.name}

@@ -58,8 +58,10 @@ const ItemInformation = ({
             width: { lg: '60%' },
           }}
         >
-          <Typography variant="h5">Mempool</Typography>
-          <Typography variant="body2" lineHeight={1.25}>
+          <Typography variant="h5" component={'h1'}>
+            Mempool
+          </Typography>
+          <Typography variant="body2" component={'p'} lineHeight={1.25}>
             {t(
               'Witness real-time transactions as they queue up for blockchain and explore our detailed statistics page for deeper insights!'
             )}

@@ -30,7 +30,7 @@ export const renderStatusIcon = (status: string | undefined, theme: Theme): JSX.
           width: '16px',
           height: '16px',
           borderRadius: '50%',
-          border: `1px solid ${theme.palette.tableBorder}`,
+          border: `1px solid ${theme.palette.border?.level0}`,
         }}
         data-testid="status-icon-undefined"
       />

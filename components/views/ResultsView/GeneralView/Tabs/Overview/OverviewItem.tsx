@@ -86,8 +86,10 @@ const OverviewItem: React.FC<OverviewItemProps> = ({ label, content, icon, descr
       alignItems={'center'}
       spacing={2}
       sx={{
-        borderBottom: `1px solid ${theme.palette.tableBorder}`,
-        padding: '0.125rem 0.5rem 0.125rem 0.5rem',
+        borderBottom: `1px solid ${theme.palette.border?.level0}`,
+        padding: '0.1rem 0.5rem 0.1rem 0.5rem',
+        maxHeight: 'max-content',
+        height: 'max-content',
         margin: '0',
         ':last-of-type': {
           borderBottom: 'none',
@@ -98,14 +100,14 @@ const OverviewItem: React.FC<OverviewItemProps> = ({ label, content, icon, descr
         xs={verticalInMobile ? 12 : 5}
         md={3.5}
         gap={'0.5rem'}
-        sx={{ minHeight: '3rem', height: 'fit-content', display: 'flex', alignItems: 'center', alignSelf: 'flex-start' }}
+        sx={{ maxHeight: 'max-content', height: 'max-content', display: 'flex', alignItems: 'center', alignSelf: 'flex-start' }}
       >
         {DescriptionTooltip}
         {LabelTypography}
       </Grid>
 
       <Grid xs={verticalInMobile ? 12 : 7} md={8.5}>
-        <Grid container alignItems={'center'} sx={{ gap: '0.5rem', flexWrap: 'nowrap', width: '100%' }}>
+        <Grid container alignItems={'center'} sx={{ gap: '0.5rem', flexWrap: 'nowrap', width: '100%', height: 'fit-content' }}>
           {IconBox}
           {renderContent}
         </Grid>

@@ -81,7 +81,6 @@ const ProTable = ({
   handleRowFocusChange,
   treeData,
   fixedHeight,
-  hideBorder,
   getRowClassName: getRowClassNameProp,
   loading,
   title,
@@ -94,6 +93,7 @@ const ProTable = ({
   serverPagination,
   disableColumnFilter,
   hideFooter,
+  noBorderRadius,
   pageSizeOptions,
   paginationModel,
   setPaginationModel,
@@ -101,6 +101,7 @@ const ProTable = ({
   sortModel,
   sortingMode,
   onSortModelChange,
+  selectedRowIndex,
 }: TableProps) => {
   const apiRef = useGridApiRef()
   const theme = useTheme()
@@ -224,7 +225,7 @@ const ProTable = ({
       return 'auto'
     }
     if (upMd) {
-      return 36
+      return 40
     }
     return 42
   }, [tableType, upMd])
@@ -244,7 +245,7 @@ const ProTable = ({
      */
     const setKeyboardFocus = () => {
       const api = apiRef?.current
-      const defaultIndexRow = 0
+      const defaultIndexRow = selectedRowIndex ?? 0
       if (api?.getAllColumns() && api?.getAllRowIds()) {
         apiRef.current.selectRow(defaultIndexRow, true, true)
         if (handleRowFocusChange) {
@@ -263,7 +264,7 @@ const ProTable = ({
       }
     }, 1000)
     return () => clearInterval(interval)
-  }, [apiRef, rowDataWithId, tableType, handleRowFocusChange])
+  }, [apiRef, rowDataWithId, tableType, handleRowFocusChange, selectedRowIndex])
 
   useEffect(() => {
     apiRef.current.subscribeEvent('cellKeyUp', handleEvent)
@@ -287,15 +288,14 @@ const ProTable = ({
 
   return (
     <Box
-      bgcolor="background.level1"
       sx={{
+        backgroundColor: theme.palette.background.level0,
         display: 'flex',
         flexDirection: 'column',
         width: '100%',
         height: fixedHeight ? '40rem' : '100%',
-        borderRadius: '6px',
+        borderRadius: noBorderRadius ? 0 : '12px',
         overflow: 'hidden',
-        border: hideBorder ? 'none' : `1px solid ${theme.palette.tableBorder}`,
       }}
     >
       <StyledBox sx={{ height: '100%', width: '100%' }} id={`table-${tableType}`}>

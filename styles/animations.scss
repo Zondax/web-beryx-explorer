@@ -1,0 +1,164 @@
+@keyframes bell-shake {
+  0%,
+  100% {
+    transform: rotate(0) scale(1.05);
+  }
+
+  15% {
+    transform: rotate(-15deg) scale(1.1);
+  }
+
+  30% {
+    transform: rotate(10deg);
+  }
+
+  45% {
+    transform: rotate(-5deg);
+  }
+
+  60% {
+    transform: rotate(5deg);
+  }
+
+  75% {
+    transform: rotate(-2.5deg);
+  }
+
+  90% {
+    transform: rotate(2.5deg) scale(1);
+  }
+}
+
+.bellAnimationContainer {
+  &:hover {
+    & .bellAnimation {
+      animation: bell-shake 1s ease-in-out forwards;
+      transition: color 0.4s ease-in-out;
+    }
+  }
+}
+
+@keyframes rotate-animation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(120deg);
+  }
+}
+
+.rotateAnimationContainer {
+  &:hover {
+    & .rotateAnimation {
+      animation: rotate-animation 0.5s ease-in-out forwards;
+      transition: color 0.4s ease-in-out;
+    }
+  }
+}
+
+@keyframes chevron-fly {
+  0% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+
+  51% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.flyLeftAnimationContainer {
+  &:hover {
+    & .flyLeft {
+      animation: chevron-fly 0.25s ease-in-out;
+      transition: transform 0.5s ease-in-out;
+    }
+  }
+}
+
+@keyframes shrink-and-disappear {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  80% {
+    transform: scale(0.1);
+    opacity: 0;
+  }
+
+  97% {
+    transform: scale(0.1);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.shrinkDisappearAnimationContainer {
+  &:hover {
+    & .shrinkDisappear {
+      animation: shrink-and-disappear 0.6s ease-in-out;
+      transition:
+        transform 0.5s ease-in-out,
+        opacity 0.5s ease-in-out;
+    }
+  }
+}
+
+@keyframes sun-setting {
+  0% {
+    transform: rotate(0deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: rotate(90deg);
+    opacity: 0;
+  }
+}
+
+@keyframes sun-rising {
+  0% {
+    transform: rotate(0deg);
+    opacity: 0;
+  }
+
+  100% {
+    transform: rotate(90deg);
+    opacity: 1;
+  }
+}
+
+.sunSettingAnimationContainer {
+  & .sunSetting,
+  & .sunRising {
+    transition:
+      transform 1s ease,
+      opacity 1s ease;
+  }
+
+  &:hover {
+    & .sunSetting {
+      animation: sun-setting 0.7s ease-in-out forwards;
+    }
+
+    & .sunRising {
+      animation: sun-rising 0.7s ease-in-out forwards;
+    }
+  }
+}

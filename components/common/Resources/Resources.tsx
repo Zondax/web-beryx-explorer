@@ -76,7 +76,7 @@ const UserResources = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          borderBottom: `1px solid ${theme.palette.tableBorder}`,
+          borderBottom: `1px solid ${theme.palette.border?.level0}`,
           padding: { xs: '0 0.5rem 0 1rem', md: '0 0.5rem 0 2rem' },
         }}
       >
@@ -174,7 +174,7 @@ const UserResources = () => {
         content = isDesktop ? <Documentation /> : <DocumentationMobile />
         break
       default:
-        content = <TOC />
+        content = <TOC resourcesMetaInfo={[]} />
     }
     return (
       <Box sx={{ height: 'calc(100% - 3.5rem - 4rem)', padding: { xs: '0 0.5rem 0.5rem 0.5rem', md: '0 0.5rem 0.5rem 1rem' } }}>

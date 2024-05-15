@@ -71,8 +71,21 @@ const WalletNotConnected = ({
   return (
     <>
       <Grid item xs={12}>
-        <Typography variant="body1" sx={{ maxWidth: '50ch', textAlign: 'left', marginBottom: '1rem' }}>
-          {t('Type in your Filecoin address or connect your wallet to receive hyperspace test FIL.')}
+        <Typography variant="body1" sx={{ maxWidth: '50ch', textAlign: 'left', margin: '1rem 0' }}>
+          {t('Type in your Filecoin address or connect your wallet to receive calibration test FIL.')}
+        </Typography>
+        <Typography
+          variant="body1"
+          color={'text.secondary'}
+          mb={'1.5rem'}
+          sx={{
+            a: { color: theme.palette.primary.main },
+          }}
+        >
+          {t('Currently you can only get 5 TFIL every 12h. If you need more, please contact us at ')}
+          <a href="mailto:beryx@zondax.ch" target={'_blank'} rel="noreferrer">
+            beryx@zondax.ch
+          </a>
         </Typography>
       </Grid>
       <Grid item xs={12}>

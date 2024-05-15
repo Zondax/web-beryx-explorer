@@ -4,7 +4,6 @@ import { useTransactions } from '@/data/beryx'
 import { useSearchStore } from '@/store/data/search'
 import { getLoadingStatus } from '@/utils/loadingStatus'
 import { Grid } from '@mui/material'
-import { Transaction } from '@zondax/beryx/dist/filecoin/api/types'
 
 import { ItemTile, StatsTile } from 'components/widgets/Charts'
 
@@ -16,6 +15,7 @@ import BalanceChart from '../../views/ResultsView/GeneralView/Tabs/Overview/Bala
 const AccountEvolution = () => {
   const inputValue = useSearchStore(s => s.searchInputValue)
   const objectType = useSearchStore(s => s.searchItemType)
+  const inputType = useSearchStore(s => s.searchInputType)
   const network = useSearchStore(s => s.searchInputNetwork)
 
   const {
@@ -25,7 +25,8 @@ const AccountEvolution = () => {
   } = useTransactions({
     input: inputValue,
     network,
-    type: objectType,
+    inputType,
+    objectType,
     method: 'receiver',
     level: 'main',
     evm: false,
@@ -40,7 +41,8 @@ const AccountEvolution = () => {
   } = useTransactions({
     input: inputValue,
     network,
-    type: objectType,
+    inputType,
+    objectType,
     method: 'sender',
     level: 'main',
     evm: false,
@@ -49,15 +51,11 @@ const AccountEvolution = () => {
   })
 
   const totalReceivedTxs = useMemo(() => {
-    return receivedTransactions?.transactions !== undefined
-      ? receivedTransactions.transactions.filter(({ tx_type }: Transaction) => tx_type !== 'Fee').length
-      : undefined
+    return receivedTransactions?.total_txs
   }, [receivedTransactions])
 
   const totalSentTxs = useMemo(() => {
-    return sentTransactions?.transactions !== undefined
-      ? sentTransactions.transactions.filter(({ tx_type }: Transaction) => tx_type !== 'Fee').length
-      : undefined
+    return sentTransactions?.total_txs
   }, [sentTransactions])
 
   return (

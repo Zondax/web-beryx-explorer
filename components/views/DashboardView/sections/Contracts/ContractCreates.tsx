@@ -7,7 +7,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useContractsCreates } from '@/data/beryx'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import { getContractInvokesCurrentWeek } from '@/utils/dashboardFormatter'
 import { getLoadingStatus } from '@/utils/loadingStatus'
 import { Grid } from '@mui/material'

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { TABLE_TYPE } from '@/config/tables'
 import { useSubscribeNats } from '@/nats/useSubscribeNats'
 import { useLatestStore } from '@/store/data/latest'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import { confirmDistinctItems } from '@/utils/arrays'
 import { Box, Button, CircularProgress, Unstable_Grid2 as Grid, Typography, useMediaQuery, useTheme } from '@mui/material'
 
@@ -66,7 +66,7 @@ const LatestItems = () => {
       <Box
         data-testid={'latest-tipsets-table'}
         key={'Latest tipsets table home page'}
-        height={{ xs: '31.25rem', md: '28.25rem' }}
+        height={{ xs: '31.25rem', md: '23.9rem' }}
         width={'100%'}
       >
         <Table
@@ -97,7 +97,7 @@ const LatestItems = () => {
       <Box
         data-testid={'latest-transactions-table'}
         key={'Latest transactions table home page'}
-        height={{ xs: '31.25rem', md: '28.25rem' }}
+        height={{ xs: '26.5rem', md: '23.9rem' }}
         width={'100%'}
       >
         <Table
@@ -128,7 +128,7 @@ const LatestItems = () => {
       <Box
         data-testid={'latest-invokes-table'}
         key={'Latest invokes table home page'}
-        height={{ xs: '31.25rem', md: '28.25rem' }}
+        height={{ xs: '26.5rem', md: '23.9rem' }}
         width={'100%'}
       >
         <Table
@@ -159,11 +159,11 @@ const LatestItems = () => {
   const renderSection = useCallback(
     (key: string, title: string, table: JSX.Element, link: string, wide = false) => {
       const sectionTitle = t(`Latest ${title}`)
-      const viewMoreTitle = t(`View More ${title}`)
+      const viewMoreTitle = t('View More')
       const sectionId = `latest-${key.toLowerCase()}-heading`
       const viewMoreId = `view-more-${key.toLowerCase()}`
       const gridWidth = wide ? 12 : 6
-      const gridHeight = { xs: '25rem', md: '30rem' }
+      const gridHeight = { xs: '26.5rem', md: '27rem' }
       const gridMarginTop = wide ? '2rem' : '0'
 
       return (
@@ -175,11 +175,11 @@ const LatestItems = () => {
           sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: gridMarginTop }}
         >
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '0 1rem' }}>
-            <Typography variant="h5" id={sectionId}>
+            <Typography variant="h5" component={'h1'} id={sectionId}>
               {sectionTitle}
             </Typography>
             <Link href={link} id={viewMoreId}>
-              <Typography variant="body1" color={theme.palette.primary.main}>
+              <Typography variant="body1" component={'p'} color={theme.palette.primary.main}>
                 {viewMoreTitle}
               </Typography>
             </Link>
@@ -224,12 +224,14 @@ const LatestItems = () => {
         flexShrink={0}
         flexWrap={'nowrap'}
         bgcolor={theme.palette.background.level1}
-        borderRadius={'0.5rem'}
+        borderRadius={'12px'}
+        overflow={'hidden'}
       >
         <Panel
           contentToDownload={''}
           tabs={[{ name: t('Latest Tipsets') }, { name: t('Latest Transactions') }, { name: t('Latest Contracts Invokes') }]}
-          padding="0.65rem 0.5rem 0.5rem 0.5rem"
+          padding="0.5rem"
+          tabBackgroundColor={theme.palette.background.level1}
         >
           {[
             renderSection('tipsets', 'Tipsets', tipsetTable, '/recent_activity?tab=tipsets'),

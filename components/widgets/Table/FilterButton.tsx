@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 
 import { FilterList } from '@mui/icons-material'
 import { Box, Button, Menu, MenuItem, Switch, Typography, useTheme } from '@mui/material'
-import Tooltip from '@mui/material/Tooltip'
 
 import { Filters, initMethodsTypeOptions } from '../SearchTables/config'
 
@@ -20,7 +19,7 @@ const FilterButton = ({ filters, setFilters }: { filters: Filters; setFilters: (
   const activeFilters = useMemo(() => {
     let count = 0
 
-    if (filters?.level !== 'all') {
+    if (filters?.level === 'main') {
       count += 1
     }
     if (filters.evm) {
@@ -60,14 +59,12 @@ const FilterButton = ({ filters, setFilters }: { filters: Filters; setFilters: (
    */
   const renderInternalMessagesSwitch = useCallback(
     () => (
-      <Tooltip title={t(filters?.level === 'all' ? 'Hide internal messages' : 'Show internal messages')}>
-        <Box display={'flex'} gap={'0.5rem'} alignItems={'center'}>
-          <Switch size="small" checked={filters?.level !== 'all'} onChange={handleInternalMessages} />
-          <Typography variant={'body2'} color={'text.primary'}>
-            {t('Hide Internal Messages')}
-          </Typography>
-        </Box>
-      </Tooltip>
+      <Box display={'flex'} gap={'0.5rem'} alignItems={'center'}>
+        <Switch size="small" checked={filters?.level !== 'all'} onChange={handleInternalMessages} />
+        <Typography variant={'body2'} color={'text.primary'}>
+          {t('Hide Internal Messages')}
+        </Typography>
+      </Box>
     ),
     [filters?.level, handleInternalMessages, t]
   )
@@ -108,12 +105,17 @@ const FilterButton = ({ filters, setFilters }: { filters: Filters; setFilters: (
   return (
     <>
       <Button
-        variant={'inputType'}
+        variant={'outlined'}
         size={'small'}
         startIcon={<FilterList />}
         endIcon={
           <Box display={'flex'} justifyContent={'center'} bgcolor={theme.palette.text.primary} borderRadius={'50%'} width={18} height={18}>
-            <Typography variant="body2" fontWeight={600} id={'badge-text'}>
+            <Typography
+              variant="body2"
+              fontWeight={600}
+              id={'badge-text'}
+              sx={{ color: `${theme.palette.text.opposite.primary} !important` }}
+            >
               {activeFilters}
             </Typography>
           </Box>
@@ -143,13 +145,13 @@ const FilterButton = ({ filters, setFilters }: { filters: Filters; setFilters: (
           '.MuiMenu-paper': {
             backgroundImage: 'none',
             backgroundColor: theme.palette.background.level1,
-            border: `1px solid ${theme.palette.tableBorder}`,
+            border: `1px solid ${theme.palette.border?.level0}`,
             mt: '0.5rem',
           },
         }}
       >
-        {filters.level && <MenuItem>{renderInternalMessagesSwitch()}</MenuItem>}
-        {filters.level && <MenuItem>{renderEvmSwitch()}</MenuItem>}
+        {filters.level ? <MenuItem>{renderInternalMessagesSwitch()}</MenuItem> : null}
+        {filters.evm !== undefined ? <MenuItem>{renderEvmSwitch()}</MenuItem> : null}
       </Menu>
     </>
   )

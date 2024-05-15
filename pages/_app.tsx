@@ -7,12 +7,13 @@ import { ParallaxProvider } from 'react-scroll-parallax'
 import { MuiDataGridProLicense } from '@/config/config'
 import { Networks } from '@/config/networks'
 import { useSubscribeNats } from '@/nats/useSubscribeNats'
-import { useAppSettingsStore } from '@/store/ui/settings'
-import { getThemeOptions } from '@/theme/theme'
+import useAppSettingsStore from '@/store/ui/settings'
+import { useCustomTheme } from '@/theme/ThemeConfiguration'
 import { CssBaseline, ThemeProvider } from '@mui/material'
-import { createTheme } from '@mui/material/styles'
 import { LicenseInfo } from '@mui/x-license-pro'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+import ErrorBoundary from 'components/application/ErrorBoundary'
 
 import { ni18nConfig } from '../ni18n.config'
 import '../styles/index.scss'
@@ -28,17 +29,18 @@ if (MuiDataGridProLicense) {
  * It also wraps the main application component with necessary providers.
  */
 function AppInternal({ Component, pageProps }: AppProps) {
-  const { theme: themeSelected } = useAppSettingsStore()
-  const theme = createTheme(getThemeOptions(themeSelected))
+  const { theme: themeSelected, language } = useAppSettingsStore(s => s)
+  const theme = useCustomTheme(themeSelected)
   const queryClient = new QueryClient()
 
-  const localLanguage = useAppSettingsStore(s => s.language)
-  useSyncLanguage(localLanguage ?? 'en')
+  useSyncLanguage(language ?? 'en')
 
   // Separate content to reduce JSX depth
   const content = (
     <QueryClientProvider client={queryClient}>
-      <Component {...pageProps} />
+      <ErrorBoundary>
+        <Component {...pageProps} />
+      </ErrorBoundary>
     </QueryClientProvider>
   )
 

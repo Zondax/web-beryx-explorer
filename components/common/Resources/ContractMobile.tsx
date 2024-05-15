@@ -95,7 +95,7 @@ const ContractMobile = () => {
   }
 
   return (
-    <Box sx={{ position: 'relative', paddingTop: '4.1rem', height: '100%' }}>
+    <Box sx={{ position: 'relative', paddingTop: '4.1rem', height: '100%', width: '100%' }}>
       <Grid
         container
         width={'100%'}

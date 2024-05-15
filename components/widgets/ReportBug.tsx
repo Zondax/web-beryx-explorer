@@ -3,15 +3,14 @@ import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { themePath } from '@/theme/utils'
-import { Grid, Grow, Typography } from '@mui/material'
+import { Edit } from '@carbon/icons-react'
+import { Box, Grid, Typography } from '@mui/material'
 import { useCookieConsent } from '@porscheofficial/cookie-consent-banner-react'
 
 /**
  * This is a functional component for reporting bugs.
  * It checks for cookie consent and renders UI accordingly.
- * In case of no consent, it will display only text message,
- * otherwise it will display additional arrow pointing to Marker feedback tool.
- * The arrow grows in when it enters the viewport.
+ * In case of no consent, it will display only text message.
  */
 const ReportBug = () => {
   /**
@@ -29,7 +28,7 @@ const ReportBug = () => {
   /**
    * State for tracking if the widget is in viewport.
    */
-  const [isInViewport, setIsInViewport] = useState(false)
+  const [_isInViewport, setIsInViewport] = useState(false)
 
   /**
    * Creating a reference to the widget's DOM element.
@@ -82,18 +81,6 @@ const ReportBug = () => {
       <Typography color="text.secondary" variant="body1" component={'p'} marginBottom={5} textAlign="center" maxWidth={'30rem'}>
         {t('We would like to know your opinion. Please accept cookies to share your feedback with us.')}
       </Typography>
-      <Grow in={isInViewport} {...(isInViewport ? { timeout: 500 } : {})}>
-        <Image
-          src="/images/arrow_drawn_down.svg"
-          alt="Pointer to Marker.io"
-          width={60}
-          height={60}
-          style={{
-            maxWidth: '100%',
-            height: 'auto',
-          }}
-        />
-      </Grow>
     </>
   )
 
@@ -102,7 +89,12 @@ const ReportBug = () => {
    */
   const pointToMarker = (
     <Typography color="text.secondary" variant="body1" component={'p'} marginBottom={5} textAlign="center" maxWidth={'30rem'}>
-      {t('We would like to know your opinion. See the arrow? Click over there to send feedback')}
+      <Box component={'span'} pr={'0.35rem'}>
+        {t('We would like to know your opinion. Click over the feedback button in the navbar')}
+      </Box>
+      <Box component={'span'} position={'absolute'}>
+        <Edit size="18" />
+      </Box>
     </Typography>
   )
 
@@ -136,22 +128,6 @@ const ReportBug = () => {
         {t('Have a bug to report or a feature request?')}
       </Typography>
       {isMarkerIoEnabled ? pointToMarker : markupNoConsent}
-      <Grow in={isMarkerIoEnabled && isInViewport} {...(isInViewport ? { timeout: 500 } : {})}>
-        <Image
-          src="/images/arrow_drawn.svg"
-          alt="Pointer to Marker.io"
-          width={120}
-          height={120}
-          style={{
-            position: 'fixed',
-            zIndex: 200,
-            bottom: 'calc(80vh / 2)',
-            right: '3rem',
-            maxWidth: '100%',
-            height: 'auto',
-          }}
-        />
-      </Grow>
     </Grid>
   )
 }

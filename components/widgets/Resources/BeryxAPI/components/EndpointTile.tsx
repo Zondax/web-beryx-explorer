@@ -29,7 +29,7 @@ const EndpointTile = ({ method, endpoint, link }: { method: string; endpoint: st
    * @returns The Typography component styled based on the HTTP method type.
    */
   const MethodTypography = () => (
-    <Typography variant="caption" color={methodColor(method)} fontFamily={'B612 Mono'}>
+    <Typography variant={'captionMono'} color={methodColor(method)}>
       {method}
     </Typography>
   )
@@ -39,10 +39,9 @@ const EndpointTile = ({ method, endpoint, link }: { method: string; endpoint: st
    */
   const EndpointTypography = () => (
     <Typography
-      variant="body1"
+      variant={'captionMono'}
       component="p"
       color={'text.primary'}
-      fontFamily={'B612 Mono'}
       sx={{
         overflow: 'hidden',
         textOverflow: 'ellipsis',
@@ -67,6 +66,7 @@ const EndpointTile = ({ method, endpoint, link }: { method: string; endpoint: st
           gap: '1rem',
           alignItems: 'center',
           justifyContent: 'space-between',
+          backgroundColor: theme.palette.background.level0,
           padding: { xs: '1rem 1.5rem', md: '0.75rem 1rem' },
           ':hover': { backgroundColor: theme.palette.background.level2 },
         }}

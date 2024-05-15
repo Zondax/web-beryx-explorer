@@ -161,11 +161,12 @@ const AddressConverterView = () => {
         transition: { xs: 'height 0.2s ease-in-out', md: 'none' },
         width: '100%',
         display: 'flex',
-        flexDirection: upMd ? 'row' : 'column',
+        flexDirection: 'column',
+        alignItems: 'center',
         gap: upMd ? '1rem' : '3rem',
         borderRadius: '8px',
         background: theme.palette.background.level1,
-        padding: upMd ? '1rem' : '1rem 0.5rem 0.5rem 0.5rem',
+        padding: upMd ? '5rem 1rem 1rem 1rem' : '1rem 0.5rem 0.5rem 0.5rem',
       }}
       key={'results view panel'}
     >
@@ -175,6 +176,7 @@ const AddressConverterView = () => {
           width: '100%',
           alignItems: 'center',
           justifyContent: 'center',
+          maxWidth: { xs: '100%', md: '35rem' },
         }}
       >
         <Grid2
@@ -185,10 +187,9 @@ const AddressConverterView = () => {
             flexDirection: 'column',
             alignItems: 'center',
             width: '100%',
-            minHeight: '16rem',
           }}
         >
-          <Grid item container spacing={0} width={'100%'} maxWidth={{ xs: '100%', md: '25rem' }} marginTop={{ xs: '1rem', md: '0' }}>
+          <Grid item container spacing={0} width={'100%'}>
             <Grid item xs={12}>
               <Typography variant={upMd ? 'h3' : 'h5'} textAlign={upMd ? 'center' : 'left'}>
                 {t('Address converter')}
@@ -229,10 +230,6 @@ const AddressConverterView = () => {
                     variant="contained"
                     size="large"
                     fullWidth
-                    sx={{
-                      height: 'fit-content',
-                      minWidth: '10rem',
-                    }}
                   >
                     <input hidden type="submit" />
 
@@ -242,17 +239,9 @@ const AddressConverterView = () => {
                   </Button>
                 </Grid>
                 <Grid item width={'fit-content'}>
-                  <Button
-                    onClick={swapWay}
-                    variant="contained"
-                    size="large"
-                    sx={{
-                      height: 'fit-content',
-                      minWidth: '1rem',
-                    }}
-                  >
-                    <Renew size={20} color={'#fff'} />
-                  </Button>
+                  <IconButton color="info" onClick={swapWay} size="large">
+                    <Renew />
+                  </IconButton>
                 </Grid>
               </Grid>
               <Grid item xs={12} mt={'0.5rem'} sx={{ minHeight: '6.25rem' }}>
@@ -285,34 +274,35 @@ const AddressConverterView = () => {
       </Box>
       <Box
         sx={{
-          height: '100%',
-          width: upMd ? '35rem' : '100%',
+          height: 'fit-content',
+          maxWidth: { xs: '100%', md: '35rem' },
           flexShrink: '0',
           display: 'flex',
           justifySelf: 'flex-end',
           flexDirection: 'column',
           borderRadius: '8px',
-          background: upMd ? theme.palette.background.level2 : 'transparent',
-          padding: upMd ? '1.25rem 1rem 1rem 1rem' : 'none',
-          overflow: 'auto',
+          background: 'transparent',
+          paddingBottom: '5rem',
         }}
       >
-        <Typography variant="h5" mb={'1.25rem'} fontWeight={700}>
+        <Typography variant="h5" component={'h2'} mb={'1.25rem'} fontWeight={700}>
           {t('Frequently Asked Questions')}
         </Typography>
         {FAQData(t).map((item, index) => (
           <Accordion key={`Accordion ${item.question}`} expanded={expanded === index.toString()} onChange={handleChange(index.toString())}>
             <AccordionSummary expandIcon={<ChevronDown />}>
-              <Typography variant="h5">{item.question}</Typography>
+              <Typography variant="h5" component={'h3'}>
+                {item.question}
+              </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography variant="caption" color="text.tertiary">
+              <Typography variant="caption" component={'p'}>
                 {item.answer}
               </Typography>
             </AccordionDetails>
           </Accordion>
         ))}
-        <Typography variant="caption" component={'p'} mt={'2rem'} color="text.tertiary">
+        <Typography variant="caption" component={'p'} mt={'2rem'} color="text.secondary">
           {t('For more information about addresses, please visit')}{' '}
           <Link href="https://docs.filecoin.io/basics/the-blockchain/addresses/" target="_blank">
             Addresses

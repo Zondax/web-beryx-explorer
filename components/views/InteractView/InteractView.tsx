@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import { themePath } from '@/theme/utils'
 import { Button, CircularProgress, Grid, Unstable_Grid2 as Grid2, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { FilEthAddress } from '@zondax/izari-filecoin/address'
@@ -68,7 +68,7 @@ const InteractView: React.FC = () => {
     if (inputValue?.startsWith('0x')) {
       try {
         const filAddr = FilEthAddress.fromEthAddress(NetworkPrefix.Mainnet, inputValue)
-        router.push(`/v1/search/fil/${network.name}/address/${filAddr}?tab=interact`, undefined, {
+        router.push(`/search/fil/${network.name}/address/${filAddr}?tab=interact`, undefined, {
           shallow: true,
         })
         return
@@ -80,7 +80,7 @@ const InteractView: React.FC = () => {
 
     try {
       FilEthAddress.fromString(inputValue).toEthAddressHex(true)
-      router.push(`/v1/search/fil/${network.name}/address/${inputValue}?tab=interact`, undefined, {
+      router.push(`/search/fil/${network.name}/address/${inputValue}?tab=interact`, undefined, {
         shallow: true,
       })
     } catch {
@@ -93,8 +93,15 @@ const InteractView: React.FC = () => {
     <Grid2 container direction="column" sx={{ width: '100%', height: '80vh', display: 'flex', alignItems: 'center', padding: '0 1rem' }}>
       <Grid2
         container
-        bgcolor="background.level2"
-        sx={{ flexDirection: 'column', justifyContent: 'space-between', width: '35rem', maxWidth: '100%', borderRadius: '8px', mt: '5rem' }}
+        bgcolor="background.level0"
+        sx={{
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          width: '35rem',
+          maxWidth: '100%',
+          borderRadius: '12px',
+          mt: '5rem',
+        }}
       >
         <Grid2
           container
@@ -127,7 +134,7 @@ const InteractView: React.FC = () => {
         </Grid2>
         <Grid2
           container
-          bgcolor="background.level1"
+          bgcolor="background.level0"
           sx={{
             zIndex: 101,
             display: 'flex',

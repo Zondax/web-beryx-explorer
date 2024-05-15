@@ -1,5 +1,5 @@
 /**
- * Import configuration for beryxExplorerVersion, inputType, networkType
+ * Import configuration for inputType, networkType
  * truncateMaxCharacters, Link from next/link for providing client-side
  * transitions between two pages in the same Next.js app,
  * useTranslation hook from react-i18next for language translation,
@@ -10,7 +10,7 @@
 import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
 
-import { beryxExplorerVersion, truncateMaxCharacters } from '@/config/config'
+import { truncateMaxCharacters } from '@/config/config'
 import { NetworkType } from '@/config/networks'
 import { ObjectType } from '@/routes/parsing'
 import { CheckmarkOutline } from '@carbon/icons-react'
@@ -36,7 +36,7 @@ const SuccessContent = ({ cid, network }: { cid?: string; network: NetworkType }
       </Grid>
       <Typography variant="body1" textAlign={'center'}>
         {t('All good. You should receive the tokens soon. Meanwhile, you can track this transaction in the')}{' '}
-        <Link href={`/${beryxExplorerVersion}/mempool`} style={{ color: theme.palette.primary.light }}>
+        <Link href={'/mempool'} style={{ color: theme.palette.primary.light }}>
           mempool
         </Link>
         .

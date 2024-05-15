@@ -55,7 +55,7 @@ const TransactionStatsMobile = () => {
         display: 'flex',
         flexDirection: 'column',
         width: '100%',
-        border: `1px solid ${theme.palette.tableBorder}`,
+        border: `1px solid ${theme.palette.border?.level0}`,
         borderRadius: '6px',
       }}
     >
@@ -64,7 +64,7 @@ const TransactionStatsMobile = () => {
         alignItems={'center'}
         justifyContent={'center'}
         sx={{
-          borderBottom: `1px solid ${theme.palette.tableBorder}`,
+          borderBottom: `1px solid ${theme.palette.border?.level0}`,
           padding: '0.5rem 0.5rem',
         }}
       >
@@ -86,11 +86,7 @@ const TransactionStatsMobile = () => {
             label={`${t('Amount')} (FIL)`}
             content={
               searchResultJson
-                ? cellAmount(
-                    BigNumber(searchResultJson?.amount)
-                      .div(Math.pow(10, chainDecimals.filecoin))
-                      .toFixed()
-                  )
+                ? cellAmount(BigNumber(searchResultJson?.amount).div(Math.pow(10, chainDecimals.filecoin)).toFixed())
                 : undefined
             }
             icon={<FilecoinIcon size={16} />}

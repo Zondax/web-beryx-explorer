@@ -14,7 +14,6 @@ import {
   ToggleButtonGroup,
   Tooltip,
   Typography,
-  alpha,
   useTheme,
 } from '@mui/material'
 
@@ -63,6 +62,7 @@ const rangeValues: { [key in rangeOptions]: number } = {
  * @returns The ItemTile component.
  */
 const ItemTile = ({
+  startIcon,
   title,
   subheader,
   tooltip,
@@ -73,11 +73,11 @@ const ItemTile = ({
   data = [],
   loading = LoadingStatus.Idle,
   size = 'large',
-  hasBorder = false,
   padding,
   defaultFilter = 'all',
   rightLabel,
 }: {
+  startIcon?: React.ReactNode
   title: string
   subheader?: string | ReactNode
   tooltip?: string
@@ -163,7 +163,7 @@ const ItemTile = ({
    * @returns - Returns nothing.
    */
   useEffect(() => {
-    if (data) {
+    if (data?.length !== 0) {
       const filteredData = filterData(dateFilter, dateLabel)
       if (filteredData && selectorAction) {
         selectorAction(filteredData)
@@ -233,9 +233,8 @@ const ItemTile = ({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        border: hasBorder ? `1px solid ${theme.palette.tableBorder}` : 'none',
         '&.MuiPaper-root': {
-          background: theme.palette.background.level1,
+          background: theme.palette.background.level0,
         },
       }}
     >
@@ -256,18 +255,7 @@ const ItemTile = ({
               </ToggleButtonGroup>
             ) : null}
             {downloadIcon ? (
-              <IconButton
-                aria-label="Download"
-                color="info"
-                sx={{
-                  padding: '0.5rem',
-                  backgroundColor: alpha(theme.palette.text?.secondary, 0.25),
-                  '&:hover': {
-                    backgroundColor: theme.palette.background?.level3,
-                  },
-                }}
-                onClick={handleDownloadClick}
-              >
+              <IconButton size="small" color="info" aria-label="Download" onClick={handleDownloadClick}>
                 <Download color={theme.palette.text.primary} />
               </IconButton>
             ) : null}
@@ -280,8 +268,9 @@ const ItemTile = ({
         }
         title={
           !subheader ? (
-            <Box display={'flex'} gap={'0.5rem'}>
-              <Typography variant="h5" data-testid={'item-tile-heading'}>
+            <Box display={'flex'} gap={'0.5rem'} alignItems={'center'}>
+              {startIcon}
+              <Typography variant="h5" component={'h2'} data-testid={'item-tile-heading'}>
                 {t(title)}
               </Typography>
               {tooltip ? (

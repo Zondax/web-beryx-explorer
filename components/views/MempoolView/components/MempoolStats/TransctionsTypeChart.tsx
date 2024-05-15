@@ -1,95 +1,111 @@
 /**
  * Imports necessary dependencies.
  */
-import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { StatsFrequency, useMempoolStore } from '@/store/data/mempool'
-import { Box, Grid, Typography } from '@mui/material'
+import { Box, Grid, Skeleton, Typography, useTheme } from '@mui/material'
 
 import PieChart, { PieChartValueProps } from 'components/common/Charts/PieChart'
 
 /**
  * TransctionsTypeChart statistics component.
  */
-const TransctionsTypeChart = ({ rangeSelected }: { rangeSelected: StatsFrequency }) => {
+const TransctionsTypeChart = ({
+  selectedType,
+  totalTransactions,
+  chartData,
+  handleTransactionTypeChange,
+}: {
+  selectedType: string
+  totalTransactions?: number
+  chartData: PieChartValueProps[] | undefined
+  handleTransactionTypeChange: (type: string) => void
+}) => {
   const { t } = useTranslation()
-
-  const { data: statistics } = useMempoolStore.getState().statistics
-
-  /**
-   * This function calculates the total number of transactions.
-   * @function
-   * @returns - Returns a number or undefined.
-   */
-  const getTotalOfTransactions = useCallback((): number | undefined => {
-    if (statistics) {
-      if (!statistics[rangeSelected].tx_types) {
-        return 0
-      }
-      return Object.values(statistics[rangeSelected].tx_types).reduce((prev, current) => prev + current.total, 0)
-    }
-    return undefined
-  }, [statistics, rangeSelected])
-
-  const [totalOfTransactions, setTotalOfTransactions] = useState<number | undefined>(getTotalOfTransactions())
-  const [chartData, setChartData] = useState<PieChartValueProps[] | undefined>(undefined)
+  const theme = useTheme()
 
   /**
-   * Set the total number of transactions and the chart data
+   * Handles click events on the chart, setting the transaction type based on the chart segment clicked.
+   *
+   * @param params - The parameters object containing data about the chart segment clicked.
    */
-  useEffect(() => {
-    const currentTotal = getTotalOfTransactions()
-    setTotalOfTransactions(currentTotal)
-
-    if (statistics?.[rangeSelected].tx_types) {
-      const currentData: PieChartValueProps[] = []
-      const others: PieChartValueProps = { name: 'Others', value: 0, tooltipLabel: [] }
-      Object.entries(statistics[rangeSelected].tx_types)
-        .filter(([_key, data]) => data.total !== 0)
-        .forEach(([key, data]) => {
-          if (currentTotal && currentTotal !== 0) {
-            if ((data.total * 100) / currentTotal > 1) {
-              currentData.push({
-                name: key.replace('tx_type_', ''),
-                value: data.total,
-              })
-            } else {
-              others.value += data.total
-              others.tooltipLabel?.push(key.replace('tx_type_', ''))
-            }
-          }
-        })
-
-      if (others.value !== 0) {
-        currentData.push(others)
-      }
-      setChartData(currentData)
-    } else {
-      setChartData([])
+  const handleChartClick = (params: any) => {
+    let type = params.data.name
+    if (params.data.name === 'Others' || params.data.name === '') {
+      type = 'all'
     }
-  }, [rangeSelected, statistics, getTotalOfTransactions])
+    handleTransactionTypeChange(type)
+  }
+
+  const selectedTypeToShow = selectedType === 'all' ? undefined : selectedType
 
   /**
    * Returns a Grid component.
    */
   return (
-    <Grid container flexDirection={'column'} justifyContent={'center'} gap={3} pb={6}>
-      {/* Total of Transactions */}
-      <Box display={'flex'} flexDirection={'column'} width={'fit-content'} textAlign={'center'} p={'0.5rem 0'}>
-        <Typography variant="h2" data-testid={'item-tile-heading'}>
-          {totalOfTransactions}
-        </Typography>
-        <Typography variant="body2" data-testid={'item-tile-heading'}>
-          {t('Transactions')}
-        </Typography>
+    <Grid
+      container
+      flexDirection={'column'}
+      justifyContent={{ xs: 'center', lg: 'flex-start' }}
+      gap={{ xs: 2, md: 0, lg: 2.5, xl: 6 }}
+      pt={{ xl: 3 }}
+      height={'100%'}
+    >
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: '0.5rem', marginBottom: '2.5rem' }}>
+        {/* Total of Transactions */}
+        {totalTransactions !== undefined ? (
+          <Box
+            display={'flex'}
+            flexDirection={'column'}
+            width={'fit-content'}
+            textAlign={'left'}
+            p={'0.5rem 0'}
+            sx={{ position: 'relative' }}
+          >
+            <Typography variant="h2" data-testid={'item-tile-heading'}>
+              {totalTransactions}
+            </Typography>
+            <Typography
+              variant="body2"
+              data-testid={'item-tile-heading'}
+              sx={{ position: 'absolute', top: '100%', left: '0', minWidth: '12rem' }}
+            >
+              {`${t('Transaction count')} (${selectedType})`}
+            </Typography>
+          </Box>
+        ) : (
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <Skeleton variant="rectangular" width={180} height={32} />
+            <Skeleton variant="rectangular" width={180} height={18} />
+          </Box>
+        )}
       </Box>
+
       {/* Chart */}
       {chartData ? (
-        <Grid container height={{ xs: '11rem', md: '19rem' }} pt={'2rem'}>
-          <PieChart data={chartData} />
+        <Grid container height={{ xs: '16rem', md: '25rem' }}>
+          <PieChart data={chartData} highLightedData={selectedTypeToShow} onChartClick={handleChartClick} />
         </Grid>
-      ) : null}
+      ) : (
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Box
+            sx={{
+              width: '16rem',
+              height: '16rem',
+              borderRadius: '50%',
+              border: '44px solid',
+              borderColor: theme.palette.background.level2,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Typography variant="h6" color="text.secondary">
+              No Data Available
+            </Typography>
+          </Box>
+        </Box>
+      )}
     </Grid>
   )
 }

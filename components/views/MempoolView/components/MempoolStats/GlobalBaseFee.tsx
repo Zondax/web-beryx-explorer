@@ -4,9 +4,9 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { StatsFrequency, statsFrequencyMapped } from '@/config/config'
 import { useGlobalBaseFee } from '@/data/beryx'
-import { StatsFrequency, statsFrequencyMapped } from '@/store/data/mempool'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import { getLoadingStatus } from '@/utils/loadingStatus'
 
 import StatsTile from 'components/views/MempoolView/components/StatsTile'

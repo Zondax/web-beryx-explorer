@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useSearchStore } from '@/store/data/search'
 import { CategoryNewEach, PortInput, PortOutput } from '@carbon/icons-react'
-import { Tooltip } from '@mui/material'
+import { Box, Tooltip } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { Transaction } from '@zondax/beryx/dist/filecoin/api/types'
 
@@ -47,7 +47,22 @@ export const TypeTransactionIcon = ({
           status === 'Ok'
             ? 'Outgoing transaction successfully sent from this address.'
             : 'Outgoing transaction sent with error from this address.',
-        icon: <PortOutput data-testid={'outgoing-icon'} size={iconSize} color={statusColor} style={{ transform: 'rotate(-45deg)' }} />,
+        icon: (
+          <Box
+            sx={{
+              '& path:first-of-type': { fill: statusColor },
+              '& path:not(:first-of-type)': { fill: theme.palette.border?.level2 },
+            }}
+          >
+            <PortOutput
+              data-testid={'outgoing-icon'}
+              size={iconSize}
+              style={{
+                transform: 'rotate(-45deg)',
+              }}
+            />
+          </Box>
+        ),
       }
     }
 
@@ -56,13 +71,22 @@ export const TypeTransactionIcon = ({
         status === 'Ok'
           ? 'Incoming transaction successfully sent to this address.'
           : 'Incoming transaction sent with error to this address.',
-      icon: <PortInput data-testid={'incoming-icon'} size={iconSize} color={statusColor} style={{ transform: 'rotate(45deg)' }} />,
+      icon: (
+        <Box
+          sx={{
+            '& path:last-child': { fill: statusColor },
+            '& path:not(:last-child)': { fill: theme.palette.border?.level2 },
+          }}
+        >
+          <PortInput data-testid={'incoming-icon'} size={iconSize} style={{ transform: 'rotate(45deg)' }} />
+        </Box>
+      ),
     }
   }, [status, theme.palette, direction, iconSize, statusColor])
 
   return (
     <Tooltip title={t(data.label)} arrow disableInteractive data-testid="transaction-type-tooltip">
-      {data.icon}
+      <Box sx={{ display: 'flex', alignItems: 'center', width: iconSize, justifyContent: 'center' }}>{data.icon}</Box>
     </Tooltip>
   )
 }

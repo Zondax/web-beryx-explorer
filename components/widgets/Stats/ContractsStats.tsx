@@ -39,12 +39,6 @@ const ContractsStats = () => {
     isSuccess: isSuccessContractInvokesDaily,
   } = useContractInvokesByAddress(inputValue, network, 'daily', true)
 
-  // const {
-  //   data: uniqueContractInvokes,
-  //   isLoading: isLoadingUniqueContractInvokes,
-  //   isSuccess: isSuccessUniqueContractInvokes,
-  // } = useUniqueContractInvokesByAddress(inputValue, network, 'monthly')
-
   const contractInvokesTotal = useMemo(() => {
     if (isSuccessContractInvokes) {
       if (contractInvokes.length >= 1) {
@@ -54,16 +48,6 @@ const ContractsStats = () => {
     }
     return undefined
   }, [contractInvokes, isSuccessContractInvokes])
-
-  // const uniqueContractInvokesTotal = useMemo(() => {
-  //   if (isSuccessUniqueContractInvokes) {
-  //     if (uniqueContractInvokes.length >= 1) {
-  //       return uniqueContractInvokes.reduce((prev, current) => prev + current.count, 0)
-  //     }
-  //     return 0
-  //   }
-  //   return undefined
-  // }, [uniqueContractInvokes, isSuccessUniqueContractInvokes])
 
   /**
    * Calculate number of Contract Invokes Past Week
@@ -126,21 +110,6 @@ const ContractsStats = () => {
               />
             ) : null}
           </ItemTile>
-
-          {/* <ItemTile
-            title={'Number of Unique Contract Invokes'}
-            loading={getLoadingStatus(isLoadingUniqueContractInvokes, isSuccessUniqueContractInvokes)}
-            size="medium"
-            hasBorder
-          >
-            {uniqueContractInvokesTotal !== undefined ? (
-              <StatsTile
-                data={{
-                  value: uniqueContractInvokesTotal,
-                }}
-              />
-            ) : null}
-          </ItemTile> */}
         </Grid>
       </Grid>
 
@@ -173,7 +142,7 @@ const ContractsStats = () => {
                     }),
                   },
                 }}
-                color={theme.palette.gradient1.level6}
+                color={theme.palette.primary.main}
               />
             ) : null}
           </ItemTile>

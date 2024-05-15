@@ -63,29 +63,41 @@ const ResourceTile = ({
       onClick={handleClick}
       sx={{
         cursor: 'pointer',
-        border: `1px solid ${theme.palette.tableBorder}`,
+        border: `1px solid ${theme.palette.border?.level0}`,
 
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        borderRadius: '8px',
-        minWidth: '20rem',
+        borderRadius: '12px',
+        minWidth: '14.5rem',
         height: image ? '22rem' : '10rem',
         contain: 'paint',
         ':hover': {
-          background: theme.palette.tableParentRowBackground,
+          background: theme.palette.background.level0,
+          '& .resource-tile-image': {
+            filter: 'brightness(1.05) contrast(1.05) saturate(1.05)',
+          },
         },
       }}
     >
       {image ? (
-        <Box sx={{ display: 'flex', height: '13rem', backgroundColor: 'background.level2', position: 'relative' }}>
+        <Box
+          className="resource-tile-image"
+          sx={{
+            display: 'flex',
+            height: '13rem',
+            backgroundColor: 'background.level2',
+            position: 'relative',
+            filter: 'brightness(0.9) contrast(1) saturate(1)',
+          }}
+        >
           <Image
             src={image}
             alt={title}
-            layout={'fill'}
-            sizes={'100vh'}
+            sizes="20rem"
+            fill
             style={{
-              maxWidth: '100%',
+              objectFit: 'cover',
             }}
           />
         </Box>
@@ -101,7 +113,7 @@ const ResourceTile = ({
         }}
       >
         <Box>
-          <Typography variant="h5" gutterBottom>
+          <Typography variant="h5" component={'p'} gutterBottom>
             {t(title)}
           </Typography>
           <Typography

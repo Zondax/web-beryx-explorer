@@ -30,6 +30,7 @@ const AddressOverview = () => {
 
   const searchValue: string = useSearchStore(s => s.searchInputValue)
   const searchType = useSearchStore(s => s.searchType)
+  const inputType = useSearchStore(s => s.searchInputType)
   const searchResultJson = useSearchStore(s => s.searchResult.json)
 
   const [balance, setBalance] = useState<string | undefined>(undefined)
@@ -41,14 +42,15 @@ const AddressOverview = () => {
     () => ({
       input: searchValue,
       network: searchNetwork,
-      type: searchType,
+      inputType,
+      objectType: searchType,
       method: undefined,
       level: 'main' as LevelFilter,
       evm: false,
       sort: undefined,
       page: { page: 1 },
     }),
-    [searchValue, searchNetwork, searchType]
+    [searchValue, searchNetwork, searchType, inputType]
   )
   /**
    * Request the total number of transactions
@@ -61,7 +63,8 @@ const AddressOverview = () => {
   const { data: incomingTxsResult, isSuccess: isSuccessIncomingTxsResult } = useTransactions({
     input: inputValue,
     network: searchNetwork,
-    type: searchType,
+    inputType,
+    objectType: searchType,
     method: 'receiver',
     level: 'main' as LevelFilter,
     evm: false,
@@ -74,7 +77,8 @@ const AddressOverview = () => {
   const { data: outgoingTxsResult, isSuccess: isSuccessOutgoingTxsResult } = useTransactions({
     input: inputValue,
     network: searchNetwork,
-    type: searchType,
+    inputType,
+    objectType: searchType,
     method: 'sender',
     level: 'main' as LevelFilter,
     evm: false,
@@ -106,7 +110,13 @@ const AddressOverview = () => {
    */
   useEffect(() => {
     if (searchResultJson?.balances) {
-      setBalance(BigNumber(formatBalance(searchResultJson?.balances)).toFormat(2, amountFormat))
+      const balance = BigNumber(formatBalance(searchResultJson?.balances))
+
+      if (balance.isLessThan(BigNumber(0.01))) {
+        setBalance(balance.toFormat(amountFormat))
+      } else {
+        setBalance(balance.dp(2, BigNumber.ROUND_DOWN).toFormat(2, amountFormat))
+      }
     }
   }, [searchResultJson])
 

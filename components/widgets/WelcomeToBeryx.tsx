@@ -79,7 +79,7 @@ const WelcomeToBeryx = (): JSX.Element => {
           />
         </Link>
       </Grid>
-      <SearchBar hasSearchButton={false} />
+      <SearchBar />
       <SearchExamples />
     </Grid>
   )

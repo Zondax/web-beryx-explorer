@@ -31,6 +31,7 @@ const HistoryHeader = ({ handleClearHistory }: { handleClearHistory: () => void 
       <Button
         variant={'text'}
         size={'small'}
+        color={'error'}
         endIcon={<TrashCan size={16} />}
         onClick={handleClearHistory}
         sx={{ paddingLeft: '1rem', paddingRight: '0.8rem', borderRadius: '4px' }}
@@ -111,7 +112,7 @@ const HistoryPopover = ({
       disableAutoFocus
       disableEnforceFocus
       disableScrollLock
-      marginThreshold={null}
+      marginThreshold={8}
       anchorOrigin={{
         vertical: 'bottom',
         horizontal: 'center',
@@ -123,8 +124,8 @@ const HistoryPopover = ({
       sx={{
         margin: { xs: mobileMenu ? '0.5rem 0.5rem 0 0.5rem' : '0.5rem 2.5rem 0 2rem', sm: '0.5rem 0 0 0' },
         '& .MuiPaper-root': {
-          background: theme.palette.background.level1,
-          border: `1px solid ${theme.palette.tableBorder}`,
+          background: theme.palette.background.level0,
+          border: `1px solid ${theme.palette.border?.level0}`,
           boxShadow: boxShadow(theme.palette.mode),
           width: anchorEl?.offsetWidth,
           minWidth: { sm: '30rem' },

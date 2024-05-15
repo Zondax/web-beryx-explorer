@@ -84,7 +84,7 @@ export default async function handler(request: NextRequest) {
           const response = await fetchContractVerified(network, input, authToken)
           if (response !== undefined) {
             isVerified = true
-            title = 'Smart Contract'
+            title = 'Contract'
           }
         } catch (err) {
           captureException(err)
@@ -100,6 +100,7 @@ export default async function handler(request: NextRequest) {
       case 'tipset':
         title = 'Tipset'
         break
+      case 'block':
       case 'block-cid':
         title = 'Block'
         break
@@ -128,27 +129,30 @@ export default async function handler(request: NextRequest) {
     const fontB612 = await fontB612Mono
 
     // Returning the final OG image response.
-    return new ImageResponse(<OgImage chain={chainName} network={network} title={title} items={data} isVerified={isVerified} />, {
-      width: IMAGE_WIDTH,
-      height: IMAGE_HEIGHT,
-      fonts: [
-        {
-          name: 'Sora',
-          data: fontData,
-          style: 'normal',
-        },
-        {
-          name: 'DM Sans',
-          data: fontDMSans,
-          style: 'normal',
-        },
-        {
-          name: 'B612 Mono',
-          data: fontB612,
-          style: 'normal',
-        },
-      ],
-    })
+    return new ImageResponse(
+      <OgImage input={input} chain={chainName} network={network} title={title} items={data} isVerified={isVerified} />,
+      {
+        width: IMAGE_WIDTH,
+        height: IMAGE_HEIGHT,
+        fonts: [
+          {
+            name: 'Sora',
+            data: fontData,
+            style: 'normal',
+          },
+          {
+            name: 'DM Sans',
+            data: fontDMSans,
+            style: 'normal',
+          },
+          {
+            name: 'B612 Mono',
+            data: fontB612,
+            style: 'normal',
+          },
+        ],
+      }
+    )
   } catch (err: any) {
     // If there's an error in generating the image, return a 500 response.
     captureException(err)

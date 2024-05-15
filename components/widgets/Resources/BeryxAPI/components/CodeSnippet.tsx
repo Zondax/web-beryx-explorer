@@ -4,7 +4,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { getContentType } from '@/utils/download'
-import { Unstable_Grid2 as Grid, useMediaQuery, useTheme } from '@mui/material'
+import { Box, useMediaQuery, useTheme } from '@mui/material'
 
 import CodeBlock from '../../../CodeBlock'
 import Panel from '../../../Panel'
@@ -27,11 +27,22 @@ const CodeSnippet = () => {
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'))
 
   return (
-    <Grid container spacing={'1rem'} justifyContent={'center'}>
-      <Grid xs={12} md={6} height={{ xs: '25rem', md: '30rem' }} sx={{ p: { textTransform: 'none' } }}>
+    <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} alignItems="center" gap="1rem">
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          width: '100%',
+          height: { xs: '25rem', md: '30rem' },
+          p: { textTransform: 'none' },
+          borderRadius: '12px',
+          overflow: 'hidden',
+        }}
+      >
         <Panel
           title={isDesktop ? t('Code Snippet') : undefined}
           contentToDownload={''}
+          tabBackgroundColor={theme.palette.background.level2}
           tabs={languageExample.map(item => {
             return { name: item.name }
           })}
@@ -48,9 +59,16 @@ const CodeSnippet = () => {
             )
           })}
         </Panel>
-      </Grid>
-      <Grid xs={12} md={6} height={{ xs: '25rem', md: '30rem' }}>
-        <Panel contentToDownload={''} title={t('Response')}>
+      </Box>
+      <Box
+        sx={{
+          width: '100%',
+          height: { xs: '25rem', md: '30rem' },
+          borderRadius: '12px',
+          overflow: 'hidden',
+        }}
+      >
+        <Panel contentToDownload={''} title={t('Response')} tabBackgroundColor={theme.palette.background.level2}>
           <CodeBlock
             key={'Beryx API tipset example response'}
             readOnly
@@ -59,8 +77,8 @@ const CodeSnippet = () => {
             fillResizablePanel
           />
         </Panel>
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   )
 }
 

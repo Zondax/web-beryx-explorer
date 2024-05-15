@@ -22,14 +22,14 @@ interface ActorTypeLabelProps {
  */
 const ActorTypeLabel = ({ label, level = 1 }: ActorTypeLabelProps): JSX.Element => {
   const theme = useTheme()
-  let bgColor = theme.palette.tableBorder
+  let bgColor = theme.palette.background.level2
 
   if (level === 1) {
     bgColor = theme.palette.background.level2
   }
 
   if (level === 3) {
-    bgColor = theme.palette.tableParentRowBackgroundFocused
+    bgColor = theme.palette.background.level1
   }
 
   return (
@@ -53,7 +53,7 @@ const ActorTypeLabel = ({ label, level = 1 }: ActorTypeLabelProps): JSX.Element 
         color={actorTypeColor(theme.palette.mode, label)}
         fontWeight={600}
       >
-        {label}
+        {label.replace(/[^a-zA-Z -]/g, '')}
       </Typography>
     </Grid>
   )

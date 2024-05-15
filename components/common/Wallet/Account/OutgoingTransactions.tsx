@@ -52,6 +52,7 @@ const OutgoingTransactions = ({
         gap: '1rem',
         padding: '1rem',
         overflow: 'auto',
+        backgroundColor: 'background.level0',
       }}
       key={'Wallet Outgoing Txs Panel Tab'}
     >
@@ -84,7 +85,7 @@ const OutgoingTransactions = ({
           </Box>
 
           {filteredTxs.length > visibleTxNumber ? (
-            <Button variant={'text'} onClick={handleSeeMoreCallback}>
+            <Button variant={'inputType'} onClick={handleSeeMoreCallback}>
               {t('See more')}
             </Button>
           ) : null}

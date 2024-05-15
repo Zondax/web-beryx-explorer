@@ -19,8 +19,9 @@ describe('<Contact />', () => {
    * Test to check if the Contact component contains the expected copyright text.
    */
   it('contains the expected copyright text', async () => {
+    const currentYear = new Date().getFullYear().toString()
     await renderWithProviders(<Contact />)
-    const copyrightText = screen.getByText('©2023 Zondax AG')
+    const copyrightText = screen.getByText(`©${currentYear} Zondax AG`)
     // Check if the expected text is in the document
     expect(copyrightText).toBeInTheDocument()
   })

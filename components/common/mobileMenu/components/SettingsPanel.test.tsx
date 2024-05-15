@@ -27,5 +27,7 @@ afterEach(() => {
 
 // Renders the component with the correct layout and styling
 it('should render the component with the correct layout and styling', () => {
-  renderWithProviders(<SettingsPanel tabsHeight={100} />)
+  // Empty function
+  const setIsMenuOpen = jest.fn()
+  renderWithProviders(<SettingsPanel setIsMenuOpen={setIsMenuOpen} />)
 })

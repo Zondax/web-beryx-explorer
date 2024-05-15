@@ -1,9 +1,9 @@
 import { GetStaticProps, InferGetStaticPropsType } from 'next/types'
 
-import { fetchResourcesMetaData, getPageMetaData, metaTags } from '@/components/metaData'
+import { fetchResourceCardsMetaData, getPageMetaData, metaTags } from '@/components/metaData'
 import { developerResources } from '@/config/config'
 import { useSubscribeNats } from '@/nats/useSubscribeNats'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 
 import { Layout } from '../components/Layout'
 import { PAGES } from '../components/Layout/components/Sidebar'
@@ -16,7 +16,7 @@ import HomeView from '../components/views/HomeView'
  * @returns An object that includes the fetched metadata for each resource and a revalidation interval set to 1 week.
  */
 export const getStaticProps: GetStaticProps = async () => {
-  const resourcesMetaInfo: LinkCardProps[] = await fetchResourcesMetaData(developerResources)
+  const resourcesMetaInfo: LinkCardProps[] = await fetchResourceCardsMetaData(developerResources)
 
   return {
     props: { resourcesMetaInfo },

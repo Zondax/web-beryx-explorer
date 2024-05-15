@@ -1,12 +1,15 @@
 import { useRouter } from 'next/router'
-import { ChangeEvent, useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 import { NetworkFindByUniqueId, NetworkType, NetworkUniqueId, Networks } from '@/config/networks'
-import { useAppSettingsStore } from '@/store/ui/settings'
-import { ExpandMore } from '@mui/icons-material'
-import { Box, MenuItem, TextField, Typography, useTheme } from '@mui/material'
+import useAppSettingsStore from '@/store/ui/settings'
+import useWalletStore from '@/store/wallets/wallet'
+import { ChevronDown, ChevronUp } from '@carbon/icons-react'
+import { Box, Button, Menu, MenuItem, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { addBreadcrumb, captureMessage } from '@sentry/nextjs'
 import * as Sentry from '@sentry/react'
+
+import FilecoinIcon from 'components/common/Icons/Filecoin'
 
 /**
  * Object to map hover colors
@@ -26,17 +29,34 @@ const hoverColors: {
   },
 }
 
+interface NetworkSelectorProps {
+  buttonSize?: 'small' | 'medium' | 'large'
+}
+
 /**
  * SelectNetwork component
  */
-const NetworkSelector = () => {
-  /**
-   * Declare the hooks
-   */
+const NetworkSelector: React.FC<NetworkSelectorProps> = ({ buttonSize = 'medium' }) => {
   const router = useRouter()
   const { network, setNetwork } = useAppSettingsStore(state => ({ network: state.network, setNetwork: state.setNetwork }))
   const theme = useTheme()
+  const isDesktop = useMediaQuery(theme.breakpoints.up('md'))
   const allNetworks = Object.values(Networks).filter((network: NetworkType) => network.show)
+  const [anchorElMenu, setAnchorElMenu] = useState<null | HTMLElement>(null)
+  const dataTestid = 'select-network-topbar'
+  const openMenu = Boolean(anchorElMenu)
+  const { switchChain } = useWalletStore(s => s)
+
+  const handleClickMenu = useCallback(
+    (event: React.MouseEvent<HTMLElement>) => {
+      setAnchorElMenu(event.currentTarget)
+    },
+    [setAnchorElMenu]
+  )
+
+  const handleCloseMenu = useCallback(() => {
+    setAnchorElMenu(null)
+  }, [setAnchorElMenu])
 
   const availableNetworks = useMemo(() => {
     const allNetworks = Object.values(Networks).filter((network: NetworkType) => network.show)
@@ -49,9 +69,7 @@ const NetworkSelector = () => {
   }, [router])
 
   const handleNetworkChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const networkUniqueId = event.target.value as NetworkUniqueId
-
+    (networkUniqueId: NetworkUniqueId) => {
       const network = NetworkFindByUniqueId(networkUniqueId)
       if (!network) {
         captureMessage(`Network with name ${networkUniqueId} not found, falling back to mainnet`, 'warning')
@@ -65,12 +83,14 @@ const NetworkSelector = () => {
       })
 
       setNetwork(network)
+      switchChain(network)
 
-      if (router.route.indexOf('/v1/search/') > -1) {
+      if (router.route.indexOf('/search/') > -1) {
         router.push('/')
       }
+      handleCloseMenu()
     },
-    [router, setNetwork]
+    [router, setNetwork, switchChain, handleCloseMenu]
   )
 
   const testTag = useMemo(
@@ -85,7 +105,7 @@ const NetworkSelector = () => {
           borderRadius: '4px',
         }}
       >
-        <Typography variant="caption" fontSize={'0.85rem'}>
+        <Typography variant="caption" fontSize={'0.85rem'} fontWeight={500}>
           testnet
         </Typography>
       </Box>
@@ -111,11 +131,12 @@ const NetworkSelector = () => {
           key={`network filecoin ${dataTestid}`}
           value={item.uniqueId}
           disabled={disabled}
+          onClick={() => handleNetworkChange(item.uniqueId)}
           sx={{
             color: theme.palette.text.primary,
+            height: '34px',
             '&.Mui-selected': { background: hoverColors[theme.palette.mode][item.uniqueId] },
           }}
-          data-testid={dataTestid}
         >
           <Box
             sx={{
@@ -124,34 +145,61 @@ const NetworkSelector = () => {
               gap: '0.5rem',
             }}
           >
-            {itemText}
+            <FilecoinIcon size={20} />
+            <Typography variant="body1" color={'text.primary'} fontWeight={400} textTransform={'capitalize'} pl={'0.5rem'}>
+              Filecoin {itemText}
+            </Typography>
             {item.isTestnet ? testTag : null}
           </Box>
         </MenuItem>
       )
     })
-  }, [availableNetworks, allNetworks, theme.palette.mode, testTag, theme.palette.text.primary])
+  }, [availableNetworks, allNetworks, theme.palette.mode, testTag, theme.palette.text.primary, handleNetworkChange])
 
   return (
     <Box display="flex" alignItems="center" gap={4}>
-      <Box display="flex" alignItems="center" border={`1px solid ${theme.palette.tableBorder}`} borderRadius={'calc(0.5rem - 2px)'}>
-        <TextField
-          id={'select-network-topbar'}
-          select
-          SelectProps={{ IconComponent: ExpandMore, MenuProps: { disableScrollLock: true } }}
-          size="small"
-          color="level0"
-          name="select-network"
-          fullWidth
-          value={network.uniqueId}
-          onChange={handleNetworkChange}
-          sx={{
-            minWidth: 'max-content',
+      <Box>
+        <Button
+          id="basic-button"
+          data-testid={dataTestid}
+          aria-controls={openMenu ? 'basic-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={openMenu ? 'true' : undefined}
+          onClick={handleClickMenu}
+          variant={'outlined'}
+          size={buttonSize}
+          startIcon={<FilecoinIcon size={18} />}
+          endIcon={openMenu ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+            }}
+          >
+            <Typography
+              variant={buttonSize === 'large' ? 'body1' : 'body2'}
+              color={'text.primary'}
+              fontWeight={600}
+              textTransform={'capitalize'}
+            >
+              {network.name}
+            </Typography>
+            {network.isTestnet && isDesktop ? testTag : null}
+          </Box>
+        </Button>
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorElMenu}
+          open={openMenu}
+          onClose={handleCloseMenu}
+          MenuListProps={{
+            'aria-labelledby': 'basic-button',
           }}
-          data-testid="select-network-topbar"
         >
           {generateNetworkItems}
-        </TextField>
+        </Menu>
       </Box>
     </Box>
   )

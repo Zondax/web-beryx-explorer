@@ -22,6 +22,7 @@ interface MempoolTransactionsTableProps {
   loading: boolean
   noRowsText?: string
   noRowsIcon?: React.JSX.Element
+  noBorderRadius?: boolean
 }
 
 /**
@@ -35,16 +36,24 @@ interface MempoolTransactionsTableProps {
  *
  * @returns A Table element that encapsulates the Mempool Transactions Table.
  */
-export const MempoolTransactionsTable = ({ noRowsText, noRowsIcon, filteredRows, loading }: MempoolTransactionsTableProps) => {
+export const MempoolTransactionsTable = ({
+  noRowsText,
+  noRowsIcon,
+  filteredRows,
+  loading,
+  noBorderRadius = false,
+}: MempoolTransactionsTableProps) => {
   return (
     <Table
       rowData={filteredRows}
       tableType={TABLE_TYPE.MEMPOOL}
       rowWatch
       mode="dev"
+      hideBorder
       noRowsText={noRowsText}
       noRowsIcon={noRowsIcon}
       loading={loading}
+      noBorderRadius={noBorderRadius}
     />
   )
 }

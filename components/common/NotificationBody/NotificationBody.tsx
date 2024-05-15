@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { ObjectType } from '@/routes/parsing'
 import { GenericNotification, TransactionNotification, useNotificationsStore } from '@/store/ui/notifications'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import { CategoryNewEach, CheckmarkFilled, CloseFilled, Misuse, TrashCan } from '@carbon/icons-react'
 import { Box, Button, Divider, Grid, Typography, useTheme } from '@mui/material'
 import { Theme } from '@mui/material/styles'
@@ -92,7 +92,7 @@ const NotificationBody = ({
         position: 'relative',
         padding: '0.875rem',
         borderRadius: '0.5rem',
-        border: `1px solid ${theme.palette.divider}`,
+        border: `1px solid ${theme.palette.border?.level0}`,
         display: 'flex',
         flexDirection: 'column',
         backgroundColor: 'background.level1',
@@ -124,10 +124,10 @@ const NotificationBody = ({
             {renderStatusIcon(notification?.status, theme)}
           </Box>
           <Grid container flexDirection={'column'}>
-            <Typography variant="h5" fontWeight={600} noWrap={false}>
+            <Typography variant="h5" component={'p'} fontWeight={600} noWrap={false}>
               {notification?.title}
             </Typography>
-            <Typography variant="body2" noWrap={false}>
+            <Typography variant="body2" component={'p'} noWrap={false}>
               {notification?.time}
             </Typography>
           </Grid>
@@ -140,7 +140,7 @@ const NotificationBody = ({
           <Transaction notification={notification as TransactionNotification} />
         ) : (
           // A GenericNotification was received
-          <Typography variant="body2" noWrap={false}>
+          <Typography variant="body2" component={'p'} noWrap={false}>
             {notification?.description}
           </Typography>
         )}
@@ -163,7 +163,7 @@ const NotificationBody = ({
           {notification && isTransaction(notification) && notification.tx_hash ? (
             <Button
               id={'view-transaction-notification'}
-              href={`/v1/search/fil/${notification.network?.name ?? network.name}/${ObjectType.TXS}/${notification.tx_hash}`}
+              href={`/search/fil/${notification.network?.name ?? network.name}/${ObjectType.TXS}/${notification.tx_hash}`}
               variant={'contained'}
               size="small"
               sx={{

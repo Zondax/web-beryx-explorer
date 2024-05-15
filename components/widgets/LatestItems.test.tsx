@@ -23,7 +23,7 @@ describe('LatestItems', () => {
       await userEvent.click(screen.getByRole('tab', { name: /Latest Tipsets/i }))
     })
 
-    expect(screen.getByRole('link', { name: /View More Tipsets/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /View More/i })).toBeInTheDocument()
 
     // Simulates a user clicking on another element
     await act(async () => {

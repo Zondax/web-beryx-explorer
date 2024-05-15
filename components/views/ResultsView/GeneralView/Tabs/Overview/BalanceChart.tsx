@@ -1,7 +1,7 @@
 /**
  * @module BalanceChart
  */
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { LoadingStatus } from '@/config/config'
@@ -21,7 +21,7 @@ import { NoRows } from '../../../../../widgets/Table'
  * BalanceChart component
  * @component
  */
-const BalanceChart: React.FC = () => {
+const BalanceChart = ({ title }: { title?: string }) => {
   const theme = useTheme()
   const { t } = useTranslation()
 
@@ -75,14 +75,13 @@ const BalanceChart: React.FC = () => {
 
   return (
     <ItemTile
-      title={t('Account Balance Change')}
+      title={t(title ?? 'Account Balance Change')}
       data={balances}
       defaultFilter={balances?.length ? 'one_year' : 'all'}
       selectorAction={setFilteredBalances}
       dateLabel={'timestamp'}
       loading={loadingStatus}
       padding="0.25rem !important"
-      hasBorder
     >
       {loadingStatus === LoadingStatus.Success && filteredBalances && filteredBalances.length > 0 ? (
         <LineChart
@@ -96,7 +95,7 @@ const BalanceChart: React.FC = () => {
               unit: 'FIL' as FilUnits,
             },
           }}
-          color={theme.palette.gradient1.level6}
+          color={theme.palette.primary.main}
         />
       ) : (
         <NoRows

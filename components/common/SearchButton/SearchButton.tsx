@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 
 import { Close, Search as SearchIcon } from '@carbon/icons-react'
-import { IconButton, Tooltip, useTheme } from '@mui/material'
+import { IconButton, Tooltip } from '@mui/material'
 
 /**
  * SearchButton component.
@@ -12,21 +12,7 @@ import { IconButton, Tooltip, useTheme } from '@mui/material'
  *
  * @returns The SearchButton component.
  */
-const SearchButton = ({
-  toggleSearch,
-  isSearchOpen,
-  properties,
-}: {
-  toggleSearch: () => void
-  isSearchOpen: boolean
-  properties?: {
-    borderRadius?: string
-    maxHeight?: string
-  }
-}) => {
-  const theme = useTheme()
-  const borderRadius = properties?.borderRadius ?? '0.5rem'
-  const height = properties?.maxHeight ?? theme.spacing(5)
+const SearchButton = ({ toggleSearch, isSearchOpen }: { toggleSearch: () => void; isSearchOpen: boolean }) => {
   /**
    * handleToggleSearch function.
    *
@@ -36,8 +22,8 @@ const SearchButton = ({
 
   return (
     <Tooltip title="Search" placement="bottom" key={'mobile menu Search'}>
-      <IconButton color="primary" onClick={handleToggleSearch} sx={{ height, borderRadius }}>
-        {isSearchOpen ? <Close size="24" /> : <SearchIcon size="20" />}
+      <IconButton color="info" size="large" onClick={handleToggleSearch}>
+        {isSearchOpen ? <Close /> : <SearchIcon />}
       </IconButton>
     </Tooltip>
   )

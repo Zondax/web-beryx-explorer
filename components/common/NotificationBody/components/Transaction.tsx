@@ -27,7 +27,13 @@ const Transaction = ({ notification }: { notification: TransactionNotification }
     <Box display={'flex'} justifyContent={'space-between'}>
       <Box width={'fit-content'}>
         {notification.tx_to ? (
-          <BeryxLink disableLink value={notification.tx_to} inputType={ObjectType.ADDRESS} limitCharacters={truncateMaxCharacters} />
+          <BeryxLink
+            disableLink
+            value={notification.tx_to}
+            network={notification.network}
+            inputType={ObjectType.ADDRESS}
+            limitCharacters={truncateMaxCharacters}
+          />
         ) : null}
         <Typography variant="body2" noWrap={false}>
           {content}

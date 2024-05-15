@@ -157,7 +157,7 @@ export const steps = (t: TFunction<'translation', undefined>): StepsParams[] => 
       options: [
         { label: t('I have the file'), description: t('Upload the .json file and you are all set.') },
         {
-          label: t('I don&apos;t have the file'),
+          label: t("I don't have the file"),
           description: t('You have to specify the entry file name, the compiler version, the license and the desired optimization.'),
         },
       ],

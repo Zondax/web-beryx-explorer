@@ -54,13 +54,13 @@ const StatsTile = ({
       >
         <DynamicFontSizeText refContainer={ref} text={formatedData.value} fontSize={fontSize} setFontSize={setFontSize} />
         {formatedData.unit ? (
-          <Typography variant="h3" pb={{ xs: '0.25rem', lg: '0.5rem' }}>
+          <Typography variant="h3" component={'span'} color={'text.primary'} pb={{ xs: '0.25rem', lg: '0.5rem' }}>
             {formatedData.unit}
           </Typography>
         ) : null}
       </Box>
       {description ? (
-        <Typography variant="subtitle2" color={'text.primary'} data-testid={'stats-tile-description'}>
+        <Typography variant="subtitle2" component={'span'} color={'text.primary'} data-testid={'stats-tile-description'}>
           {t(description)}
         </Typography>
       ) : null}

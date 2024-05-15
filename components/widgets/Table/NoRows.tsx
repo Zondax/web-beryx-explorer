@@ -5,7 +5,25 @@ import { InspectData } from '@carbon/pictograms-react'
 import { Box, Grow, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 
-import { NoRowsProps } from './types'
+/**
+ * Type for NoRowsPosition
+ */
+export type NoRowsPosition = 'inherit' | 'left' | 'center' | 'right' | 'justify'
+
+/**
+ * An interface containing the optional properties for the NoRows component.
+ *
+ * @interface NoRowsProps
+ * @property text - Text to be displayed. It can be a string or an array of strings.
+ * @property icon - Icon to be displayed.
+ * @property position - Position of the text and icon.
+ */
+export interface NoRowsProps {
+  title?: string
+  text?: string[] | string
+  icon?: JSX.Element | null
+  position?: NoRowsPosition
+}
 
 /**
  * A React functional component that displays a specified text and icon when no rows are present.
@@ -13,7 +31,7 @@ import { NoRowsProps } from './types'
  * @param props - The properties that define the text, icon, and position of the component.
  * @returns The rendered NoRows component.
  */
-const NoRows = ({ text = ['No rows'], icon = <InspectData />, position = 'center' }: NoRowsProps): JSX.Element => {
+const NoRows = ({ title, text = ['No rows'], icon = <InspectData />, position = 'center' }: NoRowsProps): JSX.Element => {
   const theme = useTheme()
   const { t } = useTranslation()
 
@@ -79,6 +97,11 @@ const NoRows = ({ text = ['No rows'], icon = <InspectData />, position = 'center
           }}
         >
           <Box sx={{ svg: { fill: theme.palette.text.secondary } }}>{icon}</Box>
+          {title && (
+            <Typography variant="h5" component={'span'} fontWeight={500}>
+              {title}
+            </Typography>
+          )}
           {renderText(text)}
         </Box>
       </Grow>

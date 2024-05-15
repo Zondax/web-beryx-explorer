@@ -44,8 +44,8 @@ export const SupportedOperationsColors: { [key: string]: { light: string; dark: 
     dark: 'rgb(177, 46, 46)', // Red
   },
   MethodsVerifiedRegistry: {
-    light: 'rgb(0, 204, 0)', // Dark Bright Green
-    dark: 'rgb(0, 255, 0)', // Bright Green
+    light: 'rgb(128, 0, 32)', // Dark Pastel Burgundy
+    dark: 'rgb(176, 48, 96)', // Pastel Burgundy
   },
   MethodsEVM: {
     light: 'rgb(101, 31, 184)', // Dark Purple

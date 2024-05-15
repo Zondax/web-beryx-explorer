@@ -6,7 +6,7 @@ import HomeView from './HomeView'
 describe('HomeView', () => {
   it('renders without crashing', async () => {
     await renderWithProviders(<HomeView resourcesMetaInfo={[]} />)
-    await waitFor(() => expect(screen.getByText('Cheers to a year full of accomplishments')).toBeInTheDocument())
-    expect(screen.getByText('Cheers to a year full of accomplishments')).toBeInTheDocument()
+    await waitFor(() => expect(screen.getByText('Explore and Interact with Filecoin Ecosystem')).toBeInTheDocument())
+    expect(screen.getByText('Explore and Interact with Filecoin Ecosystem')).toBeInTheDocument()
   })
 })

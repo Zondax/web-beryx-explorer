@@ -44,15 +44,27 @@ const Article = ({ content }: ArticleProps) => {
       const imageName = props.src.split('/').pop()
       const imagePath = `/docs/en/assets/${imageName}`
       return (
-        <Image
-          src={imagePath}
-          layout="responsive"
-          width={1200}
-          height={630}
-          alt={props.alt ?? 'explanatory image'}
-          quality={75}
-          style={{ marginTop: '1rem', marginBottom: '1rem' }}
-        />
+        <Box
+          sx={{
+            position: 'relative',
+            width: '100%',
+            paddingTop: '56.25%',
+            height: 0,
+            marginTop: '2rem',
+            marginBottom: '2rem',
+            overflow: 'hidden',
+            borderRadius: '16px',
+          }}
+        >
+          <Image
+            src={imagePath}
+            fill
+            alt={props.alt ?? 'explanatory image'}
+            quality={75}
+            sizes="(min-width: 808px) 50vw, 100vw"
+            style={{ objectFit: 'cover' }}
+          />
+        </Box>
       )
     }
     return SpecialImageComponent

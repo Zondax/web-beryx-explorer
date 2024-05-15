@@ -8,7 +8,7 @@ import { useSearchStore } from '@/store/data/search'
 import { fireEvent, screen } from '@testing-library/react'
 
 import { initialValues } from '../RunMethod'
-import { RunMethodFormValues } from '../config'
+import { RunMethodFormValues, defaultUnit } from '../config'
 import Buttons from './Buttons'
 
 const mockPartialFormik: Partial<jest.Mocked<FormikProps<RunMethodFormValues>>> = {
@@ -17,6 +17,19 @@ const mockPartialFormik: Partial<jest.Mocked<FormikProps<RunMethodFormValues>>> 
   setValues: jest.fn(),
 }
 const mockFormik = mockPartialFormik as FormikProps<RunMethodFormValues>
+
+const mockPartialWriteFormik: Partial<jest.Mocked<FormikProps<RunMethodFormValues>>> = {
+  values: {
+    method: undefined,
+    type: 'payable',
+    amount: undefined,
+    unitAmount: defaultUnit,
+    requestBody: [],
+  },
+  handleSubmit: jest.fn(),
+  setValues: jest.fn(),
+}
+const mockWriteFormik = mockPartialWriteFormik as FormikProps<RunMethodFormValues>
 
 beforeEach(() => {
   const searchStore = hookHelper(useSearchStore)
@@ -39,7 +52,7 @@ describe('Buttons', () => {
   // Test tooltip display when no form errors present
   it('should not display tooltip when there are no form errors', async () => {
     const { container } = await renderWithProviders(<Buttons formik={mockFormik} handleOpenTutorial={jest.fn()} />)
-    fireEvent.mouseOver(screen.getByRole('button', { name: 'Connect Wallet to Run' }))
+    fireEvent.mouseOver(screen.getByRole('button', { name: 'Run Method' }))
 
     const tooltip = container.querySelector('.MuiTooltip-tooltip')
     expect(tooltip).toBeNull()
@@ -58,5 +71,15 @@ describe('Buttons', () => {
       />
     )
     expect(screen.queryByText('Helper text')).toBeNull()
+  })
+
+  // Test button and tooltip display when a payable method is selected
+  it('should display "Connect Wallet to Run" button without tooltip if the selected method is payable', async () => {
+    const { container } = await renderWithProviders(<Buttons formik={mockWriteFormik} handleOpenTutorial={jest.fn()} />)
+    expect(screen.getByRole('button', { name: 'Connect Wallet to Run' })).toBeDefined()
+    fireEvent.mouseOver(screen.getByRole('button', { name: 'Connect Wallet to Run' }))
+
+    const tooltip = container.querySelector('.MuiTooltip-tooltip')
+    expect(tooltip).toBeNull()
   })
 })

@@ -48,6 +48,7 @@ const IncomingTransactions = ({
         gap: '1rem',
         padding: '1rem',
         overflow: 'auto',
+        backgroundColor: 'background.level0',
       }}
       key={'Wallet Incoming Txs Panel Tab'}
     >
@@ -80,7 +81,7 @@ const IncomingTransactions = ({
           </Box>
 
           {filteredTxs.length > visibleTxNumber ? (
-            <Button variant={'text'} onClick={handleSeeMoreButton}>
+            <Button variant={'inputType'} onClick={handleSeeMoreButton}>
               {t('See more')}
             </Button>
           ) : null}

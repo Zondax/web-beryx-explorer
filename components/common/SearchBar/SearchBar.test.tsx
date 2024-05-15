@@ -7,14 +7,14 @@ import SearchBar from './SearchBar'
 describe('SearchBar', () => {
   // Test to check if the component renders without crashing
   it('renders without crashing', async () => {
-    await renderWithProviders(<SearchBar hasSearchButton={false} />)
+    await renderWithProviders(<SearchBar />)
     // Checking if the rendered component is in the document
     expect(screen.getByTestId('search-bar')).toBeInTheDocument()
   })
 
   // Test to check if the component handles input changes
   it('handles input change', async () => {
-    await renderWithProviders(<SearchBar hasSearchButton={false} />)
+    await renderWithProviders(<SearchBar />)
     // Finding the input box and setting its value
     const input = screen.getByTestId('search-bar')
     const htmlInputElement = input.querySelector('input')

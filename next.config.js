@@ -6,7 +6,7 @@
 const commonContentSecurityPolicy = {
   'default-src': "'self' https://zondax.ch",
   'img-src':
-    "'self' https://zondax.ch https://zondax.dev https://opengraph.githubassets.com https://ethglobal.com https://static-production.npmjs.com https://user-images.githubusercontent.com blob: data: https://media.marker.io https://app.marker.io https://edge.marker.io https://storage.googleapis.com https://www.cookbook.dev https://github.githubassets.com https://plabs-assets.s3.us-west-1.amazonaws.com https://devconnect.org https://ethindia.co",
+    "'self' https://zondax.ch https://zondax.dev https://opengraph.githubassets.com https://ethglobal.com https://static-production.npmjs.com https://user-images.githubusercontent.com blob: data: https://media.marker.io https://app.marker.io https://edge.marker.io https://storage.googleapis.com https://www.cookbook.dev https://github.githubassets.com https://plabs-assets.s3.us-west-1.amazonaws.com https://devconnect.org https://ethindia.co https://linktr.ee/filecoinio https://docs.filecoin.io https://filecoin.io https://avatars.githubusercontent.com https://social-images.lu.ma https://img.evbuc.com",
   'media-src': "'self'  https://media.marker.io https://app.marker.io https://edge.marker.io",
   'script-src':
     "'self' 'unsafe-eval' 'unsafe-inline' https://challenges.cloudflare.com https://edge.marker.io https://app.marker.io https://api.zondax.ch https://www.google-analytics.com https://cdn.jsdelivr.net",
@@ -102,6 +102,30 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'user-images.githubusercontent.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'docs.filecoin.io',
+      },
+      {
+        protocol: 'https',
+        hostname: 'linktr.ee',
+      },
+      {
+        protocol: 'https',
+        hostname: 'filecoin.io',
+      },
+      {
+        protocol: 'https',
+        hostname: 'avatars.githubusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'social-images.lu.ma',
+      },
+      {
+        protocol: 'https',
+        hostname: 'img.evbuc.com',
+      },
     ],
   },
   // eslint-disable-next-line require-await
@@ -147,13 +171,23 @@ const nextConfig = {
         permanent: false,
       },
       {
-        source: '/v1/search',
+        source: '/search',
         destination: '/',
         permanent: true,
       },
       {
-        source: '/v1/search/fil/:network*/account/:value*',
-        destination: '/v1/search/fil/:network*/address/:value*',
+        source: '/search/fil/:network*/account/:value*',
+        destination: '/search/fil/:network*/address/:value*',
+        permanent: true,
+      },
+      {
+        source: '/v1/search/fil/:network*/:type/:value*',
+        destination: '/search/fil/:network*/:type/:value*',
+        permanent: true,
+      },
+      {
+        source: '/v1/mempool',
+        destination: '/mempool',
         permanent: true,
       },
     ]

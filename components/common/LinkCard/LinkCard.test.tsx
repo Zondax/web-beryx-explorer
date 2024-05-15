@@ -3,6 +3,7 @@ import '@testing-library/jest-dom'
 import { screen } from '@testing-library/react'
 
 import LinkCard from './LinkCard'
+import { LinkCardCategory } from './types'
 
 /**
  * Group of tests associated with the LinkCard Component
@@ -14,11 +15,13 @@ describe('LinkCard Component', () => {
   it('renders without crashing', async () => {
     await renderWithProviders(
       <LinkCard
+        category={LinkCardCategory.ECOSYSTEM}
         title="Test Title"
         description="Test Description"
         url="https://testurl.com"
         imageUrl="https://testurl.com/testimage.jpg"
         domain="testurl.com"
+        hasHoverEffect={false}
       />
     )
   })
@@ -29,11 +32,13 @@ describe('LinkCard Component', () => {
   it('renders correct title', async () => {
     await renderWithProviders(
       <LinkCard
+        category={LinkCardCategory.ECOSYSTEM}
         title="Test Title"
         description="Test Description"
         url="https://testurl.com"
         imageUrl="https://testurl.com/testimage.jpg"
         domain="testurl.com"
+        hasHoverEffect={false}
       />
     )
 
@@ -47,11 +52,13 @@ describe('LinkCard Component', () => {
   it('renders correct description', async () => {
     await renderWithProviders(
       <LinkCard
+        category={LinkCardCategory.ECOSYSTEM}
         title="Test Title"
         description="Test Description"
         url="https://testurl.com"
         imageUrl="https://testurl.com/testimage.jpg"
         domain="testurl.com"
+        hasHoverEffect={false}
       />
     )
 
