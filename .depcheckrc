@@ -1,2 +1,2 @@
-ignores: ["eslint", "babel-*", "turbo"]
+ignores: ["eslint", "babel-*", "turbo", ".yarn/"]
 skip-missing: true
