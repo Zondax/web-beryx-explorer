@@ -1,32 +1,26 @@
-import axios from 'axios'
-import { format } from 'date-fns-tz'
-import { v4 } from 'uuid'
-import Web3, { AbiInput, TransactionReceipt } from 'web3'
+import Web3, { TransactionReceipt } from 'web3'
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
-import { fetchBeryxApiToken } from '@/api-client/apiTokens'
 import { NetworkFindMetamaskId, NetworkMetamaskId, NetworkType } from '@/config/networks'
-import { parseRequest } from '@/refactor/contractUtils'
+import { walletErrors } from '@/config/wallet'
 import { useContractsStore } from '@/store/ui/contracts'
 import { useNotificationsStore } from '@/store/ui/notifications'
-import { captureException } from '@sentry/nextjs'
+import { getWalletError, isMetamaskError } from '@/utils/metamask'
+import { getSendTransactionData } from '@/utils/wallet'
 import { FilEthAddress } from '@zondax/izari-filecoin/address'
 import { NetworkPrefix } from '@zondax/izari-filecoin/artifacts'
 
 import { RunMethodFormValues, availableUnits } from '../../../components/views/ResultsView/ContractView/RunMethod/config'
-import { FieldValues } from '../../../components/views/ResultsView/ContractView/config'
-import { useAppSettingsStore } from '../ui/settings'
-import useWalletStore, { TransactionData } from './wallet'
+import useAppSettingsStore from '../ui/settings'
+import useWalletStore, { ConnectionResponse, TransactionData, WalletProvider } from './wallet'
 
 /**
- * Enum for wallet providers.
- * @readonly
- * @enum {string}
+ * Represents a response object from a connection request with additional Metamask-specific information.
+ * Extends the base ConnectionResponse interface.
  */
-export enum WalletProvider {
-  METAMASK = 'metamask',
-  LEDGER = 'ledger',
+interface MetamaskConnResponse extends ConnectionResponse {
+  hasMetamaskExtension?: boolean
 }
 
 /**
@@ -44,6 +38,12 @@ interface MetamaskWalletState {
   error: string | undefined
 }
 
+export interface MetamaskRpcError extends Error {
+  message: string
+  code: number
+  data?: unknown
+}
+
 /**
  * Initial state for Metamask Wallet.
  * @const
@@ -59,11 +59,12 @@ const InitialState: MetamaskWalletState = {
  * @interface
  */
 interface MetamaskWalletActions {
-  connectWallet: () => Promise<any | undefined>
+  connectWallet: () => Promise<MetamaskConnResponse>
   disconnectWallet: () => void
   invokeContract: (invokeData: RunMethodFormValues, txData: TransactionData) => void
   changeChain: (chainId: string) => void
   changeAccount: (accounts: Array<string>) => void
+  switchChain: (chainId: NetworkMetamaskId) => void
 }
 
 /**
@@ -74,7 +75,6 @@ interface MetamaskWalletActions {
 const useMetamaskWalletStore = create<MetamaskWalletState & MetamaskWalletActions>()(
   immer((set, get) => ({
     ...InitialState,
-
     connectWallet: async () => {
       if (window.ethereum) {
         try {
@@ -122,11 +122,9 @@ const useMetamaskWalletStore = create<MetamaskWalletState & MetamaskWalletAction
     },
     disconnectWallet: () => {
       set({ isConnected: false, walletInfo: InitialState.walletInfo })
-      useWalletStore.getState().disconnectWallet()
     },
     invokeContract: async (invokeData: RunMethodFormValues, txData: TransactionData) => {
       const setRpcResponse = useContractsStore.getState().setRpcResponse
-      const rpcNode = useAppSettingsStore.getState().network?.rpcNode
       const { to } = txData
 
       if (!invokeData.method) {
@@ -135,133 +133,10 @@ const useMetamaskWalletStore = create<MetamaskWalletState & MetamaskWalletAction
 
       if (window.ethereum) {
         const web3 = new Web3(window.ethereum as any)
+        const { network } = useWalletStore.getState().walletInfo
+        const data = getSendTransactionData(invokeData, web3)
 
-        const { ethAddr: from, network } = useWalletStore.getState().walletInfo
-
-        // serialize transaction data
-        let parsedReq: FieldValues[] = []
-
-        if (invokeData.requestBodyString) {
-          try {
-            parsedReq = JSON.parse(invokeData.requestBodyString)
-          } catch {
-            useNotificationsStore.getState().addNotification({
-              id: v4(),
-              title: 'Error: Wrong method arguments',
-              time: format(new Date(), 'KK:mm aa'),
-              date: format(new Date(), 'MMM dd'),
-              description: 'The argument list is not supported. Please consult the contract ABI',
-              status: 'error',
-              tag: ['interact'],
-            })
-            return
-          }
-        } else if (invokeData.requestBody) {
-          parsedReq = parseRequest(invokeData.requestBody)
-        }
-
-        // make sure the input parameters match with what the method requires
-        if ((invokeData.method.inputs.length > 0 && parsedReq.length === 0) || invokeData.method.inputs.length !== parsedReq.length) {
-          useNotificationsStore.getState().addNotification({
-            id: v4(),
-            title: 'Error: Wrong method arguments',
-            time: format(new Date(), 'KK:mm aa'),
-            date: format(new Date(), 'MMM dd'),
-            description: 'The argument list is not supported. Please consult the contract ABI',
-            status: 'error',
-            tag: ['interact'],
-          })
-          return
-        }
-
-        let serializedBody = ''
-        try {
-          serializedBody = web3.eth.abi.encodeParameters(
-            invokeData.method.inputs.map(elem => {
-              return elem as unknown as AbiInput
-            }),
-            parsedReq
-          )
-        } catch {
-          useNotificationsStore.getState().addNotification({
-            id: v4(),
-            title: 'Error: Parameters could not be coded',
-            time: format(new Date(), 'KK:mm aa'),
-            date: format(new Date(), 'MMM dd'),
-            description: 'Please check the values sent match the parameter type.',
-            status: 'error',
-            tag: ['interact'],
-          })
-          return
-        }
-
-        let selector: string | undefined
-        const selectors = useContractsStore.getState().contractCode.selectors
-        for (const key in selectors) {
-          if (selectors[key] && selectors[key].indexOf(invokeData.method.name) !== -1) {
-            selector = key
-            break
-          }
-        }
-        if (!selector) {
-          useNotificationsStore.getState().addNotification({
-            id: v4(),
-            title: 'Unknown error',
-            time: format(new Date(), 'KK:mm aa'),
-            date: format(new Date(), 'MMM dd'),
-            description: 'Please try again or use the feedback tool on the right to report it.',
-            status: 'error',
-            tag: ['interact'],
-          })
-          return
-        }
-
-        if (!rpcNode) {
-          useNotificationsStore.getState().addNotification({
-            id: v4(),
-            title: 'Interacting with this network is currently not feasible.',
-            time: format(new Date(), 'KK:mm aa'),
-            date: format(new Date(), 'MMM dd'),
-            description: 'Please try again later or use the feedback tool on the right to report it.',
-            status: 'error',
-            tag: ['interact'],
-          })
-          return
-        }
-
-        const data = `${selector}${serializedBody.slice(2)}`
         switch (invokeData.type) {
-          case 'view':
-          case 'pure': {
-            const reqBody = {
-              from,
-              to,
-              data,
-            }
-
-            try {
-              const authToken = await fetchBeryxApiToken()
-              const response = await axios.post(
-                rpcNode,
-                {
-                  jsonrpc: '2.0',
-                  method: 'eth_call',
-                  params: [reqBody, 'latest'],
-                  id: 1,
-                },
-                {
-                  headers: {
-                    Authorization: `Bearer ${authToken}`,
-                  },
-                }
-              )
-
-              setRpcResponse(response.data)
-            } catch (error) {
-              captureException(`Error with RPC request: ${error}`)
-            }
-            break
-          }
           case 'payable':
           case 'nonpayable': {
             let value = '0'
@@ -273,12 +148,9 @@ const useMetamaskWalletStore = create<MetamaskWalletState & MetamaskWalletAction
 
             await web3.eth
               .sendTransaction({ from: accounts[0], to, data, value })
-              .on('transactionHash', function (hash: any) {
+              .on('transactionHash', function (hash: string) {
                 useNotificationsStore.getState().addNotification({
-                  id: v4(),
                   title: 'Your transaction just entered mempool',
-                  time: format(new Date(), 'KK:mm aa'),
-                  date: format(new Date(), 'MMM dd'),
                   network,
                   tx_to: to ?? undefined,
                   tx_hash: hash,
@@ -294,10 +166,7 @@ const useMetamaskWalletStore = create<MetamaskWalletState & MetamaskWalletAction
                   response[key] = typeof response[key] === 'bigint' ? Number(response[key]) : response[key]
                 }
                 useNotificationsStore.getState().addNotification({
-                  id: v4(),
                   title: 'Your transaction was received',
-                  time: format(new Date(), 'KK:mm aa'),
-                  date: format(new Date(), 'MMM dd'),
                   network,
                   tx_to: receipt.to ?? undefined,
                   tx_hash: receipt.transactionHash.toString(),
@@ -310,12 +179,10 @@ const useMetamaskWalletStore = create<MetamaskWalletState & MetamaskWalletAction
                 useWalletStore.getState().gatherData()
               })
               .on('error', (e: Error) => {
+                const { title } = walletErrors['TRANSACTION_NOT_DONE']
                 useNotificationsStore.getState().addNotification({
-                  id: v4(),
-                  title: 'Error: The transaction could not be done',
+                  title,
                   description: e.message,
-                  time: format(new Date(), 'KK:mm aa'),
-                  date: format(new Date(), 'MMM dd'),
                   status: 'error',
                   tag: ['interact'],
                 })
@@ -328,11 +195,8 @@ const useMetamaskWalletStore = create<MetamaskWalletState & MetamaskWalletAction
                   }
 
                   useNotificationsStore.getState().addNotification({
-                    id: v4(),
                     title: 'Error',
                     description: errorMessage,
-                    time: format(new Date(), 'KK:mm aa'),
-                    date: format(new Date(), 'MMM dd'),
                     status: 'error',
                     tag: ['interact'],
                   })
@@ -348,20 +212,19 @@ const useMetamaskWalletStore = create<MetamaskWalletState & MetamaskWalletAction
     },
     changeChain: (chainId: string) => {
       const networkWallet = NetworkFindMetamaskId(chainId as NetworkMetamaskId)
-      const currentNetwork = useAppSettingsStore.getState().network
 
-      if (window.ethereum && get().isConnected) {
+      const currentNetwork = useAppSettingsStore.getState().network
+      if (networkWallet?.uniqueId === currentNetwork.uniqueId) {
+        useWalletStore.getState().connectWallet(WalletProvider.METAMASK)
+      } else if (window.ethereum && get().isConnected) {
         get().disconnectWallet()
         useNotificationsStore.getState().addNotification({
-          id: v4(),
           title: 'The chain was changed through the wallet.',
           description: `${
             networkWallet
               ? `As your wallet is currently linked to the ${networkWallet.project} ${networkWallet.name} network and the application you’re using operates on the ${currentNetwork.project} ${currentNetwork.name} network, the wallet was disconnected`
               : ''
           }. To fully utilize all features, please switch the Beryx’s network to match with the one in the wallet.`,
-          time: format(new Date(), 'KK:mm aa'),
-          date: format(new Date(), 'MMM dd'),
           status: 'error',
           tag: ['Wallet'],
         })
@@ -375,6 +238,55 @@ const useMetamaskWalletStore = create<MetamaskWalletState & MetamaskWalletAction
         const filEthAddr = new FilEthAddress(NetworkPrefix.Mainnet, Buffer.from(ethAddr.slice(2), 'hex')).toString()
 
         useWalletStore.getState().changeAddress(filEthAddr, ethAddr)
+      }
+    },
+    switchChain: async (metamaskId: NetworkMetamaskId) => {
+      const networkWallet = NetworkFindMetamaskId(metamaskId)
+
+      if (window.ethereum && get().isConnected && networkWallet) {
+        try {
+          await window.ethereum // Or window.ethereum if you don't support EIP-6963.
+            .request({
+              method: 'wallet_switchEthereumChain',
+              params: [{ chainId: metamaskId }],
+            })
+        } catch (switchError) {
+          // This error code indicates that the chain has not been added to MetaMask.
+          if (isMetamaskError(switchError) && switchError?.code === 4902) {
+            try {
+              await window.ethereum // Or window.ethereum if you don't support EIP-6963.
+                .request({
+                  method: 'wallet_addEthereumChain',
+                  params: [
+                    {
+                      chainId: metamaskId,
+                      chainName: `${networkWallet.project} ${networkWallet.name}`,
+                      rpcUrls: [networkWallet?.rpcNode] /* ... */,
+                    },
+                  ],
+                })
+            } catch (addError) {
+              // Handle add wallet errors.
+              const currentNetwork = useAppSettingsStore.getState().network
+              const { title, description } = getWalletError('NETWORK_NOT_MATCHING', networkWallet, currentNetwork)
+              useNotificationsStore.getState().addNotification({
+                title,
+                description,
+                status: 'error',
+                tag: ['Wallet'],
+              })
+            }
+          }
+          // Handle other "switch" errors.
+          const currentNetwork = useAppSettingsStore.getState().network
+          const { title, description } = getWalletError('NETWORK_NOT_MATCHING', networkWallet, currentNetwork)
+          useNotificationsStore.getState().addNotification({
+            title,
+            description,
+            status: 'error',
+            tag: ['Wallet'],
+          })
+        }
       }
     },
   }))

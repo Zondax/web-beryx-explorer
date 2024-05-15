@@ -17,6 +17,7 @@ import {
   ServiceConfig,
   StatsParams,
   Tipset,
+  ValueExchangedByTipset,
   ValueFlow,
 } from './beryx.types'
 import { authenticatedREST } from './rest'
@@ -677,7 +678,7 @@ export const fetchAddressValueFlow = async (
   network: NetworkType
 ): Promise<{ results: ValueFlow[]; next_cursor: string }> => {
   const restAPI = await authenticatedREST()
-  const myUrl = `${getBeryxUrl(network.chainSlug, network.name).stats}/value-flow/${address}/latest`
+  const myUrl = `${getBeryxUrl(network.chainSlug, network.name).stats}/value-flow/${address}/latest?data_points=365`
   const res = await restAPI.get(myUrl)
   return res.data
 }
@@ -732,6 +733,22 @@ export const fetchTopAccountsByGasUsed = async (network: NetworkType) => {
 export const fetchTopContractsByInvokes = async (network: NetworkType) => {
   const restAPI = await authenticatedREST()
   const myUrl = `${getBeryxUrl(network.chainSlug, network.name).stats}/contract/top/invokes`
+  const res = await restAPI.get(myUrl)
+  return res.data
+}
+
+/**
+ * @description Function to get the latest value exchange of a contract.
+ * @param network - The network type.
+ * @param contractAddress - The contract address.
+ * @returns The response data.
+ */
+export const fetchValueExchangeAtLatest = async (
+  network: NetworkType,
+  contractAddress: string
+): Promise<{ results: ValueExchangedByTipset[] }> => {
+  const restAPI = await authenticatedREST()
+  const myUrl = `${getBeryxUrl(network.chainSlug, network.name).stats}/value-exchanged/${contractAddress}/latest`
   const res = await restAPI.get(myUrl)
   return res.data
 }

@@ -1,5 +1,5 @@
 import { Components } from '@mui/material'
-import { PaletteOptions } from '@mui/material/styles'
+import { Palette } from '@mui/material/styles'
 
 /**
  * @function RadioStyle
@@ -7,7 +7,7 @@ import { PaletteOptions } from '@mui/material/styles'
  * @param palette - The theme object from @mui/material/styles.
  * @returns - The style object for MuiRadio component.
  */
-export const RadioStyle = (palette: PaletteOptions): Components => {
+export const radioStyles = (palette: Palette): Components => {
   return {
     MuiRadio: {
       styleOverrides: {

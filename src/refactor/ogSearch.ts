@@ -192,7 +192,7 @@ const getOgAddressData = async (inputValue: string, network: NetworkType, authTo
     },
     accountInfo?.actor_type &&
       accountInfo?.actor_type !== 'evm' && {
-        label: 'Actory Type',
+        label: 'Actor Type',
         value: accountInfo?.actor_type,
         valueType: 'string',
       },
@@ -249,8 +249,8 @@ const getOgBlockData = async (cid: string, network: NetworkType, authToken: stri
 
   return [
     {
-      label: 'Block ID',
-      value: truncateMiddleOfString(cid, 16),
+      label: 'Tipset Height',
+      value: tipsetInfo?.height,
       valueType: 'address',
     },
     tipsetInfo?.timestamp && {
@@ -296,9 +296,7 @@ const getOgTransactionData = async (txHash: string, network: NetworkType, authTo
     },
     tx?.amount !== undefined && {
       label: 'Value (FIL)',
-      value: BigNumber(tx?.amount)
-        .div(Math.pow(10, chainDecimals.filecoin))
-        .toFormat(2, amountFormat),
+      value: BigNumber(tx?.amount).div(Math.pow(10, chainDecimals.filecoin)).toFormat(2, amountFormat),
       valueType: 'fil',
       icon: projectIcons[network.project] ? projectIcons[network.project]({ size: 32 }) : null,
     },

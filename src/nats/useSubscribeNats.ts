@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { NetworkType } from '@/config/networks'
 import { SubscriptionGroup, getSubscriptionRequirements, resetSubscription } from '@/nats/subjects'
 import { useNatsStore } from '@/store/data/nats'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 
 import { NatsManager, SubscriptionRequirement } from './natsManager'
 

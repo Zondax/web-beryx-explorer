@@ -34,6 +34,7 @@ import {
   transactionStatusColumn,
   transactionTypeColumn,
   treeColumn,
+  valueExchangeBalanceColumn,
 } from '../standard/columnDefinitions'
 
 /**
@@ -363,4 +364,20 @@ export const percentageRangePro = (props: percentageRangeProps): GridColDef => {
  */
 export const treeColumnPro = (props: GenericColumnProps): GridColDef => {
   return treeColumn(props) as GridColDef
+}
+
+/**
+ * Function to create a valueExchangeBalance column of data grid pro
+ *
+ * @param props - The properties of the string column
+ * @param props.field - The field of the column
+ * @param props.label - The label of the column
+ * @param [props.minWidth=100] - The minimum width of the column
+ * @param [props.maxWidth] - The maximum width of the column
+ * @param [props.headerIcon] - The icon of the header
+ * @param [props.sortable=false] - Whether the column is sortable
+ * @returns A GridColDef object
+ */
+export const valueExchangeBalanceColumnPro = (props: GenericColumnProps): GridColDef => {
+  return valueExchangeBalanceColumn(props) as GridColDef
 }

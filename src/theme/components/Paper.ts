@@ -1,5 +1,5 @@
 import { Components } from '@mui/material'
-import { PaletteOptions } from '@mui/material/styles'
+import { Palette } from '@mui/material/styles'
 
 /**
  * Overrides the PaperPropsVariant to include elevationGradient
@@ -16,7 +16,7 @@ declare module '@mui/material/Paper' {
 /**
  * Exports the PaperStyle function
  */
-export const PaperStyle = (palette: PaletteOptions): Components => {
+export const paperStyles = (palette: Palette): Components => {
   /**
    * Returns the MuiPaper style overrides
    */

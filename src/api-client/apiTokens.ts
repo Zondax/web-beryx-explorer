@@ -1,6 +1,6 @@
 import { getCookie } from 'cookies-next'
 
-import { cookieAuthTokenName } from '@/config/config'
+import { cookieAuthTokenName, cookieAuthTokenPreName } from '@/config/config'
 import { useQuery } from '@tanstack/react-query'
 
 import { BeryxToken } from './auth'
@@ -10,7 +10,13 @@ import { BeryxToken } from './auth'
  */
 export const fetchBeryxApiToken = async (): Promise<BeryxToken> => {
   if (typeof window !== 'undefined') {
-    const token = getCookie(cookieAuthTokenName) as BeryxToken
+    let token = undefined
+    if (process.env.NEXT_PUBLIC_BERYX_ENV === 'pre') {
+      token = getCookie(cookieAuthTokenPreName) as BeryxToken
+    } else {
+      token = getCookie(cookieAuthTokenName) as BeryxToken
+    }
+
     if (token) {
       return token
     }
@@ -19,6 +25,7 @@ export const fetchBeryxApiToken = async (): Promise<BeryxToken> => {
 
   const { requestBeryxApiToken } = await import('./auth')
   const token = await requestBeryxApiToken()
+
   if (token) {
     return token
   }

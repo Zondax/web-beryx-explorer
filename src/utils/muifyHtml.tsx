@@ -102,7 +102,7 @@ const htmlToReactOptions: HTMLReactParserOptions = {
                 alt={domNode.attribs.alt}
                 width={16}
                 height={9}
-                sizes="100vw"
+                sizes="50vw"
                 style={{
                   width: '100%',
                   height: 'auto',

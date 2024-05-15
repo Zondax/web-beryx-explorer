@@ -1,3 +1,5 @@
+import { format } from 'date-fns-tz'
+import { v4 } from 'uuid'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
@@ -30,6 +32,7 @@ export interface GenericNotification {
   id: string
   title: string
   time: string
+  date: string
   description?: string
   status: 'confirm' | 'error'
   tag: string[]
@@ -43,6 +46,9 @@ interface NotificationsState {
   notifications: (TransactionNotification | GenericNotification)[]
   newNotification: boolean
 }
+
+// Define a type alias for the parameters of the addNotification function
+export type NotificationToAdd = Omit<TransactionNotification, 'time' | 'date' | 'id'> | Omit<GenericNotification, 'time' | 'date' | 'id'>
 
 /**
  * @constant InitialNotificationState
@@ -58,7 +64,7 @@ export const InitialNotificationState: NotificationsState = {
  * @description Interface for the actions in the store
  */
 interface NotificationsActions {
-  addNotification: (notification: TransactionNotification | GenericNotification) => void
+  addNotification: (notification: NotificationToAdd) => void
   deleteNotification: (id: string) => void
   deleteAll: () => void
   handleNewNotification: (value: boolean) => void
@@ -82,9 +88,16 @@ export const useNotificationsStore = create<NotificationsState & NotificationsAc
       (set, get) => ({
         ...InitialNotificationState,
         // actions
-        addNotification: (notification: TransactionNotification | GenericNotification) => {
+        addNotification: (notification: NotificationToAdd) => {
           const notifications = get().notifications
-          notifications.unshift(notification)
+          const completeNotification = {
+            ...notification,
+            id: v4(),
+            time: format(new Date(), 'KK:mm aa'),
+            date: format(new Date(), 'MMM dd'),
+          }
+
+          notifications.unshift(completeNotification)
           set({ notifications, newNotification: true })
         },
         deleteNotification: (id: string) => {

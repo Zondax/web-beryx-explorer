@@ -127,7 +127,7 @@ export const searchedItemTabs: { [key: string]: TabProps[] } = {
   /**
    * Tabs for tipset type items.
    */
-  tipset: [itemTabs.overview, itemTabs.transactions, itemTabs.miners],
+  tipset: [itemTabs.overview, itemTabs.transactions],
   /**
    * Tabs for transaction type items.
    */

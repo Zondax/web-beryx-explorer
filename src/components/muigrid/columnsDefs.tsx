@@ -25,6 +25,7 @@ import {
   transactionStatusColumnPro,
   transactionTypeColumnPro,
   treeColumnPro,
+  valueExchangeBalanceColumnPro,
 } from './pro/columnDefinitions'
 import {
   actorTypeColumn,
@@ -51,6 +52,7 @@ import {
   transactionStatusColumn,
   transactionTypeColumn,
   treeColumn,
+  valueExchangeBalanceColumn,
 } from './standard/columnDefinitions'
 
 /**
@@ -84,6 +86,7 @@ export default !MuiDataGridProLicense
       transactionDetailsColumn,
       transactionStatusColumn,
       transactionTypeColumn,
+      valueExchangeBalanceColumn,
     }
   : {
       treeColumn: treeColumnPro,
@@ -110,4 +113,5 @@ export default !MuiDataGridProLicense
       transactionDetailsColumn: transactionDetailsColumnPro,
       transactionStatusColumn: transactionStatusColumnPro,
       transactionTypeColumn: transactionTypeColumnPro,
+      valueExchangeBalanceColumn: valueExchangeBalanceColumnPro,
     }

@@ -31,6 +31,7 @@ export interface NetworkType {
   currency: Currency
   denomPrefix?: string
   rpcNode?: string
+  chainId: number
 }
 
 /**
@@ -57,6 +58,7 @@ export const Networks: { [key: string]: NetworkType } = {
     },
     denomPrefix: 'f',
     rpcNode: 'https://api.zondax.ch/fil/node/mainnet/rpc/v1',
+    chainId: 314,
   },
   calibration: {
     uniqueId: 'fil/calibration' as NetworkUniqueId,
@@ -70,11 +72,12 @@ export const Networks: { [key: string]: NetworkType } = {
     isTestnet: true,
     url: `${getBeryxUrl('fil', 'calibration').data}`,
     currency: {
-      symbol: 'FIL',
+      symbol: 'tFIL',
       decimals: 18,
     },
     denomPrefix: 'f',
     rpcNode: 'https://api.zondax.ch/fil/node/calibration/rpc/v1',
+    chainId: 314159,
   },
   ethereum: {
     uniqueId: 'eth/mainnet' as NetworkUniqueId,
@@ -91,6 +94,7 @@ export const Networks: { [key: string]: NetworkType } = {
       symbol: 'ETH',
       decimals: 18,
     },
+    chainId: 1,
   },
 }
 

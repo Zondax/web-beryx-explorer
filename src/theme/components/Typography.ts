@@ -1,4 +1,4 @@
-import { PaletteOptions } from '@mui/material'
+import { Palette } from '@mui/material'
 import { TypographyOptions } from '@mui/material/styles/createTypography'
 
 /**
@@ -18,10 +18,10 @@ declare module '@mui/material/Typography' {
  * @param palette - The palette options.
  * @returns The typography options.
  */
-export const getTypography = (palette: PaletteOptions): TypographyOptions => ({
+export const typographyStyles = (palette: Palette): TypographyOptions => ({
   fontFamily: [
     '-apple-system',
-    'Sora',
+    'Archivo',
     'DM Sans',
     'Roboto',
     'Helvetica Neue',
@@ -32,7 +32,7 @@ export const getTypography = (palette: PaletteOptions): TypographyOptions => ({
     'Segoe UI Symbol',
   ].join(','),
   h1: {
-    fontFamily: ['Sora'].join(','),
+    // fontFamily: ['Sora'].join(','),
     fontWeight: 500,
     fontSize: '3.5rem',
     lineHeight: 1.2,
@@ -40,7 +40,7 @@ export const getTypography = (palette: PaletteOptions): TypographyOptions => ({
     color: palette.text?.primary,
   },
   h2: {
-    fontFamily: ['Sora'].join(','),
+    // fontFamily: ['Sora'].join(','),
     fontWeight: 500,
     fontSize: '2.125rem',
     lineHeight: 1.2,
@@ -48,7 +48,7 @@ export const getTypography = (palette: PaletteOptions): TypographyOptions => ({
     color: palette.text?.primary,
   },
   h3: {
-    fontFamily: ['Sora'].join(','),
+    // fontFamily: ['Sora'].join(','),
     fontWeight: 600,
     fontSize: '1.75rem',
     lineHeight: 1.2,
@@ -56,7 +56,7 @@ export const getTypography = (palette: PaletteOptions): TypographyOptions => ({
     color: palette.text?.primary,
   },
   h4: {
-    fontFamily: ['Sora'].join(','),
+    // fontFamily: ['Sora'].join(','),
     fontWeight: 500,
     fontSize: '1.5rem',
     lineHeight: 1.2,
@@ -113,9 +113,9 @@ export const getTypography = (palette: PaletteOptions): TypographyOptions => ({
     color: palette.text?.primary,
   },
   captionMono: {
-    fontFamily: ['B612 Mono'].join(','),
+    fontFamily: ['Fragment Mono'].join(','),
     fontWeight: 400,
-    fontSize: '0.875rem',
+    fontSize: '0.9rem',
     lineHeight: 1.66,
     letterSpacing: '-0.00914em',
     color: palette.text?.primary,
@@ -128,16 +128,16 @@ export const getTypography = (palette: PaletteOptions): TypographyOptions => ({
     textTransform: 'none',
   },
   dmMono1: {
-    fontFamily: ['B612 Mono'].join(','),
+    fontFamily: ['Fragment Mono'].join(','),
     fontWeight: 400,
-    fontSize: '1rem',
+    fontSize: '1.1rem',
     lineHeight: 1.2,
     letterSpacing: '0.00938em',
     color: palette.text?.primary,
     textShadow: '0px 4px 20px rgba(0, 0, 0, 0.34)',
   },
   dmMono2: {
-    fontFamily: ['B612 Mono'].join(','),
+    fontFamily: ['Fragment Mono'].join(','),
     fontWeight: 300,
     fontSize: '1rem',
     lineHeight: 1.2,

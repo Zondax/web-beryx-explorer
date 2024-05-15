@@ -26,11 +26,12 @@ import {
   fetchTransactionsByHash,
   fetchTransactionsByHeight,
   fetchUniqueContractInvokeByAddress,
+  fetchValueExchangeAtLatest,
   postContractVerify,
 } from '@/api-client/beryx'
 import { fetchContractIPFS } from '@/api-client/beryx-clientonly'
 import { ContractVerifiedData, ContractsProps, GasUsedProps, GlobalBaseFee, StatsParams } from '@/api-client/beryx.types'
-import { FrequencyType } from '@/config/config'
+import { FrequencyType, InputType } from '@/config/config'
 import { NetworkType } from '@/config/networks'
 import { ObjectType } from '@/routes/parsing'
 import { PagesProps } from '@/store/data/search'
@@ -300,15 +301,21 @@ export const useGasUsed = (network: NetworkType | undefined, frequency: Frequenc
 /**
  * useTransactions is a custom hook that uses the useQuery hook from React Query
  * to fetch the transactions.
- * @param input - The input to fetch the type.
- * @param network - The network.
- * @param frequency - The FrequencyType.
- * @returns result - The result of the query.
+ * @param input - What you're searching for.
+ * @param network - Which blockchain network you're diving into.
+ * @param inputType - The type of your input.
+ * @param objectType - The kind of object you're interested in.
+ * @param method - The method to filter transactions.
+ * @param level - Filter by transaction level.
+ * @param evm - Set true for EVM transactions.
+ * @param sort - How you'd like your results sorted.
+ * @param page - Pagination details.
  */
 export const useTransactions = ({
   input,
   network,
-  type,
+  inputType,
+  objectType,
   method,
   level,
   evm,
@@ -317,7 +324,8 @@ export const useTransactions = ({
 }: {
   input: string
   network: NetworkType | undefined
-  type: ObjectType | undefined
+  objectType: ObjectType | undefined
+  inputType: InputType | undefined
   method: BeryxMethodType | undefined
   level: LevelFilter | undefined
   evm: boolean
@@ -336,7 +344,8 @@ export const useTransactions = ({
     'search-transactions',
     [
       network?.uniqueId,
-      type,
+      objectType,
+      inputType,
       input,
       method ?? '',
       queryParams.remove_internal_txs ?? '',
@@ -351,7 +360,7 @@ export const useTransactions = ({
     queryFn: network
       ? async () => {
           let result
-          switch (type) {
+          switch (objectType) {
             case ObjectType.ADDRESS:
             case ObjectType.CONTRACT:
               result = evm
@@ -388,7 +397,7 @@ export const useTransactions = ({
     queryKey,
     staleTime: 1000 * 60 * 40,
     retry: false,
-    enabled: Boolean(input) && input !== '' && Boolean(network) && Boolean(type),
+    enabled: Boolean(input) && input !== '' && Boolean(network) && Boolean(objectType),
     select: response => {
       if (response.transactions) {
         response.transactions = response.transactions?.filter(({ tx_type }: { tx_type: string }) => tx_type !== 'Fee')
@@ -713,5 +722,22 @@ export const useServiceConfig = (network: NetworkType | undefined) => {
     queryKey: ['service-config'],
     staleTime: 1000 * 60 * 5,
     retry: true,
+  })
+}
+
+/**
+ * useValueExchangeAtLatest is a custom hook that uses the useQuery hook from React Query
+ * to fetch the inbound and outbound of a contract in each height.
+ * @param contract - The contract address.
+ * @param network - The contract network.
+ * @returns result - The result of the query.
+ */
+export const useValueExchangeAtLatest = (network: NetworkType | undefined, contract: string) => {
+  return useQuery({
+    queryFn: network && contract ? () => fetchValueExchangeAtLatest(network, contract) : undefined,
+    queryKey: ['value-exchange-at-latest', network?.uniqueId, contract],
+    staleTime: 1000 * 60 * 5,
+    enabled: Boolean(network) && Boolean(contract),
+    retry: false,
   })
 }

@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 
 import { fetchContractIPFS } from '@/api-client/beryx-clientonly'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import { downloadSourceCode } from '@/utils/download'
 import { FileSystemObject } from '@/utils/serialize'
 import { Download } from '@carbon/icons-react'
@@ -43,7 +43,7 @@ export const DownloadIpfs = ({ CID }: { CID: string }) => {
    * Render the download button.
    */
   return (
-    <Button variant="text" size="small" endIcon={<Download />} aria-label="Download" onClick={downloadCode}>
+    <Button variant={'outlined'} size="small" endIcon={<Download />} aria-label="Download" onClick={downloadCode}>
       Source Code
     </Button>
   )

@@ -57,14 +57,12 @@ export const decodeInput = async (input: string, searchType: SearchType): Promis
   if (decodedInput.objectType === ObjectType.ADDRESS) {
     switch (searchType.type) {
       case 'eth_address':
-        const filAddr = FilEthAddress.fromEthAddress(NetworkPrefix.Mainnet, input)
-        decodedInput.filForm = filAddr.toString()
+        decodedInput.filForm = FilEthAddress.fromEthAddress(NetworkPrefix.Mainnet, input).toString() // filAddr
         decodedInput.ethForm = input
         break
       case 'address':
         try {
-          const ethAddr = FilEthAddress.fromString(input).toEthAddressHex(true)
-          decodedInput.ethForm = ethAddr
+          decodedInput.ethForm = FilEthAddress.fromString(input).toEthAddressHex(true) // ethAddr
         } catch {
           decodedInput.ethForm = undefined
         }

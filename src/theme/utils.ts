@@ -1,4 +1,4 @@
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 
 /**
  * Function to get the path of the theme file

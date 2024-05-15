@@ -38,6 +38,7 @@ const ObjectTypeMapping: { [key: string]: ObjectType } = {
   tx: ObjectType.TXS,
   txs: ObjectType.TXS,
   tipset: ObjectType.TIPSET,
+  block: ObjectType.BLOCK,
   'block-cid': ObjectType.BLOCK,
   height: ObjectType.TIPSET,
   address: ObjectType.ADDRESS,

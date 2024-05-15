@@ -1,5 +1,5 @@
-import { Breakpoints, PaletteOptions } from '@mui/material'
-import { Components } from '@mui/material/styles'
+import { Breakpoints } from '@mui/material'
+import { Components, Palette } from '@mui/material/styles'
 
 /**
  * This function returns the styles for the Accordion component.
@@ -7,7 +7,7 @@ import { Components } from '@mui/material/styles'
  * @param breakpoints - The breakpoints of the application.
  * @returns The styles for the Accordion component.
  */
-export const Accordion = (palette: PaletteOptions, breakpoints: Breakpoints): Components => {
+export const accordionStyles = (palette: Palette, breakpoints: Breakpoints): Components => {
   return {
     // Styles for the main Accordion component
     MuiAccordion: {
@@ -15,24 +15,23 @@ export const Accordion = (palette: PaletteOptions, breakpoints: Breakpoints): Co
         root: {
           position: 'relative',
           marginBottom: '8px',
-          borderRadius: '6px',
-          border: `solid 1px ${palette.tableBorder}`,
-          background: palette.background?.level3,
+          borderRadius: '8px',
+          background: palette.background?.level0,
           boxShadow: 'none',
 
           ':before': {
             display: 'none',
           },
           ':first-of-type': {
-            borderRadius: '6px',
+            borderRadius: '8px',
           },
           ':last-of-type': {
-            borderRadius: '6px',
+            borderRadius: '8px',
           },
           // Styles for the expanded Accordion
           '&.Mui-expanded': {
             border: 'solid 1px transparent',
-            background: palette.background?.level3,
+            background: palette.background?.level0,
             margin: '4px 0 12px 0',
             '& .MuiAccordionSummary-content': {
               margin: '16px 0 16px 0 !important',

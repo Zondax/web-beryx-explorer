@@ -1,4 +1,4 @@
-import { Components, PaletteOptions } from '@mui/material'
+import { Components, Palette } from '@mui/material'
 
 // Extend color prop on components
 declare module '@mui/material/TextField' {
@@ -21,7 +21,7 @@ declare module '@mui/material/TextField' {
  * @param palette - The palette options.
  * @returns The styles for the Input component.
  */
-export const InputStyles = (palette: PaletteOptions): Components => {
+export const inputStyles = (palette: Palette): Components => {
   return {
     MuiTextField: {
       variants: [
@@ -76,9 +76,6 @@ export const InputStyles = (palette: PaletteOptions): Components => {
             '& .MuiInputBase-root': {
               backgroundColor: palette.background?.level0,
             },
-            // ', & .MuiList-root, & .MuiMenu-list, &>ul, & .MuiPaper-root, & .MuiMenu-paper, & .MuiPaper-elevation, & .MuiPaper-rounded, & .MuiPaper-elevation8, & .MuiPopover-paper, & ul': {
-            //   backgroundColor: `${red[500]} !important`,
-            // },
             '& .MuiOutlinedInput-notchedOutline': {
               borderColor: palette.background?.level0,
             },
@@ -88,15 +85,28 @@ export const InputStyles = (palette: PaletteOptions): Components => {
           },
         },
         {
+          props: { variant: 'outlined' },
+          style: {
+            // border: '1px solid',
+
+            '& .MuiInputBase-root': {
+              backgroundColor: palette.background?.level0,
+              border: '1px solid',
+              borderColor: palette.border?.level0,
+              color: palette.text?.primary,
+              borderRadius: '8px',
+            },
+          },
+        },
+        {
           props: { size: 'small' },
           style: {
+            height: '24px',
             '& .MuiInputBase-root': {
-              height: '2.3rem',
+              height: '24px',
             },
             '& .MuiInputBase-input': {
-              // fontSize: '1rem',
-              padding: '0 3rem 0 1.25rem !important',
-              height: '2.3rem',
+              height: '24px',
             },
             '& .MuiInputLabel-root': {
               height: '2.3rem',
@@ -110,18 +120,15 @@ export const InputStyles = (palette: PaletteOptions): Components => {
         {
           props: { size: 'medium' },
           style: {
+            height: '34px',
             '& .MuiInputBase-root': {
-              height: '2.5rem',
+              height: '34px',
             },
             '& .MuiInputBase-input': {
-              // fontSize: '1rem',
-              padding: '0 1.25rem',
-              height: '2.5rem',
-              display: 'flex',
-              alignItems: 'center',
+              height: '34px',
             },
             '& .MuiInputLabel-root, & .MuiTypography-root': {
-              height: '2.5rem',
+              height: '34px',
               display: 'flex',
               alignItems: 'center',
               top: '-1.1rem',
@@ -157,6 +164,9 @@ export const InputStyles = (palette: PaletteOptions): Components => {
           '.Mui-disabled': {
             opacity: 0.8,
           },
+          '& .MuiInputBase-input': {
+            borderRadius: '8px',
+          },
           '& .MuiOutlinedInput-notchedOutline': {
             border: 'none', // border color for the input
           },
@@ -166,18 +176,6 @@ export const InputStyles = (palette: PaletteOptions): Components => {
           '& .MuiFormHelperText-root': {
             fontSize: '0.875rem',
           },
-          // '& .Mui-Select': {
-          //   iconComponent
-          // }
-          // // borderRadius: '4px',
-          // backgroundColor: '#FFF',
-          // '&:hover:not($disabled)': {
-          //   backgroundColor: '#F5F5F5',
-          // },
-          // '&$focused': {
-          //   backgroundColor: '#FFF',
-          //   boxShadow: '0px 0px 4px rgba(0, 0, 0, 0.25)',
-          // },
         },
       },
     },

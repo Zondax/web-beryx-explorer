@@ -322,7 +322,7 @@ export interface ParsedTypeProps {
 }
 
 /**
- * Analize the received type from the API and return the internal type:
+ * Analyze the received type from the API and return the internal type:
  * ParsedTypeProps
  */
 export const getParsedType = (input: InputProps): ParsedTypeProps => {
@@ -362,7 +362,7 @@ export const getParsedType = (input: InputProps): ParsedTypeProps => {
 }
 
 /**
- * Analize the received byte input and return true if:
+ * Analyze the received byte input and return true if:
  * * the input starts with 0x
  * * the elementes are in [A-F,0-9,a-f]
  * * the received and expected length match
@@ -383,7 +383,7 @@ export const validateBytes = (input: string, lengthExpected?: number): boolean =
 }
 
 /**
- * Analize the received input is an address. Return true if the input:
+ * Analyze the received input is an address. Return true if the input:
  * * starts with 0x,
  * * is byte20
  */

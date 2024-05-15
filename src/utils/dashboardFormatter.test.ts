@@ -11,7 +11,7 @@ describe('Dashboard Formatter', () => {
     it('should format fil values correctly', () => {
       const values = [{ value: 121212121212 }, { value: 12121212 }, { value: 1212 }]
       const result = getFormattedFilValues(values)
-      expect(result).toEqual({ values: [{ value: '121.21' }, { value: '0.01' }, { value: '0.00' }], unit: 'nanoFIL' })
+      expect(result).toEqual({ values: [{ value: 121.21 }, { value: 0.01 }, { value: 0.0 }], unit: 'nanoFIL' })
     })
 
     it('should format fil values correctly', () => {
@@ -23,7 +23,7 @@ describe('Dashboard Formatter', () => {
     it('should format fil values correctly', () => {
       const values = [{ value: 1000000000000000 }, { value: 1212122 }, { value: 121222 }]
       const result = getFormattedFilValues(values)
-      expect(result).toEqual({ values: [{ value: '0.00' }, { value: '0.00' }, { value: '0.00' }], unit: 'FIL' })
+      expect(result).toEqual({ values: [{ value: 0.0 }, { value: 0.0 }, { value: 0.0 }], unit: 'FIL' })
     })
   })
 })

@@ -1,12 +1,11 @@
-import { Components } from '@mui/material'
-import { PaletteOptions } from '@mui/material/styles'
+import { Components, Palette } from '@mui/material'
 
 /**
  * This function returns the styles for the ListItemButton component.
  * @param palette - The palette options from the theme.
  * @returns The styles for the ListItemButton component.
  */
-export const ListItemButtonStyle = (palette: PaletteOptions): Components => {
+export const listItemButtonStyles = (palette: Palette): Components => {
   return {
     MuiListItemButton: {
       styleOverrides: {

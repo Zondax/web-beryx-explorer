@@ -14,8 +14,8 @@ test.describe('Network select', () => {
     }
 
     // Open the select options
-    await page.getByLabel('Mainnet', { exact: true }).click()
-    await page.getByRole('option', { name: 'Calibration testnet' }).click()
+    await page.getByTestId('select-network-topbar').click()
+    await page.getByRole('menuitem', { name: 'Filecoin Calibration testnet' }).click()
 
     // Expect the genesis section has the heading Calibration Network
     const genesisTitle = page.getByRole('heading', { name: 'Calibration Network Information' })

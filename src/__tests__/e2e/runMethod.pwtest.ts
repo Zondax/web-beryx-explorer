@@ -81,10 +81,16 @@ async function searchAddress(page: Page, network: NetworkType, address: string) 
     timeout: 60000,
     waitUntil: WAIT_UNTIL_CRITERIA,
   })
+
+  // Wait for the cookie banner to appear and close it
+  const cookieBanner = page.getByRole('button', { name: 'Agree' })
+  await cookieBanner.waitFor({ state: 'visible' })
+  await cookieBanner.click()
+
   // If the network type is Calibration, select it from the dropdown menu.
   if (network === Networks.calibration) {
-    await page.getByLabel('Mainnet', { exact: true }).click()
-    await page.getByRole('option', { name: 'Calibration testnet' }).click()
+    await page.getByTestId('select-network-topbar').click()
+    await page.getByRole('menuitem', { name: 'Filecoin Calibration testnet' }).click()
     await page.getByTestId('select-network-topbar').getByText('Calibrationtestnet').waitFor({ state: 'visible' })
   }
 
@@ -111,8 +117,8 @@ async function goToInteractTab(page: Page) {
  * @param method - The method of the form.
  */
 async function completeForm(page: Page, type: string, method: string) {
-  await page.getByLabel('Type').click()
+  await page.locator('#select-method-type').click()
   await page.getByRole('option', { name: type }).click()
-  await page.getByLabel('Method').click()
+  await page.locator('#select-method').click()
   await page.getByRole('option', { name: method }).click()
 }

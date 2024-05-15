@@ -38,7 +38,7 @@ test.describe.parallel('Just Open - Baseline', () => {
     })
     // Check if the page has been rendered correctly
     const pageTitle = await page.title()
-    expect(pageTitle).toBe('Beryx')
+    expect(pageTitle).toBe('Beryx: Blockchain Explorer, Dashboards, Faucet and Tools')
   })
 })
 
@@ -55,7 +55,7 @@ test.describe.parallel('Just Open - Beryx', () => {
     })
     // Check if the page has been rendered correctly
     const pageTitle = await page.title()
-    expect(pageTitle).toBe('Beryx')
+    expect(pageTitle).toBe('Beryx: Blockchain Explorer, Dashboards, Faucet and Tools')
   })
 
   /**
@@ -67,7 +67,7 @@ test.describe.parallel('Just Open - Beryx', () => {
     })
     // Check if the page has been rendered correctly
     const pageTitle = await page.title()
-    expect(pageTitle).toBe('Beryx')
+    expect(pageTitle).toBe('Beryx: Blockchain Explorer, Dashboards, Faucet and Tools')
   })
 
   /**
@@ -79,7 +79,7 @@ test.describe.parallel('Just Open - Beryx', () => {
     })
     // Check if the page has been rendered correctly
     const pageTitle = await page.title()
-    expect(pageTitle).toBe('Beryx')
+    expect(pageTitle).toBe('Beryx: Blockchain Explorer, Dashboards, Faucet and Tools')
   })
 })
 
@@ -96,7 +96,7 @@ test.describe('Just Open - 404', () => {
     })
     // Check if the page has been rendered correctly
     const pageTitle = await page.title()
-    expect(pageTitle).toBe('Beryx - 404')
+    expect(pageTitle).toBe('404: Page Not Found | Beryx')
   })
 
   /**
@@ -108,7 +108,7 @@ test.describe('Just Open - 404', () => {
     })
     // Check if the page has been rendered correctly
     const pageTitle = await page.title()
-    expect(pageTitle).toBe('Beryx - 404')
+    expect(pageTitle).toBe('404: Page Not Found | Beryx')
   })
 
   /**
@@ -120,6 +120,6 @@ test.describe('Just Open - 404', () => {
     })
     // Check if the page has been rendered correctly
     const pageTitle = await page.title()
-    expect(pageTitle).toBe('Beryx - 404')
+    expect(pageTitle).toBe('404: Page Not Found | Beryx')
   })
 })

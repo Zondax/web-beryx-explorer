@@ -78,6 +78,7 @@ describe('Example searches for calibration network', () => {
           decimals: 18,
         },
         chainSlug: 'fil',
+        chainId: 3,
       })
     ).toThrow('Missing examples for network: unsupported')
   })

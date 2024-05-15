@@ -21,7 +21,7 @@ test.describe.parallel('Home - Search Examples', () => {
     await page.getByRole('button', { name: 'Contract' }).click()
 
     // Wait to the navigation finishes
-    await page.waitForURL('**/v1/search/fil/mainnet/address/*', navigationOptions)
+    await page.waitForURL('**/search/fil/mainnet/address/*', navigationOptions)
 
     // Expect the search type is visible
     const contractTitle = page.getByRole('heading', { name: /^contract$/ })
@@ -32,7 +32,7 @@ test.describe.parallel('Home - Search Examples', () => {
     await page.getByRole('button', { name: 'Address' }).click()
 
     // Wait to the navigation finishes
-    await page.waitForURL('**/v1/search/fil/mainnet/address/*', navigationOptions)
+    await page.waitForURL('**/search/fil/mainnet/address/*', navigationOptions)
 
     // Expect the search type is visible
     const contractTitle = page.getByRole('heading', { name: /^address$/ })
@@ -43,7 +43,7 @@ test.describe.parallel('Home - Search Examples', () => {
     await page.getByRole('button', { name: 'Transaction' }).click()
 
     // Wait to the navigation finishes
-    await page.waitForURL('**/v1/search/fil/mainnet/txs/*', navigationOptions)
+    await page.waitForURL('**/search/fil/mainnet/txs/*', navigationOptions)
 
     // Expect the search type is visible
     const contractTitle = page.getByRole('heading', { name: /^transaction$/ })
@@ -54,7 +54,7 @@ test.describe.parallel('Home - Search Examples', () => {
     await page.getByRole('button', { name: 'Tipset' }).click()
 
     // Wait to the navigation finishes
-    await page.waitForURL('**/v1/search/fil/mainnet/tipset/*', navigationOptions)
+    await page.waitForURL('**/search/fil/mainnet/tipset/*', navigationOptions)
 
     // Expect the search type is visible
     const contractTitle = page.getByRole('heading', { name: /^tipset$/ })
@@ -65,7 +65,7 @@ test.describe.parallel('Home - Search Examples', () => {
     await page.getByRole('button', { name: 'Block' }).click()
 
     // Wait to the navigation finishes
-    await page.waitForURL('**/v1/search/fil/mainnet/block-cid/*', navigationOptions)
+    await page.waitForURL('**/search/fil/mainnet/block-cid/*', navigationOptions)
 
     // Expect the search type is visible
     const contractTitle = page.getByRole('heading', { name: /^block$/ })
@@ -167,8 +167,8 @@ test.describe.parallel('Home - Latest tipsets, transactions and contracts', () =
 
   test('User Journey - Select Network', async ({ page }) => {
     // Change the network to Calibration
-    await page.getByLabel('Mainnet', { exact: true }).click()
-    await page.getByRole('option', { name: 'Calibration testnet' }).click()
+    await page.getByTestId('select-network-topbar').click()
+    await page.getByRole('menuitem', { name: 'Filecoin Calibration testnet' }).click()
 
     // Wait the select changes
     await page.getByTestId('select-network-topbar').getByText('Calibrationtestnet').waitFor({ state: 'visible' })
@@ -176,8 +176,8 @@ test.describe.parallel('Home - Latest tipsets, transactions and contracts', () =
 
   test.skip('User Journey - Check for latest tipsets table', async ({ page }) => {
     // Change the network to Calibration
-    await page.getByLabel('Mainnet', { exact: true }).click()
-    await page.getByRole('option', { name: 'Calibration testnet' }).click()
+    await page.getByTestId('select-network-topbar').click()
+    await page.getByRole('menuitem', { name: 'Filecoin Calibration testnet' }).click()
 
     // Wait the select changes
     await page.getByTestId('select-network-topbar').getByText('Calibrationtestnet').waitFor({ state: 'visible' })
@@ -209,7 +209,7 @@ test.describe.parallel('Home - Latest tipsets, transactions and contracts', () =
 
     // Change the network to Calibration
     await page.getByTestId('select-network-topbar').click()
-    await page.getByRole('option', { name: 'Calibration testnet' }).click()
+    await page.getByRole('menuitem', { name: 'Filecoin Calibration testnet' }).click()
 
     // Wait the select changes
     await page.getByLabel('Calibrationtestnet').waitFor({ state: 'visible' })

@@ -13,8 +13,9 @@ import { DataChartProps } from 'components/common/Charts/config'
 export const getCommonStyleTooltip = (theme: Theme) => ({
   backgroundColor: theme.palette.background.level2,
   borderWidth: 1,
-  borderColor: theme.palette.tableBorder,
+  borderColor: theme.palette.border?.level0,
   padding: [4, 8, 4, 8],
+  margin: [2, 0, 0, 0],
   textStyle: {
     color: theme.palette.text.primary,
   },
@@ -68,7 +69,7 @@ export const getDataZoom = (hideDataZoom: boolean, theme: Theme) =>
           showDetail: false,
           backgroundColor: 'transparent',
           fillerColor: 'transparent',
-          borderColor: theme.palette.tableBorder,
+          borderColor: theme.palette.border?.level0,
           borderRadius: '4px',
           handleStyle: {
             color: theme.palette.mode === 'light' ? theme.palette.background.level0 : theme.palette.text.secondary,
@@ -98,7 +99,7 @@ export const getDataZoom = (hideDataZoom: boolean, theme: Theme) =>
               color: theme.palette.text.secondary,
             },
             areaStyle: {
-              color: theme.palette.tableBorder,
+              color: theme.palette.border?.level0,
             },
           },
           selectedDataBackground: {

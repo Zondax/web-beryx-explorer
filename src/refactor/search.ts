@@ -53,24 +53,28 @@ const makeRequest = async (
   switch (type) {
     case `${InputType.ETHEREUM_ID}-${ObjectType.ADDRESS}`:
     case `${InputType.FILECOIN_ADDRESS}-${ObjectType.ADDRESS}`: {
-      const accountInfoPromise = fetchAccountInfo(inputValue, networkName)
-      const accountBalancePromise = fetchAccountBalance(inputValue, networkName)
+      try {
+        const accountInfoPromise = fetchAccountInfo(inputValue, networkName)
+        const accountBalancePromise = fetchAccountBalance(inputValue, networkName)
 
-      const response = await Promise.allSettled([accountInfoPromise, accountBalancePromise])
+        const response = await Promise.allSettled([accountInfoPromise, accountBalancePromise])
 
-      const account = {}
-      response.forEach(response => {
-        if (response.status === 'fulfilled') {
-          Object.assign(account, response.value)
-        } else {
-          captureException(response.reason)
+        const account = {}
+        response.forEach(response => {
+          if (response.status === 'fulfilled') {
+            Object.assign(account, response.value)
+          } else {
+            captureException(response.reason)
+          }
+        })
+
+        if (Object.keys(account).length !== 0) {
+          return { error: false, response: account }
         }
-      })
-
-      if (Object.keys(account).length !== 0) {
-        return { error: false, response: account }
+        return { error: true }
+      } catch (error) {
+        return { error: true }
       }
-      return { error: true }
     }
     case `${InputType.HASH}-${ObjectType.TIPSET}`: {
       try {

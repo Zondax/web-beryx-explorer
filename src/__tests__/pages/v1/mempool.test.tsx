@@ -1,7 +1,7 @@
 import { renderWithProviders } from '@/helpers/jest-react'
 import { screen } from '@testing-library/react'
 
-import MempoolController from '../../../../pages/v1/mempool'
+import MempoolController from '../../../../pages/mempool'
 
 describe('Mempool Page', () => {
   it('renders without crashing', async () => {

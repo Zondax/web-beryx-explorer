@@ -1,5 +1,5 @@
 import { Components } from '@mui/material'
-import { PaletteOptions } from '@mui/material/styles'
+import { Palette } from '@mui/material/styles'
 
 /**
  * This module extends the PaperPropsVariantOverrides interface to include a new variant 'elevationGradient'.
@@ -19,7 +19,7 @@ declare module '@mui/material/Paper' {
  * @param palette - The palette options from the theme.
  * @returns The styles for the Divider component.
  */
-export const DividerStyle = (palette: PaletteOptions): Components => {
+export const dividerStyles = (palette: Palette): Components => {
   return {
     MuiDivider: {
       styleOverrides: {
