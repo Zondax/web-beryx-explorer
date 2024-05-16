@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Networks } from '@/config/networks'
 import { useContractsStore } from '@/store/ui/contracts'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import { Button, Unstable_Grid2 as Grid } from '@mui/material'
 
 import BannerTile from './BannerTile'
@@ -30,10 +30,10 @@ const InteractUpdate = () => {
     setTestInteract(true)
     switch (network.uniqueId) {
       case Networks.calibration.uniqueId:
-        router.push(`/v1/search/${network.slug}/address/f410fc4oqz4o47leiyhmo5ynji2k4iyxmuxozj4urctq?tab=interact`)
+        router.push(`/search/${network.slug}/address/f410fc4oqz4o47leiyhmo5ynji2k4iyxmuxozj4urctq?tab=interact`)
         break
       case Networks.mainnet.uniqueId:
-        router.push(`/v1/search/${network.slug}/address/f410fg6dyyyr5q7k6tg7kmavzw4uimz3phxxqmfk2mky?tab=interact`)
+        router.push(`/search/${network.slug}/address/f410fg6dyyyr5q7k6tg7kmavzw4uimz3phxxqmfk2mky?tab=interact`)
         break
       default:
         break
@@ -49,8 +49,10 @@ const InteractUpdate = () => {
         </>
       }
       description={[
-        'In our latest update we improved the contract interaction experience.',
-        'To test your contract just search it by its address. Right there, in the results view you&apos;ll be able to call methods, view and upload its ABI and watch live insights.',
+        t('In our latest update we improved the contract interaction experience.'),
+        t(
+          "To test your contract just search it by its address. Right there, in the results view you'll be able to call methods, view and upload its ABI and watch live insights."
+        ),
       ]}
       buttons={
         <Grid container justifyContent="flex-end">

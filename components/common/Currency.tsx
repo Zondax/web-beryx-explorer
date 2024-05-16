@@ -33,8 +33,8 @@ const Currency = ({ icon, text }: CurrencyProps): JSX.Element => {
         flexDirection: 'row',
         alignItems: 'center',
         gap: '0.5rem',
-        border: `1px solid ${theme.palette.tableBorder}`,
-        background: theme.palette.tableBorder,
+        border: `1px solid ${theme.palette.border?.level0}`,
+        background: theme.palette.background.level3,
         borderRadius: '1.2rem',
         padding: '0 6px 0 2px',
       }}

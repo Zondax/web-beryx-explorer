@@ -11,6 +11,9 @@ declare global {
       CLOUDFLARE_TURNSTILE_SECRET_KEY: string
       GHOST_API_KEY: string
       GHOST_API_URL: string
+      NEXT_PUBLIC_BERYX_ENV: 'pre' | 'prod'
+      NEXT_PUBLIC_NAT_ENV: 'pre' | 'prod' | 'dev'
+      NEXT_PUBLIC_BERYX_TOKEN_PRE: string
       NEXT_PUBLIC_BERYX_CALIBRATION_PRE_URL: string
       NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY: string
       NEXT_PUBLIC_GA_TRACKING_ID: string

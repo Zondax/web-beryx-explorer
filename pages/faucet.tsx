@@ -9,7 +9,7 @@ import { useEffect } from 'react'
 import { getPageMetaData, metaTags } from '@/components/metaData'
 import { Networks, getNetworkByUniqueId } from '@/config/networks'
 import { useSubscribeNats } from '@/nats/useSubscribeNats'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 
 import { Layout } from '../components/Layout'
 import { PAGES, navigationItems } from '../components/Layout/components/Sidebar'

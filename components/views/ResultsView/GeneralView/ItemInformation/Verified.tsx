@@ -6,8 +6,8 @@ import { useContractIPFS, useContractVerified } from '@/data/beryx'
 import { useSearchStore } from '@/store/data/search'
 import { useContractsStore } from '@/store/ui/contracts'
 import { FileSystemObject } from '@/utils/serialize'
-import { CheckmarkFilled } from '@carbon/icons-react'
-import { Unstable_Grid2 as Grid, Tooltip, useTheme } from '@mui/material'
+import { Checkmark } from '@carbon/icons-react'
+import { Unstable_Grid2 as Grid, Typography, alpha, useTheme } from '@mui/material'
 
 /**
  * Verified Component
@@ -52,11 +52,21 @@ const Verified = () => {
 
   // render tooltip with success icon upon successful verification
   return (
-    <Tooltip title={t('Source Code Verified')} arrow disableInteractive placement={'top'}>
-      <Grid container alignItems={'center'} sx={{ gap: '0.5rem' }}>
-        <CheckmarkFilled style={{ color: theme.palette.success.main, cursor: 'help' }} />
-      </Grid>
-    </Tooltip>
+    <Grid
+      container
+      alignItems={'center'}
+      sx={{
+        gap: '0.25rem',
+        padding: '3px 6px 3px 5px',
+        borderRadius: '4px',
+        background: alpha(theme.palette.success.light, theme.palette.mode === 'dark' ? 0.35 : 0.75),
+      }}
+    >
+      <Checkmark style={{ color: theme.palette.success.main }} />
+      <Typography variant="subtitle2" color={theme.palette.success.main} fontWeight={600}>
+        {t('Source Code Verified')}
+      </Typography>
+    </Grid>
   )
 }
 

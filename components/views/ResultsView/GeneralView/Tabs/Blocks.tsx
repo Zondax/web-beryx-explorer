@@ -30,20 +30,25 @@ const Blocks = () => {
    */
   const searchResultJson = useSearchStore(s => s.searchResult.json)
 
+  const showBlocksTable = inputValue !== undefined && inputValue !== null
+
   return (
     /**
      * A Box component from MUI to act as a container.
      * If inputValue is not null, it renders a Table component with the respective props.
      */
     <Box height={'100%'}>
-      {inputValue ? (
+      {showBlocksTable ? (
         <Table
+          title="Blocks"
           rowData={searchResultJson?.blocks_info ?? []}
           tableType={TABLE_TYPE.TIPSET_MINERS}
           rowWatch
+          hideBorder
           mode="dev"
           noRowsText={'Something went wrong. There must be at least a miner. Try refreshing the page.'}
           noRowsIcon={<Build />}
+          hideFooter
         />
       ) : null}
     </Box>

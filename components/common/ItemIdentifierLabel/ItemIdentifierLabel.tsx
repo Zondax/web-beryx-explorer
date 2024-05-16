@@ -42,10 +42,10 @@ const ItemIdentifierLabel: React.FC<{
   return (
     <Box
       sx={{
-        backgroundColor: theme.palette.background.level2,
-        padding: '0 0 0 0.65rem',
-        borderRadius: '4px',
-        height: '27px',
+        backgroundColor: theme.palette.background.level0,
+        padding: '0 0.1rem 0 0.6rem',
+        borderRadius: '6px',
+        height: '28px',
         display: 'flex',
         alignItems: 'center',
         width: 'fit-content',

@@ -1,5 +1,5 @@
 import { Components } from '@mui/material'
-import { PaletteOptions } from '@mui/material/styles'
+import { Palette } from '@mui/material/styles'
 
 /**
  * @constant ToggleButtonGroup
@@ -7,7 +7,7 @@ import { PaletteOptions } from '@mui/material/styles'
  * @param palette - The palette options.
  * @returns The styles for the MuiToggleButtonGroup component.
  */
-export const ToggleButtonGroup = (palette: PaletteOptions): Components => {
+export const toggleButtonGroupStyles = (palette: Palette): Components => {
   return {
     MuiToggleButtonGroup: {
       /**
@@ -17,22 +17,19 @@ export const ToggleButtonGroup = (palette: PaletteOptions): Components => {
       styleOverrides: {
         root: {
           color: palette.text?.secondary,
-          backgroundColor: palette.background?.level2,
-          borderRadius: '4px',
-          border: 'none',
           '&.Mui-disabled': {
             opacity: 0.25,
           },
         },
         grouped: {
           '&:first-of-type': {
-            border: 'none',
+            borderRight: `1px solid ${palette.border?.level0}`,
           },
           '&:not(:first-of-type)': {
-            border: 'none',
+            border: `1px solid ${palette.border?.level0}`,
           },
           '&:last-of-type': {
-            border: 'none',
+            borderLeft: `1px solid ${palette.border?.level0}`,
           },
         },
       },

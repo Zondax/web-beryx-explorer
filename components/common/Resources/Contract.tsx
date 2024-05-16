@@ -108,7 +108,11 @@ const Contract = () => {
           )}
         </Box>
       </Grid>
-      <Grid container height={'100%'} sx={{ border: `1px solid ${theme.palette.info.main}`, borderRadius: '6px' }}>
+      <Grid
+        container
+        height={'100%'}
+        sx={{ border: `1px solid ${theme.palette.border?.level0}`, borderRadius: '12px', overflow: 'hidden' }}
+      >
         <Panel
           contentToDownload={''}
           floatingActionButtons

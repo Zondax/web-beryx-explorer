@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
 
-import { Launch } from '@carbon/icons-react'
+import { ArrowRight } from '@carbon/icons-react'
 import { Timeline, TimelineConnector, TimelineContent, TimelineDot, TimelineItem, TimelineSeparator, timelineItemClasses } from '@mui/lab'
 import { Box, Grid, List, Typography, useMediaQuery, useTheme } from '@mui/material'
 
@@ -24,13 +24,14 @@ const RecapList = () => {
    * @returns The JSX code for the Title component.
    */
   const renderItem = (title: string, description: string | undefined, link: string | undefined) => (
-    <Grid container flexDirection={'column'} gap={'0.5rem'} mb={'3rem'} ml={{ xs: '2rem', md: '2rem' }}>
+    <Grid container flexDirection={'column'} gap={'0.5rem'} mb={'3rem'} ml={{ xs: '2rem', md: '2rem' }} mt={'1rem'}>
       <Typography
-        variant="h4"
+        variant="h5"
+        component={'p'}
         fontWeight={600}
         color={theme.palette.text.primary}
         sx={{
-          maxWidth: '20ch',
+          maxWidth: '35ch',
           textAlign: 'left',
         }}
       >
@@ -39,21 +40,23 @@ const RecapList = () => {
       <Grid container flexDirection={'column'}>
         {description ? (
           <Typography
-            variant="subtitle1"
+            variant="body2"
+            component={'p'}
             color={theme.palette.text.primary}
             sx={{
               textAlign: 'left',
               lineHeight: 1.4,
+              opacity: 0.8,
             }}
           >
             {t(`${description}`)}
           </Typography>
         ) : null}
         {link ? (
-          <Link href={link} target={'_blank'} style={{ marginTop: '1.5rem' }}>
+          <Link href={link} target={'_blank'} style={{ marginTop: '1rem' }}>
             <Box display={'flex'} alignItems={'center'} gap={'0.2rem'} color={theme.palette.main}>
-              Visit page
-              <Launch size={12} />
+              {t('Visit page')}
+              <ArrowRight size={12} />
             </Box>
           </Link>
         ) : null}
@@ -70,6 +73,7 @@ const RecapList = () => {
   const renderLevel = (level: string, title: string) => (
     <Typography
       variant={'subtitle1'}
+      component={'span'}
       fontWeight={500}
       sx={{
         flex: 'auto',

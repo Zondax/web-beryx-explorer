@@ -6,7 +6,7 @@ import { useTransactions } from '@/data/beryx'
 import { ObjectType } from '@/routes/parsing'
 import { useSearchStore } from '@/store/data/search'
 import { newDateFormat } from '@/utils/dates'
-import { useMediaQuery, useTheme } from '@mui/material'
+import { Tooltip, Typography, useMediaQuery, useTheme } from '@mui/material'
 
 import { LevelFilter } from 'components/widgets/SearchTables/config'
 
@@ -26,6 +26,7 @@ const BlockOverview = () => {
 
   const searchValue = useSearchStore(s => s.searchInputValue)
   const searchType = useSearchStore(s => s.searchType)
+  const inputType = useSearchStore(s => s.searchInputType)
   const searchNetwork = useSearchStore(s => s.searchInputNetwork)
   const jsonLoadingStatus = useSearchStore(s => s.searchResult.jsonLoadingStatus)
   const searchResultJson = useSearchStore(s => s.searchResult.json)
@@ -39,14 +40,15 @@ const BlockOverview = () => {
     () => ({
       input: searchValue,
       network: searchNetwork,
-      type: searchType,
+      inputType,
+      objectType: searchType,
       method: undefined,
       level: 'main' as LevelFilter,
       evm: false,
       sort: undefined,
       page: { page: 1 },
     }),
-    [searchValue, searchNetwork, searchType]
+    [searchValue, searchNetwork, searchType, inputType]
   )
 
   /**
@@ -119,7 +121,11 @@ const BlockOverview = () => {
       isLoading: jsonLoadingStatus === LoadingStatus.Loading,
       label: t('Time'),
       description: t('Indicates the timestamp or time at which the block occurred'),
-      content: searchResultJson?.timestamp ? newDateFormat(searchResultJson.timestamp, 'UTC', true) : undefined,
+      content: searchResultJson?.timestamp ? (
+        <Tooltip title={`${newDateFormat(searchResultJson.timestamp, 'UTC', true)}`} arrow disableInteractive>
+          <Typography variant="caption">{`${newDateFormat(searchResultJson.timestamp, undefined, false)}`}</Typography>
+        </Tooltip>
+      ) : undefined,
       icon: undefined,
     },
     {

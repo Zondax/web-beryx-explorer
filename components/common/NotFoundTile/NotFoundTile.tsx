@@ -4,7 +4,7 @@ import { NetworkType } from '@/config/networks'
 import { ObjectType } from '@/routes/parsing'
 import { ArrowRight, CheckmarkFilled } from '@carbon/icons-react'
 import { Renew, Rocket } from '@carbon/pictograms-react'
-import { Box, Grid, Paper, Typography, useTheme } from '@mui/material'
+import { Box, Grid, Typography, useTheme } from '@mui/material'
 
 import ItemIdentifierLabel from '../ItemIdentifierLabel'
 
@@ -55,14 +55,14 @@ const NotFoundTile = ({ data, transaction, action }: NotFoundTileParams) => {
     switch (data?.icon) {
       case 'rocket':
         return (
-          <Box position={'absolute'} right={45} top={-1} zIndex={1}>
-            <Rocket width={100} height={100} color={theme.palette.background.level2} data-testid={'rocket-icon'} />
+          <Box position={'absolute'} right={65} top={8} zIndex={1}>
+            <Rocket width={80} height={80} color={theme.palette.border?.level0} data-testid={'rocket-icon'} />
           </Box>
         )
       case 'refresh':
         return (
           <Box position={'absolute'} right={45} top={-5} zIndex={1}>
-            <Renew width={90} height={90} color={theme.palette.background.level2} data-testid={'refresh-icon'} />
+            <Renew width={90} height={90} color={theme.palette.border?.level0} data-testid={'refresh-icon'} />
           </Box>
         )
       default:
@@ -71,9 +71,7 @@ const NotFoundTile = ({ data, transaction, action }: NotFoundTileParams) => {
   }
 
   return (
-    <Paper
-      variant={'elevation'}
-      elevation={2}
+    <Box
       sx={{
         cursor: 'pointer',
         position: 'relative',
@@ -82,9 +80,10 @@ const NotFoundTile = ({ data, transaction, action }: NotFoundTileParams) => {
         minWidth: '20rem',
         contain: 'paint',
         display: 'flex',
-        border: 'solid 2px transparent',
+        border: `solid 1px ${theme.palette.border?.level0}`,
+        borderRadius: '12px',
         '& :hover': {
-          backgroundColor: theme.palette.background.level1,
+          backgroundColor: theme.palette.background.level2,
           transition: 'background-color 0.1s ease-in-out',
         },
       }}
@@ -93,7 +92,8 @@ const NotFoundTile = ({ data, transaction, action }: NotFoundTileParams) => {
       <Grid
         container
         sx={{
-          background: transaction && `linear-gradient(270deg, ${theme.palette.background.level2} 0%, rgba(26, 27, 31, 0.00) 25%)`,
+          background:
+            transaction && `linear-gradient(270deg, ${theme.palette.background.level2} 0%, ${theme.palette.background.level0} 25%)`,
           padding: { xs: '1rem', md: '1.25rem' },
 
           '& :hover': {
@@ -107,8 +107,12 @@ const NotFoundTile = ({ data, transaction, action }: NotFoundTileParams) => {
             {renderIcon()}
             <Grid container flexDirection={'column'} gap={'0.5rem'} width={'85%'} zIndex={2}>
               {/* Information */}
-              <Typography variant="h5">{t(data.title)}</Typography>
-              <Typography variant="subtitle1">{t(data.description)}</Typography>
+              <Typography variant="h5" component={'h1'}>
+                {t(data.title)}
+              </Typography>
+              <Typography variant="subtitle1" component={'p'}>
+                {t(data.description)}
+              </Typography>
             </Grid>
             {/* Left arrow */}
             <Grid container width={'15%'} alignItems={'flex-end'} justifyContent={'flex-end'} zIndex={20}>
@@ -129,7 +133,7 @@ const NotFoundTile = ({ data, transaction, action }: NotFoundTileParams) => {
                 {/* Type and value */}
                 <Box display={'flex'} flexDirection={{ xs: 'column', md: 'row' }} gap={'0.5rem'} alignItems={{ md: 'center' }}>
                   {transaction.formatedType ? (
-                    <Typography variant="h5" textTransform={'capitalize'} data-testid={'not-found-tile-transaction-type'}>
+                    <Typography variant="h5" component={'h1'} textTransform={'capitalize'} data-testid={'not-found-tile-transaction-type'}>
                       {t(transaction.formatedType)}
                     </Typography>
                   ) : null}
@@ -150,7 +154,7 @@ const NotFoundTile = ({ data, transaction, action }: NotFoundTileParams) => {
           </Grid>
         ) : null}
       </Grid>
-    </Paper>
+    </Box>
   )
 }
 

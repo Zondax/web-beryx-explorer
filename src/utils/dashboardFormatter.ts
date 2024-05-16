@@ -51,22 +51,23 @@ export const getFormattedFilValues = (values: { value: number }[]): { values: { 
   let currentUnit: FormatFilOption | undefined
 
   for (const { unit, minValue } of formatFilOptions) {
-    if (values.some((elem: { value: number }) => elem.value >= minValue)) {
+    if (values.some(elem => elem.value >= minValue)) {
       currentUnit = { unit, minValue }
       break
     }
   }
 
   if (currentUnit) {
-    values = values.map((elem: any) => {
+    values = values.map(elem => {
+      let transformedValue: number
       switch (currentUnit?.unit) {
         case 'FIL':
-          elem.value = parseFloat(availableUnits['attoFIL'](elem.value).toWhole())
-          elem.value = elem.value % 1 !== 0 ? elem.value.toFixed(2) : Math.floor(elem.value)
+          transformedValue = parseFloat(availableUnits['attoFIL'](elem.value.toString()).toWhole())
+          elem.value = transformedValue % 1 !== 0 ? parseFloat(transformedValue.toFixed(2)) : transformedValue
           break
         case 'nanoFIL':
-          elem.value = parseFloat(availableUnits['attoFIL'](elem.value).toNano())
-          elem.value = elem.value % 1 !== 0 ? elem.value.toFixed(2) : Math.floor(elem.value)
+          transformedValue = parseFloat(availableUnits['attoFIL'](elem.value.toString()).toNano())
+          elem.value = transformedValue % 1 !== 0 ? parseFloat(transformedValue.toFixed(2)) : transformedValue
           break
         default:
       }
@@ -97,7 +98,7 @@ export const completeGasRange = ({ frequency, data }: { frequency: FrequencyType
   }
 
   let currentDate = new Date(data[0].bucket).getTime()
-  let index = 0 // index of the analized position in the data
+  let index = 0 // index of the Analyzed position in the data
 
   const addMissingDates = () => {
     // The current date is greater or equal than today.
@@ -149,7 +150,7 @@ export const completeContractsRange = ({ frequency, data }: { frequency: Frequen
   }
 
   let currentDate = new Date(data[0].bucket).getTime()
-  let index = 0 // index of the analized position in the data
+  let index = 0 // index of the Analyzed position in the data
 
   const addMissingDates = () => {
     // The current date is greater or equal than today.

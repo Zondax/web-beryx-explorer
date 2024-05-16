@@ -4,10 +4,11 @@ import { useCallback } from 'react'
 
 import { themePath } from '@/theme/utils'
 import { Close, Menu } from '@carbon/icons-react'
-import { Box, Unstable_Grid2 as Grid2, Grow, IconButton, Tooltip, useTheme } from '@mui/material'
+import { Box, IconButton, useTheme } from '@mui/material'
 
-import { BoxNetworkSelector } from '../../../Layout/components/TopBar'
-import { SearchBar, SearchButton } from '../../index'
+import NetworkSelector from 'components/Layout/components/TopBar/NetworkSelectorBox/NetworkSelector'
+
+import { SearchButton } from '../../index'
 
 /**
  * Props for the component `TopLevelProps`
@@ -31,13 +32,13 @@ interface TopLevelProps {
  */
 const TopSection = ({ isMenuOpen, isSearchOpen, toggleMenu, setIsSearchOpen }: TopLevelProps) => {
   const theme = useTheme()
+
   const toggleSearch = useCallback(() => {
     setIsSearchOpen(!isSearchOpen)
   }, [isSearchOpen, setIsSearchOpen])
 
-  const TopLevelGrid = (
-    <Grid2
-      container
+  return (
+    <Box
       sx={{
         display: 'flex',
         justifyContent: 'space-between',
@@ -46,13 +47,13 @@ const TopSection = ({ isMenuOpen, isSearchOpen, toggleMenu, setIsSearchOpen }: T
         width: '100%',
       }}
     >
-      <Box sx={{ marginLeft: theme.spacing(0.5) }}>
-        <Link href="/">
+      <Box sx={{ marginLeft: theme.spacing(1), paddingTop: '1px' }}>
+        <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
           <Image
-            src={themePath('logos/beryx_full_mobile.svg')}
+            src={themePath('logos/beryx_full.svg')}
             alt="Beryx Logo"
-            width={75}
-            height={24}
+            width={49}
+            height={22}
             style={{
               maxWidth: '100%',
               height: 'auto',
@@ -60,49 +61,32 @@ const TopSection = ({ isMenuOpen, isSearchOpen, toggleMenu, setIsSearchOpen }: T
           />
         </Link>
       </Box>
-      <Grid2
-        container
+      <Box
         sx={{
           display: 'flex',
-          gap: '0.5rem',
+          gap: '0.35rem',
           height: 'fit-content',
           alignItems: 'center',
+          padding: '0.5rem',
         }}
       >
-        {!isMenuOpen && <SearchButton isSearchOpen={isSearchOpen} toggleSearch={toggleSearch} />}
-        <Tooltip title="Menu" placement="bottom" key={'mobile menu Settings'}>
-          <IconButton color="primary" onClick={toggleMenu}>
-            {isMenuOpen ? <Close size="24" /> : <Menu size="24" />}
-          </IconButton>
-        </Tooltip>
-      </Grid2>
-    </Grid2>
-  )
-
-  const SearchGrid = (
-    <Grow in={isSearchOpen}>
-      <Grid2
-        container
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1rem',
-          alignItems: 'center',
-          height: isSearchOpen ? 'fit-content' : 0,
-          width: '100%',
-        }}
-      >
-        <BoxNetworkSelector />
-        <SearchBar hasSearchButton={false} properties={{ maxWidth: '40rem' }} mobileMenu navbar />
-      </Grid2>
-    </Grow>
-  )
-
-  return (
-    <>
-      {TopLevelGrid}
-      {SearchGrid}
-    </>
+        <Box
+          sx={{
+            display: 'flex',
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'relative',
+          }}
+        >
+          <NetworkSelector buttonSize="large" />
+        </Box>
+        <SearchButton isSearchOpen={isSearchOpen} toggleSearch={toggleSearch} />
+        <IconButton color="info" size="large" onClick={toggleMenu}>
+          {isMenuOpen ? <Close /> : <Menu />}
+        </IconButton>
+      </Box>
+    </Box>
   )
 }
 

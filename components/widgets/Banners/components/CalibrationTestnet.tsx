@@ -5,7 +5,7 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Networks } from '@/config/networks'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import { Button, Unstable_Grid2 as Grid } from '@mui/material'
 
 import BannerTile from './BannerTile'
@@ -35,8 +35,8 @@ const CalibrationTestnet = () => {
       id={'calibration-tesnet'}
       title={'Calibration testnet is now supported in Beryx'}
       description={[
-        'At the end of May 2023, Filecoin Hyperspace testnet was discontinued permanently in favor of Calibration testnet.',
-        'More info about Calibration testnet can be found in the Filecoin Docs.',
+        t('At the end of May 2023, Filecoin Hyperspace testnet was discontinued permanently in favor of Calibration testnet.'),
+        t('More info about Calibration testnet can be found in the Filecoin Docs.'),
       ]}
       buttons={
         <Grid container justifyContent="flex-start" gap={2}>

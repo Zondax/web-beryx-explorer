@@ -45,10 +45,11 @@
 @use './colors.scss' as *;
 @use './utils.scss' as *;
 @use './porsche-consent.scss' as *;
+@use './animations.scss' as *;
 
 html,
 body {
-  font-size: 14px;
+  font-size: 15px;
   padding: 0;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -124,12 +125,12 @@ img {
         width 0.07s ease-in;
 
       &.handle-dark {
-        background-color: #3651dc;
+        background-color: #0e88e7;
         width: 0.3rem;
       }
 
       &.handle-light {
-        background-color: #3252c7;
+        background-color: #0090ff;
         width: 0.3rem;
       }
     }
@@ -145,11 +146,11 @@ img {
       width 0.15s ease-in;
 
     &.handle-dark {
-      background-color: #343a43;
+      background-color: #364052;
     }
 
     &.handle-light {
-      background-color: #c7cbd2;
+      background-color: #cbd3e4;
     }
   }
 }

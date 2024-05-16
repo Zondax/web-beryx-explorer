@@ -4,7 +4,7 @@ import { LoadingStatus } from '@/config/config'
 import { ObjectType } from '@/routes/parsing'
 import { useSearchStore } from '@/store/data/search'
 import { newDateFormat } from '@/utils/dates'
-import { useMediaQuery, useTheme } from '@mui/material'
+import { Tooltip, Typography, useMediaQuery, useTheme } from '@mui/material'
 
 import BeryxLink from '../../../../../common/BeryxLink'
 import BooleanLabel from '../../../../../common/BooleanLabel'
@@ -67,7 +67,7 @@ const TipsetOverview = () => {
           disableTooltip
           inputType={ObjectType.TIPSET}
           network={network}
-          value={searchResultJson?.height || searchValue}
+          value={searchResultJson?.height !== undefined ? searchResultJson.height.toString() : searchValue}
           isColored
         />
       ),
@@ -100,7 +100,11 @@ const TipsetOverview = () => {
       isLoading: jsonLoadingStatus === LoadingStatus.Loading,
       label: t('Time'),
       description: t('Indicates the timestamp or time at which the tipset occurred') ?? '',
-      content: searchResultJson?.timestamp ? newDateFormat(searchResultJson.timestamp, 'UTC', true) : undefined,
+      content: searchResultJson?.timestamp ? (
+        <Tooltip title={`${newDateFormat(searchResultJson.timestamp, 'UTC', true)}`} arrow disableInteractive>
+          <Typography variant="caption">{`${newDateFormat(searchResultJson.timestamp, undefined, false)}`}</Typography>
+        </Tooltip>
+      ) : undefined,
       icon: undefined,
     },
     {

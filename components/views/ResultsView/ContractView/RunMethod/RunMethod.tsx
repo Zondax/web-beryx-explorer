@@ -73,12 +73,11 @@ const RunMethod = ({ abi, ETHAddress, status }: RunMethodProps): JSX.Element => 
    * @param values - The values of the RunMethod form.
    * @param actions - The actions of the form.
    * @param actions.setSubmitting - The function to set the submitting state of the form.
-   * @param actions.setStatus - The function to set the status of the form.
    *
    * @returns - The promise that resolves when the request is sent.
    */
   const sendRequestToRpc = useCallback(
-    async function sendRequestToRpcFunction(values: RunMethodFormValues, actions: { setSubmitting: any; setStatus: any }) {
+    async function sendRequestToRpcFunction(values: RunMethodFormValues, actions: { setSubmitting: (isSubmitting: boolean) => void }) {
       actions.setSubmitting(true)
       setRpcResponse('')
 
@@ -231,7 +230,7 @@ const RunMethod = ({ abi, ETHAddress, status }: RunMethodProps): JSX.Element => 
             sx={{ isplay: 'flex', alignItems: 'center', padding: '0.25rem 1rem', margin: '0 1rem', background: 'none' }}
           >
             {t(
-              "You're using the tracking feature and while tracking an address you can't invoke contracts. To interact with contracts please connect a wallet."
+              "You're using the tracking feature and while tracking an address you only can use read methods. Otherwise please connect a wallet."
             )}
           </Alert>
         ) : undefined}

@@ -4,9 +4,10 @@ import { amountFormat, chainDecimals, truncateMaxCharacters } from '@/config/con
 import { NetworkType } from '@/config/networks'
 import { ObjectType } from '@/routes/parsing'
 import { newDateFormat } from '@/utils/dates'
-import { Box, Unstable_Grid2 as Grid, Typography, useTheme } from '@mui/material'
+import { Box, Unstable_Grid2 as Grid, Tooltip, Typography, useTheme } from '@mui/material'
 
 import BeryxLink from '../BeryxLink'
+import MempoolTransactionStatus from '../MempoolTransactionStatus'
 import { TypeTransactionIcon } from '../TypeTransactionIcon'
 
 export type TransactionType = 'send' | 'receive' | 'mempool'
@@ -36,6 +37,7 @@ interface TransactionTileProps {
   timestamp: string
   opacity?: number
   network?: NetworkType
+  last_seen?: string
 }
 
 /**
@@ -44,7 +46,18 @@ interface TransactionTileProps {
  * @param props - The transaction tile properties
  * @returns TransactionTile JSX component
  */
-const TransactionTile = ({ status, hash, amount, unit, direction, timestamp, method, opacity, network }: TransactionTileProps) => {
+const TransactionTile = ({
+  status,
+  hash,
+  amount,
+  unit,
+  direction,
+  timestamp,
+  method,
+  opacity,
+  network,
+  last_seen,
+}: TransactionTileProps) => {
   const theme = useTheme()
 
   return (
@@ -54,7 +67,7 @@ const TransactionTile = ({ status, hash, amount, unit, direction, timestamp, met
       gap={'0.5rem'}
       padding={'1rem'}
       flexWrap={'nowrap'}
-      sx={{ borderRadius: '6px', border: `1px solid ${theme.palette.tableBorder}`, opacity }}
+      sx={{ borderRadius: '8px', border: `1px solid ${theme.palette.border?.level0}`, opacity }}
     >
       <Box
         sx={{
@@ -67,7 +80,7 @@ const TransactionTile = ({ status, hash, amount, unit, direction, timestamp, met
           flexShrink: '0',
         }}
       >
-        <TypeTransactionIcon status={status} direction={direction} />
+        {last_seen ? <MempoolTransactionStatus last_seen={last_seen} /> : <TypeTransactionIcon status={status} direction={direction} />}
       </Box>
       <Grid container flexDirection={'column'} width={'100%'}>
         <Grid container>
@@ -87,9 +100,14 @@ const TransactionTile = ({ status, hash, amount, unit, direction, timestamp, met
             </Typography>
           </Grid>
         </Grid>
-        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '1rem' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '0.25rem' }}>
+          <Tooltip title={`${newDateFormat(timestamp, 'UTC', true)}`} arrow disableInteractive>
+            <Typography variant="caption" color={'text.secondary'} sx={{ marginBottom: '0rem' }}>
+              {newDateFormat(timestamp, undefined, false)}
+            </Typography>
+          </Tooltip>
           <Typography variant="caption" color={'text.secondary'} sx={{ marginBottom: '0rem' }}>
-            {newDateFormat(timestamp, 'UTC', true)} • {method}
+            • {method}
           </Typography>
         </Box>
       </Grid>

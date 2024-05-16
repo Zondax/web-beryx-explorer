@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 
 import { GasUsedProps } from '@/api-client/beryx.types'
 import { useGasUsed } from '@/data/beryx'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import { getFormattedFilValues } from '@/utils/dashboardFormatter'
 import { getDateUTC } from '@/utils/dates'
 import { getLoadingStatus } from '@/utils/loadingStatus'

@@ -210,8 +210,9 @@ export const useSearchStore = create<SearchState & SearchActions>()(
         } else {
           captureException(new Error('Duplicated Transactions'), {
             extra: {
-              description: `Found duplicated transaction for: ${get().searchItemType} ${get().searchInputValue} in ${get()
-                .searchInputNetwork?.name} with id: ${transactionId}`,
+              description: `Found duplicated transaction for: ${get().searchItemType} ${get().searchInputValue} in ${
+                get().searchInputNetwork?.name
+              } with id: ${transactionId}`,
             },
           })
         }

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { NetworkFindByName } from '@/config/networks'
 import { TransactionData, useMempoolStore } from '@/store/data/mempool'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import useWalletStore, { WalletProvider } from '@/store/wallets/wallet'
 import { Box, Button, CircularProgress } from '@mui/material'
 
@@ -51,7 +51,7 @@ const MempoolTransactions = ({ visibleTxNumber }: { visibleTxNumber: number }): 
   const handleSeeMoreMempool = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault()
-      return router.push('/v1/mempool', undefined, {
+      return router.push('/mempool', undefined, {
         shallow: true,
       })
     },
@@ -145,6 +145,7 @@ const MempoolTransactions = ({ visibleTxNumber }: { visibleTxNumber: number }): 
         gap: '1rem',
         padding: '1rem',
         overflow: 'auto',
+        backgroundColor: 'background.level0',
       }}
       key={'Wallet Mempool Txs Panel Tab'}
     >
@@ -171,13 +172,14 @@ const MempoolTransactions = ({ visibleTxNumber }: { visibleTxNumber: number }): 
                   opacity={isLoading ? 0.5 : 1}
                   network={walletNetwork}
                   key={`${filAddr} transaction mempool ${tx.tx_cid}`}
+                  last_seen={tx.last_seen}
                 />
               )
             })}
           </Box>
 
           {filteredMempoolTxs.length > visibleTxNumber ? (
-            <Button variant={'text'} onClick={handleSeeMoreMempool}>
+            <Button variant={'inputType'} onClick={handleSeeMoreMempool}>
               {t('See more in Mempool')}
             </Button>
           ) : null}

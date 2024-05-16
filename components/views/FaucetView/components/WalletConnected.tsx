@@ -20,7 +20,7 @@ import Turnstile from 'react-turnstile'
 
 import { truncateMaxCharacters } from '@/config/config'
 import { ObjectType } from '@/routes/parsing'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import useWalletStore from '@/store/wallets/wallet'
 import { Alert, Box, Grid, Typography, useTheme } from '@mui/material'
 

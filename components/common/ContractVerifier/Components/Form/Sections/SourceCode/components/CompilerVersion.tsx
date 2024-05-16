@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { ContractVerificationRequirements } from '@/api-client/beryx.types'
 import { useContractCompilers } from '@/data/beryx'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import { ExpandMore } from '@mui/icons-material'
 import { MenuItem, TextField, Typography } from '@mui/material'
 

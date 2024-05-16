@@ -22,7 +22,7 @@ const ChangelogView = () => {
       data-testid="article-view"
       sx={{
         borderRadius: '8px',
-        overflow: 'hidden',
+        overflowY: 'auto',
         width: '100%',
         height: upMd ? 'calc(100dvh - 2.25rem - 4rem)' : 'fit-content',
         display: 'flex',
@@ -34,8 +34,7 @@ const ChangelogView = () => {
           backgroundColor: theme.palette.background.level1,
           borderRadius: '8px',
           width: 'fit-content',
-          height: '100%',
-          overflowY: 'auto',
+          height: 'fit-content',
           display: 'flex',
           flexDirection: 'column',
           padding: { xs: '0 2rem 4rem 2rem', md: '0 3rem 5rem 3rem' },
@@ -48,20 +47,27 @@ const ChangelogView = () => {
             top: 0,
             backgroundColor: theme.palette.background.level1,
             zIndex: 1,
-            padding: { xs: '3rem 0', md: '4rem 0' },
+            padding: { xs: '2rem 0', md: '3rem 0 1rem 0' },
             boxShadow: `0 10px 20px ${theme.palette.background.level1}`,
           }}
         >
-          <Typography variant="h3" mb={{ xs: '0.5rem' }} textAlign={{ md: 'center', xs: 'left' }}>
+          <Typography variant="h3" component={'h1'} mb={{ xs: '0.5rem' }} textAlign={{ md: 'center', xs: 'left' }}>
             {t('Changelog')}
           </Typography>
-          <Typography variant={'subtitle1'} component={'p'} color={'text.secondary'} mt={0.5} textAlign={{ md: 'center', xs: 'left' }}>
+          <Typography
+            variant={'body1'}
+            component={'p'}
+            color={'text.primary'}
+            mt={0.5}
+            textAlign={{ md: 'center', xs: 'left' }}
+            sx={{ opacity: 0.8 }}
+          >
             {t('Unveiling the Evolution of Beryx')}
           </Typography>
         </Box>
         <Box
           sx={{
-            maxWidth: { xs: '100%', md: '75ch' },
+            maxWidth: { xs: '100%', md: '45dvw' },
           }}
         >
           <RecapList />

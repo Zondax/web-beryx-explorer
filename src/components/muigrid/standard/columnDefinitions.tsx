@@ -5,11 +5,18 @@ import { useTranslation } from 'react-i18next'
 import { amountFormat, chainDecimals, truncateMaxCharacters } from '@/config/config'
 import { ObjectType } from '@/routes/parsing'
 import { useSearchStore } from '@/store/data/search'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import { cellAmount } from '@/utils/conversion'
 import { newDateFormat, timeSince } from '@/utils/dates'
+import { getNumberColor } from '@/utils/ui'
 import { Box, Unstable_Grid2 as Grid, Tooltip, Typography } from '@mui/material'
-import { GridColDef, gridDateComparator, gridStringOrNumberComparator } from '@mui/x-data-grid'
+import {
+  GridColDef,
+  GridRenderCellParams,
+  GridTreeNodeWithRender,
+  gridDateComparator,
+  gridStringOrNumberComparator,
+} from '@mui/x-data-grid'
 
 import MempoolTransactionStatus from 'components/common/MempoolTransactionStatus'
 import TypeTransactionIconContainer from 'components/common/TypeTransactionIcon'
@@ -133,6 +140,7 @@ export interface GenericColumnProps {
   headerIcon?: React.JSX.Element
   sortable?: boolean
   minWidth?: number
+  maxWidth?: number
 }
 
 export interface CellParams {
@@ -207,7 +215,7 @@ const renderIndentedCell = (
       />
       {shoulDisplayFlag ? (
         <Tooltip title={'This is an internal transaction. Click on the hash to see the main transaction'} arrow>
-          <Grid container bgcolor={'#363D48'} borderRadius={'4px'} p={'2px 8px'}>
+          <Grid container bgcolor={'border.level2'} borderRadius={'4px'} p={'2px 8px'}>
             <Typography
               variant="subtitle2"
               color="text.secondary"
@@ -251,7 +259,7 @@ export const beryxLinkColumn = ({
   hasCopyButton = true,
   limitCharacters = truncateMaxCharacters,
   disableLimitCharacters = false,
-  minWidth = 190,
+  minWidth = 210,
   maxWidth = undefined,
   indent = false,
   headerIcon,
@@ -331,7 +339,7 @@ export const methodTypeColumn = ({ field, label, headerIcon, sortable = false }:
     field,
     headerName: label,
     type: 'string',
-    minWidth: 120,
+    minWidth: 130,
     flex: 1,
     sortable,
     renderHeader: () => <RenderHeader label={label} headerIcon={headerIcon} />,
@@ -343,7 +351,7 @@ export const methodTypeColumn = ({ field, label, headerIcon, sortable = false }:
     },
     sortComparator: gridStringOrNumberComparator,
 
-    renderCell: (params: any) => {
+    renderCell: (params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>) => {
       if (!params.value) {
         return (
           <Typography variant="body1" color="text.secondary">
@@ -381,7 +389,7 @@ export const transactionStatusColumn = ({ field, sortable = false }: GenericColu
      * @param params - The parameters of the cell
      * @returns A TransactionStatus component or an empty string
      */
-    renderCell: (params: any) => {
+    renderCell: (params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>) => {
       if (params.value === undefined) {
         return ''
       }
@@ -415,7 +423,7 @@ export const mempoolTransactionStatusColumn = ({ field, sortable = false }: Gene
      * @param params - The parameters of the cell
      * @returns A TransactionStatus component or an empty string
      */
-    renderCell: (params: any) => {
+    renderCell: (params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>) => {
       return <MempoolTransactionStatus last_seen={params.value} />
     },
   }
@@ -446,7 +454,7 @@ export const transactionTypeColumn = ({ field, sortable = false }: GenericColumn
      * @param params - The parameters of the cell
      * @returns A TransactionStatus component or an empty string
      */
-    renderCell: (params: any) => {
+    renderCell: (params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>) => {
       return <TypeTransactionIconContainer transaction={params.row} />
     },
   }
@@ -463,14 +471,14 @@ export const transactionTypeColumn = ({ field, sortable = false }: GenericColumn
  * @param [props.sortable=false] - Whether the column is sortable
  * @returns A GridColDef object
  */
-export const amountColumn = ({ field, label, minWidth, headerIcon, sortable = false }: GenericColumnProps): GridColDef => {
+export const amountColumn = ({ field, label, minWidth, maxWidth, headerIcon, sortable = false }: GenericColumnProps): GridColDef => {
   return {
     field,
     headerName: label,
     type: 'number',
     minWidth: minWidth ?? 110,
     flex: 1,
-    maxWidth: 170,
+    maxWidth: maxWidth ?? 170,
     align: 'right',
     headerAlign: 'right',
     sortable,
@@ -511,7 +519,7 @@ export const amountColumn = ({ field, label, minWidth, headerIcon, sortable = fa
      * @param params - The parameters of the cell
      * @returns A Tooltip component or an empty string
      */
-    renderCell: (params: any) => {
+    renderCell: (params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>) => {
       if (params.value === undefined) {
         return (
           <Typography variant="body1" color="text.secondary">
@@ -569,7 +577,7 @@ export const booleanColumn = ({ field, label, headerIcon, sortable = false }: Ge
      * @param params - The parameters of the cell
      * @returns A BooleanColumn component or a Typography component
      */
-    renderCell: (params: any) => {
+    renderCell: (params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>) => {
       if (params.value === undefined) {
         return (
           <Typography variant="body1" color="text.secondary">
@@ -636,7 +644,7 @@ export const minerColumn = ({ field, label, minWidth, maxWidth, headerIcon, sort
      * @param params - The parameters of the cell
      * @returns A Typography component or a string
      */
-    renderCell: (params: any) => {
+    renderCell: (params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>) => {
       if (!params.value) {
         return (
           <Typography variant="body1" color="text.secondary">
@@ -692,7 +700,7 @@ export interface TimeColumnProps {
 export const timeColumn = ({ field, label, isUTC = false, headerIcon, sortable = false }: TimeColumnProps): GridColDef => {
   return {
     field,
-    headerName: `${label} UTC`,
+    headerName: `${label}${isUTC ? ' UTC' : ''}`,
     type: 'number',
     minWidth: 200,
     flex: 1,
@@ -704,7 +712,7 @@ export const timeColumn = ({ field, label, isUTC = false, headerIcon, sortable =
      *
      * @returns A RenderHeader component
      */
-    renderHeader: () => <RenderHeader label={`${label} (UTC)`} headerIcon={headerIcon} />,
+    renderHeader: () => <RenderHeader label={`${label}${isUTC ? ' (UTC)' : ''}`} headerIcon={headerIcon} />,
     /**
      * Function to compare two values
      *
@@ -729,7 +737,7 @@ export const timeColumn = ({ field, label, isUTC = false, headerIcon, sortable =
      * @param params - The parameters of the cell
      * @returns A Typography component or a string
      */
-    renderCell: (params: any) => {
+    renderCell: (params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>) => {
       if (!params.value) {
         return (
           <Typography variant="body1" color="text.secondary">
@@ -737,7 +745,11 @@ export const timeColumn = ({ field, label, isUTC = false, headerIcon, sortable =
           </Typography>
         )
       }
-      return <Typography variant="caption">{newDateFormat(params.value, isUTC ? 'UTC' : undefined, false)}</Typography>
+      return (
+        <Tooltip title={`${newDateFormat(params.value, isUTC ? undefined : 'UTC', true)}`} arrow disableInteractive>
+          <Typography variant="caption">{`${newDateFormat(params.value, isUTC ? 'UTC' : undefined, false)}`}</Typography>
+        </Tooltip>
+      )
     },
   }
 }
@@ -774,7 +786,7 @@ export const timeSinceColumn = ({ field, label, headerIcon, minWidth, sortable =
      * @param params - The parameters of the cell
      * @returns A Typography component or a string
      */
-    renderCell: (params: any) => {
+    renderCell: (params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>) => {
       if (!params.value) {
         return (
           <Typography variant="body1" color="text.secondary">
@@ -855,7 +867,7 @@ export const numberColumn = ({
      * @param params - The parameters of the cell
      * @returns A Tooltip component
      */
-    renderCell: (params: any) => {
+    renderCell: (params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>) => {
       const number = BigNumber(params.value).toFormat(decimals ?? 2, amountFormat)
       return (
         <Tooltip title={number} arrow>
@@ -934,7 +946,7 @@ export const stringColumn = ({
      * @param params - The parameters of the cell
      * @returns A Typography component
      */
-    renderCell: (params: any) => {
+    renderCell: (params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>) => {
       return (
         <Typography variant="body1" color={!params.value ? 'text.secondary' : 'text.primary'}>
           {!params.value ? '—' : params.value}
@@ -1010,7 +1022,7 @@ export const boxColumn = ({
     filterable: false,
     sortComparator: gridStringOrNumberComparator,
     renderHeader: () => <RenderHeader label={label} headerIcon={headerIcon} />,
-    renderCell: (params: any) => {
+    renderCell: (params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>) => {
       const result = params.row[field.split('-')[0]]
       const network = useAppSettingsStore.getState().network
       if (!result) {
@@ -1142,7 +1154,7 @@ export const compilerColumn = ({ field, label, headerIcon, sortable = false }: G
     sortable,
     sortComparator: gridStringOrNumberComparator,
     renderHeader: () => <RenderHeader label={label} headerIcon={headerIcon} />,
-    renderCell: (params: any) => {
+    renderCell: (params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>) => {
       return (
         <Typography variant="body1" color="text.primary">
           {params.value[0] ?? '-'}
@@ -1171,7 +1183,7 @@ export const optimizationColumn = ({ field, label, headerIcon, sortable = false 
     sortable,
     sortComparator: gridStringOrNumberComparator,
     renderHeader: () => <RenderHeader label={label} headerIcon={headerIcon} />,
-    renderCell: (params: any) => {
+    renderCell: (params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>) => {
       /**
        * Function to get the label for optimization
        * @returns The label for optimization
@@ -1214,7 +1226,7 @@ export const licenseColumn = ({ field, label, headerIcon, sortable = false }: Ge
     sortable,
     sortComparator: gridStringOrNumberComparator,
     renderHeader: () => <RenderHeader label={label} headerIcon={headerIcon} />,
-    renderCell: (params: any) => {
+    renderCell: (params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>) => {
       let arrayLicenses = []
       if (params.value) {
         arrayLicenses = params.value.map((license: string) => {
@@ -1248,7 +1260,7 @@ export const downloadIpfs = ({ field }: { field: string }): GridColDef => {
     maxWidth: 140,
     flex: 1,
     sortable: false,
-    renderCell: (params: any) => {
+    renderCell: (params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>) => {
       const columns = Object.keys(params.row)
       if (columns.length === 0) {
         return ''
@@ -1274,6 +1286,7 @@ export interface RankColumnProps {
   label: string
   headerIcon?: React.JSX.Element
   sortable?: boolean
+  showPrize?: boolean
 }
 
 /**
@@ -1285,7 +1298,7 @@ export interface RankColumnProps {
  * @property [props.sortable=false] - Whether the column is sortable
  * @returns A column definition for the grid
  */
-export const rankColumn = ({ field, label, headerIcon, sortable = false }: RankColumnProps): GridColDef => {
+export const rankColumn = ({ field, label, headerIcon, sortable = false, showPrize = false }: RankColumnProps): GridColDef => {
   return {
     field,
     headerName: label,
@@ -1301,7 +1314,7 @@ export const rankColumn = ({ field, label, headerIcon, sortable = false }: RankC
       }
       return ''
     },
-    renderCell: (params: any) => {
+    renderCell: (params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>) => {
       if (params.value === undefined) {
         return (
           <Typography variant="body1" color="text.secondary">
@@ -1314,6 +1327,13 @@ export const rankColumn = ({ field, label, headerIcon, sortable = false }: RankC
        * @returns The icon to be rendered
        */
       const renderIcon = (): JSX.Element => {
+        if (!showPrize) {
+          return (
+            <Typography variant="body1" fontWeight={500} fontSize={'0.875rem'} color="text.primary">
+              {Number(params.id) + 1}
+            </Typography>
+          )
+        }
         switch (params.id) {
           case '0':
             return <FirstPositionIcon size={54} />
@@ -1323,13 +1343,7 @@ export const rankColumn = ({ field, label, headerIcon, sortable = false }: RankC
             return <ThirdPositionIcon size={54} />
           default:
             return (
-              <Typography
-                variant="body1"
-                fontWeight={500}
-                fontSize={'0.875rem'}
-                color="text.primary"
-                sx={{ textShadow: '1px 1px 10px rgba(0, 0, 0, 0.8)' }}
-              >
+              <Typography variant="body1" fontWeight={500} fontSize={'0.875rem'} color="text.primary">
                 {Number(params.id) + 1}
               </Typography>
             )
@@ -1378,7 +1392,7 @@ export const actorTypeColumn = ({ field, label, headerIcon, sortable = false }: 
     },
     sortComparator: gridStringOrNumberComparator,
 
-    renderCell: (params: any) => {
+    renderCell: (params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>) => {
       if (!params.value) {
         return (
           <Typography variant="body1" color="text.secondary">
@@ -1386,7 +1400,7 @@ export const actorTypeColumn = ({ field, label, headerIcon, sortable = false }: 
           </Typography>
         )
       }
-      return <ActorTypeLabel label={params.value ?? '-'} level={3} />
+      return <ActorTypeLabel label={params.value ?? '-'} level={0} />
     },
   }
 }
@@ -1429,7 +1443,7 @@ export const percentageRange = ({ field, label, width = 170, headerIcon, sortabl
     flex: 0.25,
     sortComparator: gridStringOrNumberComparator,
     renderHeader: () => <RenderHeader label={label} headerIcon={headerIcon} />,
-    renderCell: (params: any) => {
+    renderCell: (params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>) => {
       const higherValue = params.api.getRow(0)[field]
       return (
         <Grid container width={'100%'} height={'100%'} display={'relative'} pb={'1px'}>
@@ -1487,11 +1501,91 @@ export const treeColumn = ({ field, sortable = false }: GenericColumnProps): Gri
      * @param params - The parameters of the cell
      * @returns A TransactionStatus component or an empty string
      */
-    renderCell: (params: any) => {
+    renderCell: (params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>) => {
       if (params.row.collapse === undefined) {
         return ''
       }
       return <TreeColumn row={params.row} />
+    },
+  }
+}
+
+/**
+ * AmountColumn valueExchangeBalanceColumn
+ *
+ * @param props - The properties passed to the component
+ * @param props.field - The field of the column
+ * @param props.label - The label of the column
+ * @param [props.minWidth=110] - The minimum width of the column
+ * @param props.headerIcon - The icon of the header
+ * @param [props.sortable=false] - Whether the column is sortable
+ * @returns A GridColDef object
+ */
+export const valueExchangeBalanceColumn = ({
+  field,
+  label,
+  minWidth,
+  maxWidth,
+  headerIcon,
+  sortable = false,
+}: GenericColumnProps): GridColDef => {
+  return {
+    field,
+    headerName: label,
+    type: 'number',
+    minWidth: minWidth ?? 110,
+    flex: 1,
+    maxWidth: maxWidth ?? 170,
+    align: 'right',
+    headerAlign: 'right',
+    sortable,
+    renderHeader: () => <RenderHeader label={label} headerIcon={headerIcon} />,
+    /**
+     * Function to determine the class name of the cell
+     *
+     * @param params - The parameters of the cell
+     * @returns The class name of the cell
+     */
+    cellClassName: (params: any) => {
+      if (params?.row?.deleted) {
+        return 'font-transparent'
+      }
+      return ''
+    },
+    /**
+     * Function to render the cell
+     *
+     * @param params - The parameters of the cell
+     * @returns A Tooltip component or an empty string
+     */
+    renderCell: (params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>) => {
+      if (params.row.inbound === undefined || params.row.outbound === undefined) {
+        return (
+          <Typography variant="body1" color="text.secondary">
+            —
+          </Typography>
+        )
+      }
+      const inboundAmount = parseInt(params.row.inbound)
+      const outboundAmount = parseInt(params.row.outbound)
+      const balance = inboundAmount - outboundAmount
+
+      const value = BigNumber(balance).div(Math.pow(10, chainDecimals.filecoin))
+      const formattedValue = value.toFormat(2, amountFormat)
+      const amount = cellAmount(value.toFixed())
+
+      return (
+        <Tooltip title={amount} arrow>
+          <Typography
+            variant="captionMono"
+            color={getNumberColor(value)}
+            textAlign={'right'}
+            sx={{ whitSspace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+          >
+            {formattedValue}
+          </Typography>
+        </Tooltip>
+      )
     },
   }
 }

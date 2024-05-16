@@ -3,8 +3,8 @@ import { NextRouter } from 'next/router'
 import { ReactNode } from 'react'
 import { ParallaxProvider } from 'react-scroll-parallax'
 
-import { getThemeOptions } from '@/theme/theme'
-import { ThemeProvider, createTheme } from '@mui/material'
+import { getCustomTheme } from '@/theme/test-theme'
+import { ThemeProvider } from '@mui/material'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { act, render } from '@testing-library/react'
 
@@ -27,7 +27,7 @@ export const queryWrapper = ({ children }: { children?: ReactNode }) => {
  */
 export const renderWithProviders = (children: ReactNode) => {
   // Create material-ui theme with 'light' options
-  const theme = createTheme(getThemeOptions('light'))
+  const theme = getCustomTheme('light')
   const queryClient = new QueryClient()
   const mockRouter: Partial<NextRouter> = {}
 

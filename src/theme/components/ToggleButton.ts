@@ -1,5 +1,5 @@
 import { Components } from '@mui/material'
-import { PaletteOptions } from '@mui/material/styles'
+import { Palette } from '@mui/material/styles'
 
 /**
  * @constant ToggleButton
@@ -8,33 +8,52 @@ import { PaletteOptions } from '@mui/material/styles'
  * @param palette - The palette options.
  * @returns The styles for the MuiToggleButton component.
  */
-export const ToggleButton = (palette: PaletteOptions): Components => {
+export const toggleButtonStyles = (palette: Palette): Components => {
   return {
     MuiToggleButton: {
+      variants: [
+        {
+          props: { size: 'small' },
+          style: {
+            borderRadius: '6px',
+            padding: '0.2rem 0.5rem',
+            height: '28px',
+          },
+        },
+        {
+          props: { size: 'medium' },
+          style: {
+            borderRadius: '8px',
+            padding: '0.25rem 0.5rem',
+            height: '34px',
+          },
+        },
+      ],
       /**
        * @property styleOverrides
        * @description This property represents the style overrides for the MuiToggleButton component.
        */
       styleOverrides: {
         root: {
-          borderRadius: '4px',
           color: palette.text?.secondary,
+          backgroundColor: palette.background?.level0,
+
           '&:hover': {
-            backgroundColor: palette.background?.level3,
+            backgroundColor: palette.background?.level2,
           },
           '&.Mui-selected': {
-            color: palette.mode === 'dark' ? palette.text?.primary : palette.background?.level0,
-            backgroundColor: palette.mode === 'dark' ? palette.tableParentRowBackgroundFocused : palette.text?.primary,
-            border: 'none',
+            color: palette.text?.primary,
+            backgroundColor: palette.primary.main,
             '&:hover': {
-              backgroundColor: palette.mode === 'dark' ? palette.tableParentRowBackgroundFocused : palette.text?.primary,
+              backgroundColor: palette.primary.light,
             },
           },
           '&.Mui-disabled': {
             opacity: '0.25',
             pointerEvents: 'auto',
-            '&:hover': {
-              backgroundColor: 'transparent',
+            backgroundColor: palette.background?.level0,
+            '&.Mui-selected': {
+              backgroundColor: palette.background.level0,
             },
           },
         },

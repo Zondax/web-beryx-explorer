@@ -1,10 +1,15 @@
 import React, { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
+import { useLedgerWalletStore } from '@/store/wallets/ledger'
 import useWalletStore, { WalletProvider } from '@/store/wallets/wallet'
-import { Box, Button, CircularProgress, Unstable_Grid2 as Grid, TextField, Typography, debounce, useTheme } from '@mui/material'
+import { CloseFilled } from '@carbon/icons-react'
+import { Box, Button, CircularProgress, Unstable_Grid2 as Grid, TextField, Tooltip, Typography, debounce, useTheme } from '@mui/material'
 
+import { BetaBox } from 'components/views/ResultsView/ContractView/RunMethod/components/Parameters/Parameters'
+
+import LedgerIcon from '../Icons/Ledger'
 import MetamaskIcon from '../Icons/Metamask'
 
 /**
@@ -19,6 +24,8 @@ const WalletOptions = () => {
   const { network } = useAppSettingsStore(state => ({ network: state.network }))
 
   const { connectWallet, isLoading, provider, error } = useWalletStore(s => s)
+  const { isLoading: ledgerIsLoading, error: ledgerError } = useLedgerWalletStore(s => s)
+
   const [address, setAddress] = useState<string | undefined>(undefined)
   const [inputError, setInputError] = useState<string | undefined>(undefined)
 
@@ -32,6 +39,21 @@ const WalletOptions = () => {
     (e: React.MouseEvent) => {
       e.preventDefault()
       connectWallet(WalletProvider.METAMASK)
+    },
+    [connectWallet]
+  )
+
+  /**
+   * This function handles the action to connect to Ledger when the user clicks the
+   * respective button.
+   *
+   * @param e - the event of the user's mouse click
+   */
+  const handleConnectLedger = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault()
+      // setConnection()
+      connectWallet(WalletProvider.LEDGER)
     },
     [connectWallet]
   )
@@ -94,6 +116,17 @@ const WalletOptions = () => {
    */
   const debouncedChangeHandler = useMemo(() => debounce(handleInputChange, 300), [])
 
+  const renderStatusIcon = useCallback((status?: 'loading' | 'error' | 'success') => {
+    switch (status) {
+      case 'loading':
+        return <CircularProgress size={12} thickness={6} />
+      case 'error':
+        return <CloseFilled color="red" />
+      default:
+        return null
+    }
+  }, [])
+
   /* Rendering the main component */
   return (
     <Box
@@ -121,7 +154,7 @@ const WalletOptions = () => {
           container
           height={'100%'}
           sx={{
-            border: `1px solid ${theme.palette.tableBorder}`,
+            border: `1px solid ${theme.palette.border?.level0}`,
             borderRadius: '6px',
             display: 'flex',
             flexDirection: 'column',
@@ -141,11 +174,12 @@ const WalletOptions = () => {
               height: '3.5rem',
               padding: '0.75rem 1.25rem',
               cursor: 'pointer',
+              borderBottom: `1px solid ${theme.palette.border?.level0}`,
               ':hover': {
-                background: theme.palette.tableParentRowBackground,
+                background: theme.palette.background.level2,
               },
               ':active': {
-                background: theme.palette.tableChildRowBackgroundFocused,
+                background: theme.palette.background.level1,
               },
             }}
           >
@@ -162,6 +196,52 @@ const WalletOptions = () => {
                 <CircularProgress size={16} />
               </Grid>
             ) : null}
+          </Grid>
+
+          {/* Ledger */}
+          <Grid
+            id={'connect2ledger-button'}
+            container
+            xs={12}
+            alignItems={'center'}
+            gap={2}
+            onClick={handleConnectLedger}
+            role="button"
+            sx={{
+              height: '3.5rem',
+              padding: '0.75rem 1.25rem',
+              cursor: 'pointer',
+              ':hover': {
+                background: theme.palette.background.level2,
+              },
+              ':active': {
+                background: theme.palette.background.level1,
+              },
+            }}
+          >
+            <Grid xs={0.7} display={'flex'} alignItems={'center'} gap={'0.5rem'}>
+              <LedgerIcon size={18} color={theme.palette.text.primary} />
+            </Grid>
+            <Grid xs={1.7} container alignItems={'center'} sx={{ gap: '0.5rem' }}>
+              <Typography variant="body1" component={'p'} color={'text.primary'} fontWeight={600}>
+                Ledger
+              </Typography>
+            </Grid>
+            <Grid xs={2}>
+              <Tooltip
+                title={t('Ledger integration is in beta. Please report any issues you encounter using the feedback tool from the top bar.')}
+                disableInteractive
+                arrow
+              >
+                <BetaBox />
+              </Tooltip>
+            </Grid>
+            <Grid xs={6} container alignItems={'center'} gap={1}>
+              {renderStatusIcon(ledgerIsLoading ? 'loading' : ledgerError ? 'error' : 'success')}
+              <Typography variant="caption" component={'p'} color={'text.secondary'}>
+                {ledgerIsLoading ? t('Connecting...') : ledgerError ? ledgerError : null}
+              </Typography>
+            </Grid>
           </Grid>
         </Grid>
       </Box>

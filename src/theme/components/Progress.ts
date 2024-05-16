@@ -8,7 +8,7 @@ import { PaletteOptions } from '@mui/material/styles'
  * @param theme - The theme object from @mui/material/styles.
  * @returns - The style object for MuiCircularProgress component.
  */
-export const ProgressStyle = (theme: PaletteOptions): Components => {
+export const progressStyles = (theme: PaletteOptions): Components => {
   return {
     MuiCircularProgress: {
       variants: [

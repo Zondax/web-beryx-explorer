@@ -6,7 +6,7 @@ import { subscribeNatsSync } from '@/nats/useSubscribeNats'
 import { ObjectType } from '@/routes/parsing'
 import { useSearchStore } from '@/store/data/search'
 import { useContractsStore } from '@/store/ui/contracts'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import { Box, Unstable_Grid2 as Grid, useTheme } from '@mui/material'
 
 import { searchedItemTabs } from '../../../../src/config/tabs'
@@ -131,37 +131,32 @@ const GeneralView = () => {
       <Panel
         contentToDownload={''}
         tabs={tabs.map((item: TabProps) => ({ name: item.name, disabled: !item.show }))}
+        tabBackgroundColor={theme.palette.background.level1}
+        tabBorderColor={theme.palette.border?.level1}
         currentTab={activeTab}
-        padding="0.65rem 0.5rem 0.7rem 0.5rem"
+        padding="0.5rem"
         onTabChange={handleTabChange}
       >
         {renderTabs}
       </Panel>
     )
-  }, [tabs, activeTab, handleTabChange, renderTabs])
+  }, [tabs, theme.palette, activeTab, handleTabChange, renderTabs])
 
   return (
     <Box
       sx={{
-        height: { xs: 'calc(100dvh - 6.75rem)', md: 'calc(100dvh - 2.25rem - 4rem)' },
-        minHeight: '40rem',
-        transition: { xs: 'height 0.2s ease-in-out', md: 'none' },
+        height: { xs: 'calc(100dvh - 6.75rem)', md: 'calc(100dvh - 6rem - 1.75rem)' },
         width: '100%',
-        display: 'flex',
-        gap: '8px',
       }}
-      key={'results view panel'}
     >
       <Grid
         container
         flexDirection={'column'}
-        gap={'0.25rem'}
         width={'100%'}
         height={'100%'}
         flexShrink={0}
         flexWrap={'nowrap'}
-        bgcolor={theme.palette.background.level1}
-        borderRadius={'0.5rem'}
+        sx={{ backgroundColor: theme.palette.background.level0 }}
       >
         <ItemInformation searchItemType={searchItemType} />
         {renderPanel}

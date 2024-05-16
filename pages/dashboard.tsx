@@ -1,4 +1,6 @@
 import { getPageMetaData, metaTags } from '@/components/metaData'
+import { useSubscribeNats } from '@/nats/useSubscribeNats'
+import useAppSettingsStore from '@/store/ui/settings'
 
 import { Layout } from '../components/Layout'
 import { PAGES } from '../components/Layout/components/Sidebar'
@@ -16,6 +18,10 @@ const metaData = getPageMetaData(PAGES.DASHBOARD)
  * @function DashboardController
  */
 export default function DashboardController() {
+  const { network } = useAppSettingsStore(state => ({ network: state.network }))
+
+  useSubscribeNats(network, 'home')
+
   return (
     <>
       {

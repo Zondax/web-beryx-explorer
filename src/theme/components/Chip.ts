@@ -1,4 +1,4 @@
-import { PaletteOptions } from '@mui/material/styles'
+import { Palette } from '@mui/material'
 import { Components } from '@mui/material/styles/components'
 
 /**
@@ -6,7 +6,7 @@ import { Components } from '@mui/material/styles/components'
  * @param palette - The palette options from the theme.
  * @returns The styles for the Chip component.
  */
-export const ChipStyles = (palette: PaletteOptions): Components => {
+export const chipStyles = (palette: Palette): Components => {
   return {
     MuiChip: {
       // Styles for the root element of the Chip component

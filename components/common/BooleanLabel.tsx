@@ -24,7 +24,7 @@ const BooleanLabel = ({ value }: BooleanLabelProps) => {
     return null
   }
 
-  const color = value ? theme.palette.success.main : theme.palette.error.main
+  const color = value ? theme.palette.success.main : theme.palette.warning.main
 
   return (
     <Box
@@ -34,7 +34,7 @@ const BooleanLabel = ({ value }: BooleanLabelProps) => {
         borderRadius: '4px',
         display: 'flex',
         alignItems: 'center',
-        backgroundColor: theme.palette.tableBorder,
+        backgroundColor: value ? theme.palette.success.light : theme.palette.warning.light,
         width: 'fit-content',
         height: '1.5rem',
       }}

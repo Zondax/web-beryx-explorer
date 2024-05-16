@@ -15,6 +15,7 @@ import {
   License,
   Login,
   Logout,
+  Percentage,
   Policy,
   TransformBinary,
   Trophy,
@@ -48,6 +49,7 @@ const {
   transactionDetailsColumn,
   transactionStatusColumn,
   transactionTypeColumn,
+  valueExchangeBalanceColumn,
 } = columnDefinitions
 
 /**
@@ -109,6 +111,10 @@ export enum TABLE_TYPE {
   TOP_CONTRACTS_BY_UNIQUE_USERS = 'top_contracts_by_unique_users',
   /** Top contracts by invokes */
   TOP_CONTRACTS_BY_INVOKES = 'top_contracts_by_invokes',
+  /** Gas statistics by method */
+  GAS_STATISTICS_BY_METHOD = 'gas_statistics_by_method',
+  /** Value exchanged by height */
+  VALUE_EXCHANGED_BY_HEIGHT = 'value_exchanged_by_height',
 }
 
 /**
@@ -130,7 +136,7 @@ export const columnDefsNormal = {
       sortable: true,
     }),
     booleanColumn({ field: 'canonical', label: 'Canonical', headerIcon: <InProgressWarning />, sortable: true }),
-    timeColumn({ field: 'tipset_timestamp', label: 'Timestamp', headerIcon: <Calendar />, sortable: true }),
+    timeColumn({ field: 'tipset_timestamp', label: 'When', headerIcon: <Calendar />, sortable: true }),
     boxColumn({
       field: 'blocks_info-1',
       label: 'Block IDs',
@@ -181,7 +187,7 @@ export const columnDefsNormal = {
     }),
     numberColumn({
       field: 'gas_used',
-      label: 'Gas Used (attoFIL)',
+      label: 'Gas Used (units)',
       minWidth: 150,
       headerIcon: <GasStationFilled />,
       sortable: true,
@@ -210,7 +216,7 @@ export const columnDefsNormal = {
     }),
     numberColumn({
       field: 'gas_used',
-      label: 'Gas Used (attoFIL)',
+      label: 'Gas Used (units)',
       minWidth: 150,
       headerIcon: <GasStationFilled />,
       sortable: true,
@@ -239,7 +245,7 @@ export const columnDefsNormal = {
     }),
     numberColumn({
       field: 'gas_used',
-      label: 'Gas Used (attoFIL)',
+      label: 'Gas Used (units)',
       minWidth: 150,
       headerIcon: <GasStationFilled />,
       sortable: false,
@@ -257,8 +263,6 @@ export const columnDefsNormal = {
       headerIcon: <DoubleInteger />,
     }),
     beryxLinkColumn({ field: 'Miner', label: 'Miner', inputType: ObjectType.ADDRESS, headerIcon: <WatsonHealth3DSoftware /> }),
-    codeViewColumn(),
-    downloadColumn({ fileName: 'tipset_transactions' }),
   ],
   internal_transactions: [
     transactionStatusColumn({ field: 'status', label: 'Status' }),
@@ -269,7 +273,7 @@ export const columnDefsNormal = {
       headerIcon: <DoubleInteger />,
       indent: true,
     }),
-    timeColumn({ field: 'tx_timestamp', label: 'Timestamp', isUTC: true, headerIcon: <Calendar />, sortable: true }),
+    timeColumn({ field: 'tx_timestamp', label: 'When', headerIcon: <Calendar />, sortable: true }),
     beryxLinkColumn({
       field: 'height',
       label: 'Height',
@@ -300,12 +304,12 @@ export const columnDefsNormal = {
       indent: true,
       sortable: true,
     }),
-    timeColumn({ field: 'tx_timestamp', label: 'Timestamp', isUTC: true, headerIcon: <Calendar />, sortable: true }),
+    timeColumn({ field: 'tx_timestamp', label: 'When', headerIcon: <Calendar />, sortable: true }),
     beryxLinkColumn({
       field: 'height',
       label: 'Height',
       inputType: ObjectType.TIPSET,
-      minWidth: 100,
+      minWidth: 110,
       headerIcon: <Cube />,
       sortable: true,
     }),
@@ -320,7 +324,7 @@ export const columnDefsNormal = {
     }),
     numberColumn({
       field: 'gas_used',
-      label: 'Gas Used (attoFIL)',
+      label: 'Gas Used (units)',
       minWidth: 150,
       headerIcon: <GasStationFilled />,
       sortable: true,
@@ -338,12 +342,12 @@ export const columnDefsNormal = {
       headerIcon: <DoubleInteger />,
       sortable: true,
     }),
-    timeColumn({ field: 'tx_timestamp', label: 'Timestamp', isUTC: true, headerIcon: <Calendar />, sortable: true }),
+    timeColumn({ field: 'tx_timestamp', label: 'When', headerIcon: <Calendar />, sortable: true }),
     beryxLinkColumn({
       field: 'height',
       label: 'Height',
       inputType: ObjectType.TIPSET,
-      minWidth: 100,
+      minWidth: 110,
       headerIcon: <Cube />,
       sortable: true,
     }),
@@ -358,7 +362,7 @@ export const columnDefsNormal = {
     }),
     numberColumn({
       field: 'gas_used',
-      label: 'Gas Used (attoFIL)',
+      label: 'Gas Used (units)',
       minWidth: 150,
       headerIcon: <GasStationFilled />,
       sortable: true,
@@ -370,12 +374,12 @@ export const columnDefsNormal = {
   latest_transactions: [
     transactionStatusColumn({ field: 'status', label: 'Status' }),
     beryxLinkColumn({ field: 'tx_cid', label: 'Hash', inputType: ObjectType.TXS, headerIcon: <DoubleInteger /> }),
-    beryxLinkColumn({ field: 'tx_from', label: 'From', inputType: ObjectType.ADDRESS, headerIcon: <Logout /> }),
     methodTypeColumn({ field: 'tx_type', label: 'Method', headerIcon: <DataCategorical /> }),
+    beryxLinkColumn({ field: 'tx_from', label: 'From', inputType: ObjectType.ADDRESS, headerIcon: <Logout /> }),
   ],
   mempool: [
     mempoolTransactionStatusColumn({ field: 'last_seen', label: 'Status' }),
-    timeColumn({ field: 'first_seen', label: 'Timestamp', sortable: true }),
+    timeColumn({ field: 'first_seen', label: 'When', sortable: true, headerIcon: <Calendar /> }),
     beryxLinkColumn({ field: 'tx_cid', label: 'Hash', inputType: ObjectType.TXS, headerIcon: <DoubleInteger />, sortable: true }),
     beryxLinkColumn({ field: 'tx_from', label: 'From', inputType: ObjectType.ADDRESS, headerIcon: <Logout />, sortable: true }),
     beryxLinkColumn({ field: 'tx_to', label: 'To', inputType: ObjectType.ADDRESS, headerIcon: <Login />, sortable: true }),
@@ -427,7 +431,7 @@ export const columnDefsNormal = {
     }),
     numberColumn({
       field: 'gas_used',
-      label: 'Gas Used (attoFIL)',
+      label: 'Gas Used (units)',
       minWidth: 150,
       headerIcon: <GasStationFilled />,
       sortable: true,
@@ -437,7 +441,7 @@ export const columnDefsNormal = {
     downloadColumn({ fileName: 'contract' }),
   ],
   contracts_invokes: [
-    timeColumn({ field: 'bucket', label: 'Date', isUTC: true }),
+    timeColumn({ field: 'bucket', label: 'Date' }),
     beryxLinkColumn({ field: 'tx_to', label: 'To', inputType: ObjectType.ADDRESS }),
     numberColumn({ field: 'count', label: 'Count' }),
     codeViewColumn(),
@@ -449,22 +453,22 @@ export const columnDefsNormal = {
     beryxLinkColumn({ field: 'height', label: 'Height', inputType: ObjectType.TIPSET, minWidth: 100, headerIcon: <Cube /> }),
     beryxLinkColumn({ field: 'tx_from', label: 'Who invoked it', inputType: ObjectType.ADDRESS, headerIcon: <Logout /> }),
     amountColumn({ field: 'amount', label: 'Amount (FIL)', headerIcon: <FilecoinIcon size={15} color1="#e2ebfe49" color2="#000" /> }),
-    numberColumn({ field: 'gas_used', label: 'Gas Used (attoFIL)', minWidth: 150, headerIcon: <GasStationFilled /> }),
+    numberColumn({ field: 'gas_used', label: 'Gas Used (units)', minWidth: 150, headerIcon: <GasStationFilled /> }),
   ],
   contracts_creates: [
-    timeColumn({ field: 'bucket', label: 'Date', isUTC: true }),
+    timeColumn({ field: 'bucket', label: 'Date' }),
     beryxLinkColumn({ field: 'tx_from', label: 'From', inputType: ObjectType.ADDRESS }),
     numberColumn({ field: 'count', label: 'Count' }),
     codeViewColumn(),
   ],
   gas_used: [
-    timeColumn({ field: 'bucket', label: 'Date', isUTC: true }),
+    timeColumn({ field: 'bucket', label: 'Date' }),
     beryxLinkColumn({ field: 'tx_from', label: 'From', inputType: ObjectType.ADDRESS }),
     numberColumn({ field: 'count', label: 'Gas Used' }),
     codeViewColumn(),
   ],
   rich_list: [
-    rankColumn({ field: 'id', label: 'Rank', headerIcon: <Trophy /> }),
+    rankColumn({ field: 'id', label: 'Rank', headerIcon: <Trophy />, showPrize: true }),
     beryxLinkColumn({ field: 'account', label: 'Account', inputType: ObjectType.ADDRESS, headerIcon: <DoubleInteger />, maxWidth: 150 }),
     amountColumn({ field: 'balance', label: 'Balance (FIL)', headerIcon: <FilecoinIcon size={15} color1="#e2ebfe49" color2="#000" /> }),
     codeViewColumn(),
@@ -514,7 +518,7 @@ export const columnDefsNormal = {
       disableLimitCharacters: true,
       headerIcon: <IbmCloudVpcEndpoints />,
     }),
-    numberColumn({ field: 'value', label: 'Gas Used (attoFIL)', decimals: 0 }),
+    numberColumn({ field: 'value', label: 'Gas Used (units)', decimals: 0 }),
   ],
   dashboard_top_addresses_count: [
     beryxLinkColumn({
@@ -566,7 +570,7 @@ export const columnDefsNormal = {
     }),
   ],
   leaderboard: [
-    rankColumn({ field: 'id', label: 'Rank' }),
+    rankColumn({ field: 'id', label: 'Rank', showPrize: true }),
     beryxLinkColumn({
       field: 'unified_account',
       label: 'Address',
@@ -574,8 +578,8 @@ export const columnDefsNormal = {
       headerIcon: <DoubleInteger />,
       sortable: true,
     }),
-    timeColumn({ field: 'first_seen', label: 'First Seen', isUTC: true, headerIcon: <Calendar /> }),
-    timeColumn({ field: 'last_seen', label: 'Last Seen', isUTC: true, headerIcon: <Calendar /> }),
+    timeColumn({ field: 'first_seen', label: 'First Seen', headerIcon: <Calendar /> }),
+    timeColumn({ field: 'last_seen', label: 'Last Seen', headerIcon: <Calendar /> }),
     beryxLinkColumn({
       field: 'last_seen_height',
       label: 'Last seen Height',
@@ -594,13 +598,13 @@ export const columnDefsNormal = {
       field: 'ratio',
       label: 'Ratio',
       minWidth: 150,
-      headerIcon: <Hashtag />,
+      headerIcon: <Percentage />,
       headerTooltip: "Represents the account's balance as a percentage of the total system balance.",
       decimals: 2,
     }),
   ],
   top_contracts_by_unique_users: [
-    rankColumn({ field: 'id', label: 'Rank' }),
+    rankColumn({ field: 'id', label: 'Rank', showPrize: true }),
     beryxLinkColumn({ field: 'tx_to', label: 'To', inputType: ObjectType.ADDRESS, headerIcon: <Login />, disableLimitCharacters: true }),
     numberColumn({
       field: 'count',
@@ -613,11 +617,11 @@ export const columnDefsNormal = {
     }),
   ],
   top_accounts_by_gas_used: [
-    rankColumn({ field: 'id', label: 'Rank' }),
+    rankColumn({ field: 'id', label: 'Rank', showPrize: true }),
     beryxLinkColumn({ field: 'tx_from', label: 'From', inputType: ObjectType.ADDRESS, headerIcon: <Logout /> }),
     numberColumn({
       field: 'gas_used',
-      label: 'Gas Used (attoFIL)',
+      label: 'Gas Used (units)',
       minWidth: 150,
       headerIcon: <GasStationFilled />,
       sortable: true,
@@ -625,7 +629,7 @@ export const columnDefsNormal = {
     }),
   ],
   top_contracts_by_invokes: [
-    rankColumn({ field: 'id', label: 'Rank' }),
+    rankColumn({ field: 'id', label: 'Rank', showPrize: true }),
     beryxLinkColumn({ field: 'tx_to', label: 'To', inputType: ObjectType.ADDRESS, headerIcon: <Login />, disableLimitCharacters: true }),
     numberColumn({
       field: 'count',
@@ -635,6 +639,75 @@ export const columnDefsNormal = {
       headerIcon: <Hashtag />,
       sortable: true,
       decimals: 0,
+    }),
+  ],
+  gas_statistics_by_method: [
+    methodTypeColumn({ field: 'method_name', label: 'Method', headerIcon: <DataCategorical />, sortable: true }),
+    numberColumn({
+      field: 'avg_gas_limit',
+      label: 'Avg. Gas Limit (attoFIL)',
+      minWidth: 150,
+      headerIcon: <GasStationFilled />,
+      sortable: true,
+      decimals: 0,
+    }),
+    numberColumn({
+      field: 'avg_fee_premium',
+      label: 'Avg. Fee Premium (attoFIL)',
+      minWidth: 150,
+      headerIcon: <GasStationFilled />,
+      sortable: true,
+      decimals: 0,
+    }),
+    numberColumn({
+      field: 'avg_fee_cap',
+      label: 'Avg. Fee Cap (attoFIL)',
+      minWidth: 150,
+      headerIcon: <GasStationFilled />,
+      sortable: true,
+      decimals: 0,
+    }),
+    numberColumn({
+      field: 'avg_confirmation_time',
+      label: 'Avg. Confirmation Time (seconds)',
+      minWidth: 150,
+      headerIcon: <Calendar />,
+      sortable: true,
+      decimals: 0,
+    }),
+  ],
+  value_exchanged_by_height: [
+    beryxLinkColumn({
+      field: 'height',
+      label: 'Height',
+      inputType: ObjectType.TIPSET,
+      hasCopyButton: false,
+      headerIcon: <Cube />,
+      minWidth: 130,
+    }),
+    amountColumn({
+      field: 'inbound',
+      label: 'Inbound (FIL)',
+      headerIcon: <FilecoinIcon size={15} color1="#e2ebfe49" color2="#000" />,
+      maxWidth: 200,
+    }),
+    amountColumn({
+      field: 'outbound',
+      label: 'Outbound (FIL)',
+      headerIcon: <FilecoinIcon size={15} color1="#e2ebfe49" color2="#000" />,
+      maxWidth: 200,
+    }),
+    valueExchangeBalanceColumn({
+      field: 'balance-at-height',
+      label: 'Balance at Height (FIL)',
+      headerIcon: <FilecoinIcon size={15} color1="#e2ebfe49" color2="#000" />,
+      maxWidth: 200,
+    }),
+    amountColumn({
+      field: 'balance',
+      label: 'Partial Balance (FIL)',
+      headerIcon: <FilecoinIcon size={15} color1="#e2ebfe49" color2="#000" />,
+      maxWidth: 200,
     }),
   ],
 }

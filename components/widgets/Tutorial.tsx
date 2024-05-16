@@ -94,7 +94,7 @@ const Tutorial = ({ steps, handleCloseTutorial }: { steps: StepsInterface[]; han
           }}
         >
           <Tooltip title={t('Close')} placement="bottom" key={'close popup'}>
-            <IconButton color="info" sx={{ width: '2.5rem', padding: '0.25rem', borderRadius: '8px' }} onClick={handleCloseTutorial}>
+            <IconButton color="info" onClick={handleCloseTutorial}>
               <Close size={24} />
             </IconButton>
           </Tooltip>

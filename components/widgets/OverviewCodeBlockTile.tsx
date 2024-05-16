@@ -3,7 +3,7 @@ import { useCallback } from 'react'
 import { downloadTxtFile, getContentType } from '@/utils/download'
 import { copyContent } from '@/utils/text'
 import { Copy, Download } from '@carbon/icons-react'
-import { Box, Button, useTheme } from '@mui/material'
+import { Box, IconButton, useTheme } from '@mui/material'
 
 import CodeBlock from './CodeBlock'
 
@@ -68,28 +68,12 @@ const OverviewCodeBlockTile = ({ data, label, height = 'min-content' }: Overview
           zIndex: '400',
         }}
       >
-        <Button
-          variant={'inputType'}
-          onClick={handleCopyButton}
-          sx={{
-            minWidth: 'unset',
-            paddingX: '1rem',
-            backgroundColor: theme.palette.tableParentRowBackgroundFocused,
-          }}
-        >
+        <IconButton color="info" onClick={handleCopyButton}>
           <Copy />
-        </Button>
-        <Button
-          variant={'inputType'}
-          onClick={handleDownloadButton}
-          sx={{
-            minWidth: 'unset',
-            paddingX: '1rem',
-            backgroundColor: theme.palette.tableParentRowBackgroundFocused,
-          }}
-        >
+        </IconButton>
+        <IconButton color="info" onClick={handleDownloadButton}>
           <Download />
-        </Button>
+        </IconButton>
       </Box>
 
       <CodeBlock

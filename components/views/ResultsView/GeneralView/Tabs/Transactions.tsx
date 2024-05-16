@@ -26,10 +26,13 @@ const Transactions = () => {
 
   const inputType = useSearchStore(s => s.searchType)
 
+  const showBlocksTable = inputValue !== undefined && inputValue !== null && network && searchType && searchType !== ObjectType.UNKNOWN
+
   return (
     <Box height={'100%'}>
-      {network && inputValue && searchType ? (
+      {showBlocksTable ? (
         <SearchTables
+          hideBorder
           tableType={TABLE_TYPE.TRANSACTIONS}
           noRowsText={inputType === ObjectType.TXS ? t('No internal messages') : t('No transactions')}
           noRowsIcon={<InspectData color={theme.palette.text.secondary} />}

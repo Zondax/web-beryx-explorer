@@ -33,7 +33,7 @@ const Account = () => {
   const { t } = useTranslation()
 
   useEffect(() => {
-    const calculatedTxNumber = Math.floor((height - 530) / 88)
+    const calculatedTxNumber = Math.floor((height - 600) / 88)
     setVisibleTxNumber(Math.max(calculatedTxNumber, 1))
   }, [height])
 
@@ -50,7 +50,7 @@ const Account = () => {
     (e: React.MouseEvent, type: string) => {
       e.preventDefault()
       return router.push(
-        `/v1/search/fil/${network?.name.toLowerCase()}/${ObjectType.ADDRESS}/${filAddr}?type=${type}&tab=transactions`,
+        `/search/fil/${network?.name.toLowerCase()}/${ObjectType.ADDRESS}/${filAddr}?type=${type}&tab=transactions`,
         undefined,
         {
           shallow: true,

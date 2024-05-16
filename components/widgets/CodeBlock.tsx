@@ -107,7 +107,7 @@ const CodeBlock = ({
         inherit: true,
         rules: [{ token: '123', background: colors.gray850 }],
         colors: {
-          'editor.background': '#23252C',
+          'editor.background': '#1F2634',
         },
       },
       'beryx-light': {

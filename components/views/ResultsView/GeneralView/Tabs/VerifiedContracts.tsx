@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { TABLE_TYPE } from '@/config/tables'
 import { useContractsVerified } from '@/data/beryx'
 import { PagesProps } from '@/store/data/search'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import { Analyze } from '@carbon/pictograms-react'
 import { Box } from '@mui/material'
 
@@ -17,9 +17,6 @@ import Table from '../../../../widgets/Table'
  * Represents the table of verified contracts on the selected network.
  */
 const VerifiedContracts = () => {
-  /**
-   * Take the current state of network.
-   */
   const { network } = useAppSettingsStore(state => ({ network: state.network }))
 
   const [paginationModel, setPaginationModel] = useState(initPaginationModel)
@@ -63,7 +60,7 @@ const VerifiedContracts = () => {
         rowData={contractIsSuccess ? verifiedContracts.data : []}
         mode="normal"
         tableType={TABLE_TYPE.VERIFIED_CONTRACTS}
-        title="Verified Contracts"
+        hideBorder
         loading={contractsIsFetching}
         noRowsText={`No contracts were verified on ${network.name}`}
         noRowsIcon={<Analyze />}

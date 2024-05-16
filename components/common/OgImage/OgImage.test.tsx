@@ -13,7 +13,8 @@ describe('OgImage', () => {
    * Test that the OgImage component can be rendered without crashing
    */
   it('renders without crashing', async () => {
-    await renderWithProviders(<OgImage chain="chain" network={Networks.mainnet} title="title" isVerified items={[]} />)
+    await renderWithProviders(<OgImage input="input" chain="chain" network={Networks.mainnet} title="title" isVerified items={[]} />)
+    expect(screen.getByText('input')).toBeInTheDocument()
     expect(screen.getByText('chain')).toBeInTheDocument()
     expect(screen.getByText('mainnet')).toBeInTheDocument()
     expect(screen.getByText('title')).toBeInTheDocument()
@@ -27,7 +28,7 @@ describe('OgImage', () => {
       { label: 'label1', value: 'value1', valueType: 'string' },
       { label: 'label2', value: 'value2', valueType: 'string' },
     ]
-    await renderWithProviders(<OgImage chain="chain" network={Networks.mainnet} title="title" isVerified items={items} />)
+    await renderWithProviders(<OgImage input="input" chain="chain" network={Networks.mainnet} title="title" isVerified items={items} />)
     items.forEach(item => {
       expect(screen.getByText(item.label)).toBeInTheDocument()
       expect(screen.getByText(item.value)).toBeInTheDocument()
@@ -42,7 +43,7 @@ describe('OgImage', () => {
       { label: 'label1', value: undefined, valueType: 'string' },
       { label: 'label2', value: 'value2', valueType: 'string' },
     ]
-    await renderWithProviders(<OgImage chain="chain" network={Networks.mainnet} title="title" isVerified items={items} />)
+    await renderWithProviders(<OgImage input="input" chain="chain" network={Networks.mainnet} title="title" isVerified items={items} />)
     expect(screen.queryByText('label1')).not.toBeInTheDocument()
     expect(screen.getByText('label2')).toBeInTheDocument()
     expect(screen.getByText('value2')).toBeInTheDocument()

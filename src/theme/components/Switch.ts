@@ -1,11 +1,11 @@
-import { Components, PaletteOptions } from '@mui/material'
+import { Components, Palette } from '@mui/material'
 
 /**
  * @constant Switch
  * @description This constant represents the styles for the MuiSwitch component.
  * @type {Components}
  */
-export const Switch = (palette: PaletteOptions): Components => {
+export const switchStyles = (palette: Palette): Components => {
   return {
     MuiSwitch: {
       styleOverrides: {
@@ -25,7 +25,7 @@ export const Switch = (palette: PaletteOptions): Components => {
           // Controls default (unchecked) color for the track
           backgroundColor: palette.mode === 'dark' ? palette.level1 : palette.level1,
           borderRadius: 40 / 2,
-          border: `1px solid ${palette.tableBorder}`,
+          border: `1px solid ${palette.border?.level0}`,
           opacity: 1,
           transition: 'background-color 0.2s, border 0.2s',
           '.Mui-checked.Mui-checked + &': {

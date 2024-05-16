@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Box, Typography, useTheme } from '@mui/material'
@@ -14,6 +15,16 @@ const Contact = () => {
   const theme = useTheme()
   const { t } = useTranslation()
 
+  /**
+   * `getCurrentYear` is a memoized function that returns the current year as a string.
+   * It uses the JavaScript `Date` object to get the current year.
+   *
+   * @returns {string} The current year.
+   */
+  const getCurrentYear = useMemo(() => {
+    return new Date().getFullYear().toString()
+  }, [])
+
   return (
     <Box display={'flex'} flexDirection={'column'} alignItems={'flex-end'}>
       <Typography
@@ -24,7 +35,7 @@ const Contact = () => {
           textAlign: { xs: 'center', md: 'right' },
         }}
       >
-        ©2023 Zondax AG
+        ©{getCurrentYear} Zondax AG
       </Typography>
       <Typography
         variant="subtitle2"

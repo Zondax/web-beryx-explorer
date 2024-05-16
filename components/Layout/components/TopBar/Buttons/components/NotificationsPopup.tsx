@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useNotificationsStore } from '@/store/ui/notifications'
-import { Chat } from '@carbon/icons-react'
+import { InspectData } from '@carbon/pictograms-react'
 import { Box, Button, Unstable_Grid2 as Grid2 } from '@mui/material'
 
 import NotificationBody from '../../../../../common/NotificationBody/NotificationBody'
@@ -31,7 +31,7 @@ const NotificationsPopup = () => {
   return (
     <Grid2
       container
-      bgcolor="background.level1"
+      bgcolor="background.level0"
       sx={{
         position: 'relative',
         alignItems: 'flex-start',
@@ -40,7 +40,7 @@ const NotificationsPopup = () => {
         flexDirection: 'column',
         width: '26rem',
         minHeight: '10rem',
-        height: 'calc(100% - 3.25rem)',
+        maxHeight: 'calc(100dvh - 9rem)',
       }}
     >
       <Grid2
@@ -55,7 +55,7 @@ const NotificationsPopup = () => {
         }}
       >
         {notifications.length === 0 ? (
-          <NoRows text={'There are no notifications'} icon={<Chat width={70} height={40} />} />
+          <NoRows text={''} title={"You don't have any notifications yet"} icon={<InspectData />} />
         ) : (
           <>
             <Grid2
@@ -86,7 +86,8 @@ const NotificationsPopup = () => {
                 gap: '0.5rem',
                 overflowY: 'scroll',
                 width: '100%',
-                height: '95%',
+                height: '100%',
+                maxHeight: 'calc(100dvh - 15rem)',
               }}
             >
               {notifications.map(notification => (

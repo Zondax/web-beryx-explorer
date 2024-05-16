@@ -2,7 +2,7 @@ import NextLink from 'next/link'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import { Box, Link, Typography, useTheme } from '@mui/material'
 import { useCookieConsent } from '@porscheofficial/cookie-consent-banner-react'
 

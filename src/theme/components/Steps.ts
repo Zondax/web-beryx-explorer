@@ -5,7 +5,7 @@ import { Components } from '@mui/material'
  * @description This constant represents the styles for the MuiStepConnector, MuiStepLabel, and MuiStepIcon components.
  * @type {Components}
  */
-export const Steps: Components = {
+export const stepsStyles: Components = {
   MuiStepConnector: {
     styleOverrides: {
       root: {

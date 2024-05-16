@@ -1,5 +1,4 @@
 import { Components } from '@mui/material'
-import { PaletteOptions } from '@mui/material/styles'
 
 /**
  * @constant TabListStyle
@@ -8,7 +7,7 @@ import { PaletteOptions } from '@mui/material/styles'
  * @param palette - The palette options.
  * @returns The styles for the MuiTabs component.
  */
-export const TabListStyle = (palette: PaletteOptions): Components => {
+export const tabListStyles = (): Components => {
   return {
     MuiTabs: {
       /**
@@ -21,11 +20,8 @@ export const TabListStyle = (palette: PaletteOptions): Components => {
           height: '2.25rem',
           background: 'transparent',
           borderRadius: '4px',
-          '.MuiTabs-scroller .MuiTabs-indicator': {
-            backgroundColor: palette.tableParentRowBackground,
-            height: '100%',
-            borderRadius: '4px',
-            zIndex: '-1',
+          '.MuiTabs-indicator': {
+            display: 'none',
           },
           '.MuiTabs-flexContainer': {
             height: '100%',

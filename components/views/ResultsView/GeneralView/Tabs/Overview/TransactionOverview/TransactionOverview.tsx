@@ -18,7 +18,7 @@ import { newDateFormat } from '@/utils/dates'
 import { downloadTxtFile, getContentType } from '@/utils/download'
 import { copyContent } from '@/utils/text'
 import { Copy, Download, GasStationFilled } from '@carbon/icons-react'
-import { Box, Button, Tooltip, Typography, useTheme } from '@mui/material'
+import { Box, IconButton, Tooltip, Typography, useTheme } from '@mui/material'
 
 import { LevelFilter } from 'components/widgets/SearchTables/config'
 
@@ -46,6 +46,7 @@ const TransactionOverview = () => {
   // API data
   const searchValue: string = useSearchStore(s => s.searchInputValue)
   const searchResultJson = useSearchStore(s => s.searchResult.json)
+  const inputType = useSearchStore(s => s.searchInputType)
   const searchType = useSearchStore(s => s.searchType)
   const searchInputType = useSearchStore(s => s.searchInputType)
   const searchResultMempoolJson = useSearchStore(s => s.searchResult.mempoolJson)
@@ -72,14 +73,15 @@ const TransactionOverview = () => {
     () => ({
       input: searchValue,
       network,
-      type: searchType,
+      inputType,
+      objectType: searchType,
       method: undefined,
       level: 'all' as LevelFilter,
       evm: false,
       sort: undefined,
       page: { page: 1 },
     }),
-    [searchValue, network, searchType]
+    [searchValue, network, searchType, inputType]
   )
 
   /**
@@ -153,9 +155,7 @@ const TransactionOverview = () => {
   useEffect(() => {
     if (searchResultJson?.amount !== undefined) {
       setAmount(
-        BigNumber(searchResultJson?.amount)
-          .div(Math.pow(10, chainDecimals.filecoin))
-          .toFormat(2, amountFormat)
+        BigNumber(searchResultJson?.amount).div(Math.pow(10, chainDecimals.filecoin)).dp(2, BigNumber.ROUND_DOWN).toFormat(2, amountFormat)
       )
     }
 
@@ -197,11 +197,7 @@ const TransactionOverview = () => {
   useEffect(() => {
     // mempool
     if (searchResultMempoolJson?.amount !== undefined) {
-      setAmount(
-        BigNumber(searchResultMempoolJson?.amount)
-          .div(Math.pow(10, chainDecimals.filecoin))
-          .toFormat(2, amountFormat)
-      )
+      setAmount(BigNumber(searchResultMempoolJson?.amount).div(Math.pow(10, chainDecimals.filecoin)).toFormat(2, amountFormat))
     }
     if (searchResultMempoolJson?.gas_fee_cap !== undefined) {
       setGasFeeCap(BigNumber(searchResultMempoolJson?.gas_fee_cap).toFormat(2, amountFormat))
@@ -236,6 +232,13 @@ const TransactionOverview = () => {
     }
     return '-'
   }, [searchResultJson, searchResultMempoolJson])
+
+  const getNumberInternalMsg = useCallback(() => {
+    if (!txsResult.total_txs) {
+      return '-'
+    }
+    return (txsResult.total_txs - 1).toString()
+  }, [txsResult])
 
   // Create an object to store repetitive data for OverviewItems
   const overviewItemsData = [
@@ -278,9 +281,17 @@ const TransactionOverview = () => {
       label: t('Time'),
       description: undefined,
       content:
-        searchResultJson?.tx_timestamp || searchResultMempoolJson?.first_seen
-          ? newDateFormat(searchResultJson?.tx_timestamp ?? searchResultMempoolJson?.first_seen, 'UTC', true)
-          : '-',
+        searchResultJson?.tx_timestamp || searchResultMempoolJson?.first_seen ? (
+          <Tooltip
+            title={`${newDateFormat(searchResultJson?.tx_timestamp ?? searchResultMempoolJson?.first_seen, 'UTC', true)}`}
+            arrow
+            disableInteractive
+          >
+            <Typography variant="caption">{`${newDateFormat(searchResultJson?.tx_timestamp ?? searchResultMempoolJson?.first_seen, undefined, false)}`}</Typography>
+          </Tooltip>
+        ) : (
+          '-'
+        ),
       icon: undefined,
     },
     {
@@ -353,13 +364,7 @@ const TransactionOverview = () => {
       description: undefined,
       content:
         amount !== undefined ? (
-          <Tooltip
-            title={BigNumber(searchResultJson?.amount)
-              .div(Math.pow(10, chainDecimals.filecoin))
-              .toFixed()}
-            arrow
-            disableInteractive
-          >
+          <Tooltip title={BigNumber(searchResultJson?.amount).div(Math.pow(10, chainDecimals.filecoin)).toFixed()} arrow disableInteractive>
             <Typography variant="caption" component={'p'} color={'text.primary'}>
               {amount}
             </Typography>
@@ -376,8 +381,8 @@ const TransactionOverview = () => {
     },
     {
       isLoading: jsonLoadingStatus === LoadingStatus.Loading,
-      label: `${t('Gas Used')} (attoFIL)`,
-      description: t('The value that represents the amount of gas used (attoFIL) in the transaction') ?? '',
+      label: `${t('Gas Used')} (units)`,
+      description: t('The value that represents the amount of gas used (units) in the transaction') ?? '',
       content: gas,
       icon: gas ? <GasStationFilled width={16} height={16} color={theme.palette.text.secondary} /> : undefined,
       display: !searchResultMempoolJson,
@@ -392,7 +397,7 @@ const TransactionOverview = () => {
     },
     {
       isLoading: jsonLoadingStatus === LoadingStatus.Loading,
-      label: `${t('Gas Limit')} (gas units)`,
+      label: `${t('Gas Limit')} (units)`,
       description:
         t(
           "Is measured in units of gas and set by the message sender. It imposes a hard limit on the amount of gas (i.e., number of units of gas) that a message's execution should be allowed to consume on chain"
@@ -411,6 +416,13 @@ const TransactionOverview = () => {
       content: gasPremium,
       icon: gasPremium ? <GasStationFilled width={16} height={16} color={theme.palette.text.secondary} /> : undefined,
       display: Boolean(searchResultMempoolJson),
+    },
+    {
+      isLoading: isLoadingTxsResult,
+      label: t('Number of Internal Messages'),
+      description: t('Indicates the total number of internal messages.') ?? '',
+      content: txsResult !== undefined && isSuccessTxsResult ? getNumberInternalMsg() : undefined,
+      icon: undefined,
     },
     {
       isLoading: txMetadata.loadingStatus === LoadingStatus.Loading,
@@ -454,28 +466,12 @@ const TransactionOverview = () => {
                 zIndex: '400',
               }}
             >
-              <Button
-                variant={'inputType'}
-                onClick={handleCopyButton}
-                sx={{
-                  minWidth: 'unset',
-                  paddingX: '1rem',
-                  backgroundColor: theme.palette.tableParentRowBackgroundFocused,
-                }}
-              >
+              <IconButton color="info" onClick={handleCopyButton}>
                 <Copy />
-              </Button>
-              <Button
-                variant={'inputType'}
-                onClick={handleDownloadButton}
-                sx={{
-                  minWidth: 'unset',
-                  paddingX: '1rem',
-                  backgroundColor: theme.palette.tableParentRowBackgroundFocused,
-                }}
-              >
+              </IconButton>
+              <IconButton color="info" onClick={handleDownloadButton}>
                 <Download />
-              </Button>
+              </IconButton>
             </Box>
 
             <CodeBlock
@@ -491,13 +487,6 @@ const TransactionOverview = () => {
         ),
       icon: undefined,
       verticalInMobile: params.loadingStatus !== LoadingStatus.Error,
-    },
-    {
-      isLoading: isLoadingTxsResult,
-      label: t('Number of Internal Messages'),
-      description: t('Indicates the total number of internal messages.') ?? '',
-      content: txsResult !== undefined && isSuccessTxsResult ? (txsResult.total_txs - 1).toString() : undefined,
-      icon: undefined,
     },
   ]
 

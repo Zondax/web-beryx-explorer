@@ -53,3 +53,29 @@ export const isArrayType = (type: string): { type: 'fixed' | 'dynamic'; length?:
   }
   return null
 }
+
+// Sort the array using the custom sort function
+export const sortArray = (currentArray: string[], priorityStrings: string[]) => {
+  // Custom sort function
+  const customSort = (a: string, b: string) => {
+    // Get the indices of the strings in the priority list
+    const indexA = priorityStrings.indexOf(a)
+    const indexB = priorityStrings.indexOf(b)
+
+    // Compare the indices to determine the order
+    if (indexA === -1 && indexB === -1) {
+      // Both strings are not in the priority list, use default lexicographical order
+      return a.localeCompare(b)
+    } else if (indexA === -1) {
+      // Only `b` is in the priority list, `b` comes before `a`
+      return 1
+    } else if (indexB === -1) {
+      // Only `a` is in the priority list, `a` comes before `b`
+      return -1
+    }
+    // Both strings are in the priority list, sort based on their index
+    return indexA - indexB
+  }
+
+  return currentArray.sort(customSort)
+}

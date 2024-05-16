@@ -2,10 +2,10 @@ import { debounce } from 'lodash'
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
-import { FrequencyType } from '@/config/config'
+import { StatsFrequency } from '@/config/config'
 import { NetworkType } from '@/config/networks'
 
-import { useAppSettingsStore } from '../ui/settings'
+import useAppSettingsStore from '../ui/settings'
 
 export const DEBOUNCE_TIME = 300
 
@@ -48,7 +48,7 @@ export interface TxTypesProps {
 /**
  * Statistics Data Props
  */
-export interface StatisticsDataProps {
+export interface StatisticsBaseProps {
   avg_confirmation_time: number
   avg_fee_cap: number
   avg_fee_premium: number
@@ -65,21 +65,18 @@ export interface StatisticsDataProps {
   tx_types: { [key: string]: TxTypesProps }
 }
 
-export type StatsFrequency = 'current' | 'previous_day' | 'previous_hour' | 'previous_week'
-
-export const statsFrequencyMapped: { [key in StatsFrequency]: FrequencyType } = {
-  current: 'hourly',
-  previous_hour: 'hourly',
-  previous_day: 'daily',
-  previous_week: 'weekly',
+/**
+ * Statistics Data Props
+ */
+export interface StatisticsDataProps extends StatisticsBaseProps {
+  stats_by_tx_type: { [key: string]: StatisticsBaseProps }
 }
 
 /**
- * StatisticsProps
- * @property current - The current statistics.
- * @property previous_day - The previous_day statistics.
- * @property previous_hour - The previous_hour statistics.
- * @property previous_week - The previous_week statistics.
+ * Represents overall statistics with data for different frequency intervals.
+ */
+/**
+ * Represents overall statistics with data for different frequency intervals.
  */
 export type StatisticsProps = {
   [key in StatsFrequency]: StatisticsDataProps

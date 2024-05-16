@@ -56,21 +56,21 @@ const Genesis = ({ network }: { network: NetworkType }) => {
   const valueBorder = useMemo(() => {
     if (upMd) {
       return theme.palette.mode === 'light'
-        ? `linear-gradient(45deg, ${theme.palette.text.tertiary} 0%, ${theme.palette.background.level0} 100%)`
-        : `linear-gradient(45deg, ${theme.palette.background.level3} 0%, ${theme.palette.background.level0} 100%)`
+        ? `linear-gradient(45deg, ${theme.palette.border?.level0} 0%, ${theme.palette.background.level1} 100%)`
+        : `linear-gradient(45deg, ${theme.palette.border?.level0} 0%, ${theme.palette.background.level1} 100%)`
     }
 
     return theme.palette.mode === 'light'
-      ? `linear-gradient(45deg, ${theme.palette.background.level0} 0%, ${theme.palette.text.tertiary} 1rem, ${theme.palette.background.level0} 100%)`
-      : `linear-gradient(45deg, ${theme.palette.background.level0} 0%, ${theme.palette.background.level3} 1rem, ${theme.palette.background.level0} 100%)`
+      ? `linear-gradient(45deg, ${theme.palette.background.level1} 0%, ${theme.palette.border?.level0} 1rem, ${theme.palette.background.level1} 100%)`
+      : `linear-gradient(45deg, ${theme.palette.background.level1} 0%, ${theme.palette.border?.level0} 1rem, ${theme.palette.background.level1} 100%)`
   }, [upMd, theme.palette])
 
   // Memoizing labelBorder based on screen size and theme palette
   const labelBorder = useMemo(() => {
     if (upMd) {
       return theme.palette.mode === 'light'
-        ? `linear-gradient(45deg, ${theme.palette.background.level0} 0%, ${theme.palette.text.tertiary} 100%)`
-        : `linear-gradient(45deg, ${theme.palette.background.level0} 0%, ${theme.palette.background.level3} 100%)`
+        ? `linear-gradient(45deg, ${theme.palette.background.level1} 0%, ${theme.palette.border?.level0} 100%)`
+        : `linear-gradient(45deg, ${theme.palette.background.level1} 0%, ${theme.palette.border?.level0} 100%)`
     }
     return undefined
   }, [upMd, theme.palette])
@@ -96,6 +96,7 @@ const Genesis = ({ network }: { network: NetworkType }) => {
         textTransform={'capitalize'}
         marginBottom={'2rem'}
         marginLeft={{ xs: '1.5rem', md: undefined }}
+        textAlign={'center'}
       >
         {t(`${network.project}-${network.name}`)} {upMd ? null : <br />}
         {t('Network Information')}
@@ -114,8 +115,8 @@ const Genesis = ({ network }: { network: NetworkType }) => {
                 borderLeft: '1px solid transparent',
                 borderImage:
                   theme.palette.mode === 'light'
-                    ? `linear-gradient(45deg, rgba(0,0,0,0) 0%, ${theme.palette.text.tertiary} 50%)`
-                    : `linear-gradient(45deg, rgba(0,0,0,0) 0%, ${theme.palette.background.level3} 50%)`,
+                    ? `linear-gradient(45deg, rgba(0,0,0,0) 0%, ${theme.palette.border?.level0} 50%)`
+                    : `linear-gradient(45deg, rgba(0,0,0,0) 0%, ${theme.palette.border?.level0} 50%)`,
                 borderImageSlice: 1,
               }}
             />
@@ -127,16 +128,16 @@ const Genesis = ({ network }: { network: NetworkType }) => {
                   borderTop: '1px solid transparent',
                   borderImage:
                     theme.palette.mode === 'light'
-                      ? `linear-gradient(45deg, ${theme.palette.background.level0} 0%, ${theme.palette.text.tertiary} 100%)`
-                      : `linear-gradient(45deg, ${theme.palette.background.level0} 0%, ${theme.palette.background.level3} 100%)`,
+                      ? `linear-gradient(45deg, ${theme.palette.background.level1} 0%, ${theme.palette.border?.level0} 100%)`
+                      : `linear-gradient(45deg, ${theme.palette.background.level1} 0%, ${theme.palette.border?.level0} 100%)`,
                   borderImageSlice: 1,
                 },
                 ':after ': {
                   borderTop: '1px solid transparent',
                   borderImage:
                     theme.palette.mode === 'light'
-                      ? `linear-gradient(45deg, ${theme.palette.text.tertiary} 0%, ${theme.palette.background.level0} 100%)`
-                      : `linear-gradient(45deg, ${theme.palette.background.level3} 0%, ${theme.palette.background.level0} 100%)`,
+                      ? `linear-gradient(45deg, ${theme.palette.border?.level0} 0%, ${theme.palette.background.level1} 100%)`
+                      : `linear-gradient(45deg, ${theme.palette.border?.level0} 0%, ${theme.palette.background.level1} 100%)`,
                   borderImageSlice: 1,
                 },
               }}

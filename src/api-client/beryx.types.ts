@@ -226,6 +226,9 @@ export interface ServiceConfig {
   fees: { estimate: { allowed_methods: { method_name: string }[] } }
 }
 
+/**
+ * Represents information about a smart contract, including bytecode, instructions, ABI, and verification details.
+ */
 export interface ContractInfo {
   bytecode: string
   instructions: string[]
@@ -246,6 +249,9 @@ export interface ContractInfo {
   }
 }
 
+/**
+ * Represents an item in the ABI (Application Binary Interface) of a smart contract function.
+ */
 export interface AbiItem {
   inputs: InputProps[]
   anonymous?: boolean
@@ -255,9 +261,21 @@ export interface AbiItem {
   type: string
 }
 
+/**
+ * Represents a parameter or return value in the ABI of a smart contract function.
+ */
 export interface InputProps {
   components?: InputProps[]
   internalType: string
   name: string
   type: string
+}
+
+/**
+ * Represents the value exchanged by transactions in a tipset (block).
+ */
+export interface ValueExchangedByTipset {
+  inbound: string
+  outbound: string
+  height: number
 }

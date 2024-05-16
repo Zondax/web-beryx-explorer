@@ -2,6 +2,8 @@
  * @module ResourcesData
  * @description This module exports interfaces and data for the Resources component.
  */
+import { LinkCardCategory } from 'components/common/LinkCard/types'
+
 import { LinkCardProps } from '../../common/LinkCard'
 
 /**
@@ -43,7 +45,7 @@ export const cardData: ProjectsInterface[] = [
         title: 'Beryx Api',
         description: 'Indexes and exposes via a public API Filecoin historical and real-time data.',
         linkDesc: 'Get your free token',
-        linkUrl: 'https://docs.zondax.ch/Beryx',
+        linkUrl: 'https://docs.zondax.ch/beryx-api',
       },
       {
         title: 'Beryx Client Tool for JS',
@@ -97,11 +99,53 @@ export const cardData: ProjectsInterface[] = [
  */
 export const otherResources: LinkCardProps[] = [
   {
+    title: 'InterPlanetary Consensus',
+    description: 'InterPlanetary Consensus (IPC) is a revolutionary blockchain technology that powers planetary-scale web3 apps.',
+    url: 'https://ipc.space/',
+    imageUrl: '/images/ipc.png',
+    domain: 'ipc.space',
+    category: LinkCardCategory.ECOSYSTEM,
+  },
+  {
+    title: 'Filecoin',
+    description: 'Filecoin has 262 repositories available. Follow their code on GitHub.',
+    url: 'https://github.com/filecoin-project',
+    imageUrl: '/images/filecoin-git.png',
+    domain: 'github.com',
+    category: LinkCardCategory.ECOSYSTEM,
+  },
+  {
+    title: 'Lotus',
+    description: 'Lotus is the reference implementation of the Filecoin blockchain.',
+    url: 'https://lotus.filecoin.io/',
+    imageUrl: '/images/lotus.png',
+    domain: 'lotus.filecoin.io',
+    category: LinkCardCategory.DEVELOPERS,
+  },
+  {
+    title: 'Filecoin (@Filecoin) on X',
+    description:
+      'Filecoin ⨎ is the largest decentralized data storage marketplace, protocol, & cryptocurrency. Twitter account is community managed.',
+    url: 'https://twitter.com/Filecoin',
+    imageUrl: '/images/filecoin-x.png',
+    domain: 'twitter.com',
+    category: LinkCardCategory.SOCIAL_EVENTS,
+  },
+  {
+    title: 'Filecoin Slack',
+    description: 'Join the Filecoin community on Slack.',
+    url: 'https://filecoin.io/slack',
+    imageUrl: '/images/filecoin-slack.png',
+    domain: 'filecoin.io',
+    category: LinkCardCategory.SOCIAL_EVENTS,
+  },
+  {
     title: 'Beryx API',
     description: 'Indexes and exposes via a public API Filecoin historical and real-time data.',
-    url: 'https://docs.zondax.ch/Beryx',
+    url: 'https://docs.zondax.ch/beryx-api',
     imageUrl: '/images/beryx.png',
     domain: 'docs.zondax.ch',
+    category: LinkCardCategory.DEVELOPERS,
   },
   {
     title: 'Filecoin FVM contracts on Cookbook',
@@ -110,12 +154,39 @@ export const otherResources: LinkCardProps[] = [
     url: 'https://www.cookbook.dev/filecoin',
     imageUrl: '/images/cookbook.png',
     domain: 'www.cookbook.dev',
+    category: LinkCardCategory.DEVELOPERS,
+  },
+  {
+    title: 'Orbit Filecoin x Cyber Science Katowice !',
+    description:
+      'Hey there! Join us at Orbit Filecoin x Cyber Science Katowice for a deep dive into the world of decentralized storage and cybersecurity.',
+    url: 'https://www.eventbrite.com/e/orbit-filecoin-x-cyber-science-katowice-tickets-872433832077',
+    imageUrl: '/images/filecoin-e1.png',
+    domain: 'www.eventbrite.com',
+    category: LinkCardCategory.SOCIAL_EVENTS,
+  },
+  {
+    title: 'ETHWarsaw & Orbit Filecoin',
+    description: 'Welcome to the ultimate Web3 tech with Orbit Filecoin and ETHWarsaw  in the heart of  Warsaw!',
+    url: 'https://www.eventbrite.com/e/ethwarsaw-orbit-filecoin-tickets-873379029187',
+    imageUrl: '/images/filecoin-e2.png',
+    domain: 'www.eventbrite.com',
+    category: LinkCardCategory.SOCIAL_EVENTS,
+  },
+  {
+    title: 'Filecoin Orbit Meetup - Intro to Filecoin and Interplanetary Consensus',
+    description: "Join us for a chill Filecoin Meetup where we'll chat about Filecoin and Interplanetary Consensus (IPC)!",
+    url: 'https://www.eventbrite.com/e/filecoin-orbit-meetup-intro-to-filecoin-and-interplanetary-consensus-tickets-867725569537',
+    imageUrl: '/images/filecoin-e3.png',
+    domain: 'www.eventbrite.com',
+    category: LinkCardCategory.SOCIAL_EVENTS,
   },
   {
     title: 'Filecoin Ecosystem',
     description: 'Filecoin interactive ecosystem dashboard.',
     url: 'https://ecosystem.filecoin.io/?filters=enabled&tags=FVM',
-    imageUrl: '/images/filecoin.png',
+    imageUrl: '/images/filecoin-eco.png',
     domain: 'ecosystem.filecoin.io',
+    category: LinkCardCategory.ECOSYSTEM,
   },
 ]

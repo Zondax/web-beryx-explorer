@@ -63,7 +63,7 @@ const storeOptions = {
  * Zustand store for the application settings.
  * It includes the initial state and actions.
  */
-export const useAppSettingsStore = create<AppSettingState & AppSettingActions>()(
+const useAppSettingsStore = create<AppSettingState & AppSettingActions>()(
   immer(
     persist(
       set => ({
@@ -116,3 +116,5 @@ export const useAppSettingsStore = create<AppSettingState & AppSettingActions>()
     )
   )
 )
+
+export default useAppSettingsStore

@@ -63,7 +63,7 @@ export const DynamicFontSizeText = ({
   }, [text, adjustFontSize])
 
   return (
-    <Typography variant="h1" style={{ fontSize, width: 'fit-content' }} ref={textRef}>
+    <Typography variant={'body1'} component={'span'} color={'text.primary'} style={{ fontSize, width: 'fit-content' }} ref={textRef}>
       {text}
     </Typography>
   )

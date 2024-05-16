@@ -116,7 +116,7 @@ const CodeView = ({ content }: CodeViewProps) => {
               transform: 'translate(-50%, -50%)',
               width: '50rem',
               maxWidth: upMd ? '80vw' : 'calc(100vw - 1rem)',
-              border: `1px solid ${theme.palette.background.level2}`,
+              border: `1px solid ${theme.palette.border?.level0}`,
               boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.24), 0px 1px 3px rgba(0, 0, 0, 0.12)',
               borderRadius: '12px',
               filter: `drop-shadow(${theme.palette.mode === 'light' ? theme.shadows[2] : theme.shadows[3]})`,
@@ -152,7 +152,7 @@ const CodeView = ({ content }: CodeViewProps) => {
                   height: '40rem',
                   maxHeight: '80vh',
                   borderRadius: '8px',
-                  border: `1px solid ${theme.palette.background.level2}`,
+                  border: `1px solid ${theme.palette.border?.level0}`,
                 }}
               >
                 <Panel noTopbar>{renderCode()}</Panel>

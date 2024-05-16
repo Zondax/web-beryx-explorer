@@ -4,15 +4,19 @@ import { useTranslation } from 'react-i18next'
 import { truncateMaxCharacters } from '@/config/config'
 import { NetworkType } from '@/config/networks'
 import { ObjectType } from '@/routes/parsing'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
+import { LedgerWalletError, useLedgerWalletStore } from '@/store/wallets/ledger'
 import useWalletStore, { WalletProvider } from '@/store/wallets/wallet'
 import { boxShadow } from '@/theme/hoverEffect'
-import { Close, Logout, Renew, View } from '@carbon/icons-react'
-import { Box, Button, CircularProgress, Tooltip, useTheme } from '@mui/material'
+import { ChevronLeft, Close, Logout, Renew, View } from '@carbon/icons-react'
+import { Box, Button, CircularProgress, IconButton, Theme, Tooltip, Typography, useTheme } from '@mui/material'
 
 import BeryxLink from '../BeryxLink/BeryxLink'
+import LedgerIcon from '../Icons/Ledger'
 import MetamaskIcon from '../Icons/Metamask'
 import Account from './Account/Account'
+import ChooseLedgerAddress from './ChooseLedgerAddress'
+import DeviceLocked from './DeviceLocked'
 import WalletOptions from './WalletOptions'
 
 /**
@@ -23,11 +27,12 @@ import WalletOptions from './WalletOptions'
  *
  * @returns - Returns the JSX Element of the icon based on the provider or null if the provider is not recognized.
  */
-export const renderProviderIcon = (provider: WalletProvider, size: number) => {
+export const renderProviderIcon = (provider: WalletProvider, size: number, theme: Theme) => {
   switch (provider) {
     case WalletProvider.METAMASK:
       return <MetamaskIcon size={size} />
-
+    case WalletProvider.LEDGER:
+      return <LedgerIcon size={size} color={theme.palette.text.primary} />
     case WalletProvider.VIEW_ONLY:
       return <View width={size} />
 
@@ -56,27 +61,33 @@ const Buttons: React.FC<{
   handleMenuPopup: () => void
 }> = ({ isConnected, isLoading, gather, disconnectWallet, handleMenuPopup }) => {
   const { t } = useTranslation()
+  const { setIsChoosingAddress } = useLedgerWalletStore(s => s)
+
+  const handleClose = useCallback(() => {
+    handleMenuPopup()
+    setIsChoosingAddress(false)
+  }, [handleMenuPopup, setIsChoosingAddress])
 
   return (
-    <Box sx={{ display: 'flex', gap: '0.125rem', alignItems: 'center' }}>
+    <Box sx={{ display: 'flex', gap: '0.25rem', alignItems: 'center' }}>
       {isConnected && (
         <>
-          <Tooltip title={t('Refresh')} disableInteractive arrow>
-            <Button variant={'text'} sx={{ minWidth: 'unset', padding: '0.5rem 0.95rem' }} onClick={gather}>
-              {isLoading ? <CircularProgress size={14} /> : <Renew width={16} />}
+          <Tooltip title={t('Disconnect wallet')} disableInteractive arrow>
+            <Button size="medium" variant="outlined" onClick={disconnectWallet} startIcon={<Logout width={15} />}>
+              <Typography>Disconnect</Typography>
             </Button>
           </Tooltip>
-          <Tooltip title={t('Disconnect wallet')} disableInteractive arrow>
-            <Button variant={'text'} sx={{ minWidth: 'unset', padding: '0.5rem 0.95rem' }} onClick={disconnectWallet}>
-              <Logout width={15} />
-            </Button>
+          <Tooltip title={t('Refresh')} disableInteractive arrow>
+            <IconButton className="rotateAnimationContainer" color="info" onClick={gather}>
+              {isLoading ? <CircularProgress size={14} /> : <Renew className="rotateAnimation" width={16} />}
+            </IconButton>
           </Tooltip>
         </>
       )}
       <Tooltip title={t('Close')} disableInteractive arrow>
-        <Button variant={'text'} sx={{ minWidth: 'unset', padding: '0.5rem 0.6rem' }} onClick={handleMenuPopup}>
-          <Close size={20} />
-        </Button>
+        <IconButton className="shrinkDisappearAnimationContainer" color="info" onClick={handleClose}>
+          <Close className="shrinkDisappear" />
+        </IconButton>
       </Tooltip>
     </Box>
   )
@@ -106,6 +117,13 @@ const WalletHeader: React.FC<{
   disconnectWallet: () => void
   handleMenuPopup: () => void
 }> = ({ isConnected, filAddr, provider, network: networkName, isLoading, gather, disconnectWallet, handleMenuPopup }) => {
+  const theme = useTheme()
+  const { isChoosingAddress, setIsChoosingAddress } = useLedgerWalletStore(s => s)
+
+  const handleBack = useCallback(() => {
+    setIsChoosingAddress(false)
+  }, [setIsChoosingAddress])
+
   return (
     <Box
       sx={{
@@ -113,25 +131,40 @@ const WalletHeader: React.FC<{
         height: '3.5rem',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: isConnected ? 'space-between' : 'flex-end',
+        justifyContent: 'space-between',
         padding: { xs: '0 0.5rem 0 1rem', md: '0 0.5rem 0 1rem' },
       }}
     >
-      {isConnected && filAddr && (
-        <Box sx={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-          {provider ? (
-            <Box sx={{ display: 'flex', flexShrink: 0, alignItems: 'center' }}>{renderProviderIcon(provider as WalletProvider, 15)}</Box>
-          ) : null}
-          <BeryxLink inputType={ObjectType.ADDRESS} value={filAddr} limitCharacters={truncateMaxCharacters} network={networkName} />
-        </Box>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        {isChoosingAddress ? (
+          <IconButton className="flyLeftAnimationContainer" color="info" size="medium" onClick={handleBack}>
+            <ChevronLeft className="flyLeft" width={14} />
+          </IconButton>
+        ) : null}
+        {isConnected && filAddr ? (
+          <Box sx={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            {provider ? (
+              <Box sx={{ display: 'flex', flexShrink: 0, alignItems: 'center' }}>
+                {renderProviderIcon(provider as WalletProvider, 15, theme)}
+              </Box>
+            ) : null}
+            <BeryxLink inputType={ObjectType.ADDRESS} value={filAddr} limitCharacters={truncateMaxCharacters} network={networkName} />
+          </Box>
+        ) : (
+          <Typography variant="h5" pl={'1rem'}>
+            Connect your wallet
+          </Typography>
+        )}
+      </Box>
+      {isChoosingAddress ? null : (
+        <Buttons
+          isConnected={isConnected}
+          isLoading={isLoading}
+          gather={gather}
+          disconnectWallet={disconnectWallet}
+          handleMenuPopup={handleMenuPopup}
+        />
       )}
-      <Buttons
-        isConnected={isConnected}
-        isLoading={isLoading}
-        gather={gather}
-        disconnectWallet={disconnectWallet}
-        handleMenuPopup={handleMenuPopup}
-      />
     </Box>
   )
 }
@@ -145,11 +178,10 @@ const WalletHeader: React.FC<{
  */
 const Wallet: React.FC<{ handleMenuPopup: () => void }> = ({ handleMenuPopup }) => {
   const theme = useTheme()
-  const isConnected = useWalletStore(s => s.isConnected)
-  const provider = useWalletStore(s => s.provider)
-  const { disconnectWallet, gatherData, isLoading } = useWalletStore(s => s)
+  const { isConnected, provider, disconnectWallet, gatherData, isLoading } = useWalletStore(s => s)
   const { network } = useAppSettingsStore(state => ({ network: state.network }))
   const { filAddr } = useWalletStore(s => s.walletInfo)
+  const { isChoosingAddress, error: ledgerError } = useLedgerWalletStore(s => s)
 
   /**
    * gather function.
@@ -162,16 +194,33 @@ const Wallet: React.FC<{ handleMenuPopup: () => void }> = ({ handleMenuPopup }) 
     gatherData(true, true)
   }, [gatherData])
 
+  const renderWalletContent = useCallback(() => {
+    if (isConnected) {
+      if (ledgerError && ledgerError === LedgerWalletError.DEVICE_LOCKED && provider === WalletProvider.LEDGER) {
+        return <DeviceLocked />
+      }
+      if (isChoosingAddress) {
+        return <ChooseLedgerAddress />
+      }
+      return <Account />
+    }
+    return <WalletOptions />
+  }, [isConnected, ledgerError, provider, isChoosingAddress])
+
   return (
     <Box
       sx={{
         transformOrigin: '100% 0 0',
         zIndex: '200',
-        border: `1px solid ${theme.palette.tableBorder}`,
-        borderRadius: '8px',
-        background: theme.palette.background.level1,
+        border: `1px solid ${theme.palette.border?.level0}`,
+        borderRadius: '10px',
+        background: theme.palette.background.level0,
         width: '31.75rem',
         boxShadow: boxShadow(theme.palette.mode),
+        height: 'fit-content',
+        maxHeight: 'calc(100dvh - 7rem)',
+        transition: 'height 0.3s ease',
+        overflow: 'hidden',
       }}
     >
       <WalletHeader
@@ -184,7 +233,7 @@ const Wallet: React.FC<{ handleMenuPopup: () => void }> = ({ handleMenuPopup }) 
         disconnectWallet={disconnectWallet}
         handleMenuPopup={handleMenuPopup}
       />
-      {isConnected ? <Account /> : <WalletOptions />}
+      {renderWalletContent()}
     </Box>
   )
 }

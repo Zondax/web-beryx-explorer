@@ -1,5 +1,5 @@
 import { Components } from '@mui/material'
-import { PaletteOptions } from '@mui/material/styles'
+import { Palette } from '@mui/material/styles'
 
 /**
  * @constant TablePaginationStyle
@@ -8,7 +8,7 @@ import { PaletteOptions } from '@mui/material/styles'
  * @param palette - The palette options.
  * @returns The styles for the MuiTablePagination component.
  */
-export const TablePaginationStyle = (palette: PaletteOptions): Components => {
+export const tablePaginationStyles = (palette: Palette): Components => {
   return {
     MuiTablePagination: {
       /**
@@ -18,11 +18,12 @@ export const TablePaginationStyle = (palette: PaletteOptions): Components => {
       styleOverrides: {
         root: {
           '& .MuiPaginationItem-root': {
+            backgroundColor: palette.background?.level0,
             '&:hover': {
               backgroundColor: palette.background?.level2,
             },
             '&.Mui-selected': {
-              backgroundColor: palette.background?.level3,
+              backgroundColor: palette.background?.level2,
             },
           },
         },

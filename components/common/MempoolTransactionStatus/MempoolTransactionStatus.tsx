@@ -28,13 +28,7 @@ export const renderStatusIcon = (last_seen: string | undefined, theme: Theme): J
   }
 
   return (
-    <CircularProgress
-      size={14}
-      thickness={6}
-      disableShrink
-      data-testid="status-icon-loading"
-      sx={{ color: theme.palette.text.secondary }}
-    />
+    <CircularProgress size={14} thickness={6} disableShrink data-testid="status-icon-loading" sx={{ color: theme.palette.text.tertiary }} />
   )
 }
 

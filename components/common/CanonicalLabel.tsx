@@ -47,7 +47,7 @@ const CanonicalLabel = ({ isCanonical, type = 'boolean' }: CanonicalLabelProps) 
           borderRadius: '4px',
           display: 'flex',
           alignItems: 'center',
-          backgroundColor: theme.palette.tableBorder,
+          backgroundColor: isCanonical ? theme.palette.success.light : theme.palette.warning.light,
           width: 'max-content',
           height: '1.5rem',
         }}
@@ -57,7 +57,7 @@ const CanonicalLabel = ({ isCanonical, type = 'boolean' }: CanonicalLabelProps) 
           component={'p'}
           fontSize={'0.85rem'}
           lineHeight={1}
-          color={isCanonical ? theme.palette.success.main : theme.palette.error.main}
+          color={isCanonical ? theme.palette.success.main : theme.palette.warning.main}
           fontWeight={600}
           noWrap
         >

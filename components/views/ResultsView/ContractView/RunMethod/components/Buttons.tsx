@@ -1,11 +1,13 @@
 import { FormikProps } from 'formik'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useContractsStore } from '@/store/ui/contracts'
+import { useLedgerWalletStore } from '@/store/wallets/ledger'
 import useWalletStore, { WalletProvider } from '@/store/wallets/wallet'
+import { getMethod } from '@/utils/contracts'
 import { PlayFilledAlt, Wallet } from '@carbon/icons-react'
-import { Button, CircularProgress, Unstable_Grid2 as Grid, Tooltip, useTheme } from '@mui/material'
+import { Box, Button, CircularProgress, Unstable_Grid2 as Grid, Tooltip, Typography, useTheme } from '@mui/material'
 
 import { RunMethodFormValues } from '../config'
 
@@ -21,8 +23,13 @@ const Buttons = ({ formik, handleOpenTutorial, helper }: ButtonProps) => {
   const { t } = useTranslation()
 
   const { isConnected, setOpenWallet, provider } = useWalletStore(s => s)
+  const { isSigning } = useLedgerWalletStore(s => s)
   const formInputs = useContractsStore(s => s.form.inputs)
 
+  /**
+   * Checks if a provider is needed based on the formik values.
+   */
+  const needProvider = useMemo(() => formik.values.type && getMethod({ methodType: formik.values.type }) !== 'read', [formik])
   /**
    * This function is responsible for showing the wallet connect option.
    * It sets the state of the wallet to open.
@@ -35,7 +42,7 @@ const Buttons = ({ formik, handleOpenTutorial, helper }: ButtonProps) => {
     <Grid container alignItems={'center'} gap={'0.5rem'} justifyContent={'flex-end'} width={'100%'} sx={{ padding: '0.5rem 1.25rem' }}>
       <Button
         id="run-method"
-        variant="text"
+        variant={'outlined'}
         onClick={handleOpenTutorial}
         sx={{
           padding: '0.76rem 0.9rem 0.76rem 0.9rem',
@@ -50,23 +57,24 @@ const Buttons = ({ formik, handleOpenTutorial, helper }: ButtonProps) => {
       >
         {t('Read Tutorial')}
       </Button>
-      {isConnected && provider !== WalletProvider.VIEW_ONLY ? (
+      {!needProvider || (isConnected && provider !== WalletProvider.VIEW_ONLY) ? (
         <Tooltip
           title={helper}
           sx={{ maxWidth: '60xh' }}
-          disableHoverListener={Object.keys(formik.errors).length === 0}
+          disableHoverListener={!formik.errors || Object.keys(formik.errors).length === 0}
           arrow
           disableInteractive
         >
-          <span style={{ cursor: Object.keys(formik.errors).length !== 0 ? 'help' : undefined }}>
+          <span style={{ cursor: formik.errors && Object.keys(formik.errors).length !== 0 ? 'help' : undefined }}>
             <Button
               id="run-method"
               variant="contained"
               disabled={
-                Object.keys(formik.errors).length !== 0 || (formInputs?.completed !== formInputs?.total && !formik.values.requestBodyString)
+                (formik.errors && Object.keys(formik.errors).length !== 0) ||
+                (formInputs?.completed !== formInputs?.total && !formik.values.requestBodyString)
               }
               type="submit"
-              endIcon={!formik.isSubmitting ? <PlayFilledAlt size={16} color={theme.palette.success.main} /> : null}
+              endIcon={!formik.isSubmitting && !isSigning ? <PlayFilledAlt size={16} color={theme.palette.success.main} /> : null}
               sx={{
                 minWidth: '10.25rem',
                 padding: '0.76rem 0.9rem 0.76rem 0.9rem',
@@ -78,8 +86,13 @@ const Buttons = ({ formik, handleOpenTutorial, helper }: ButtonProps) => {
                 },
               }}
             >
-              {formik.isSubmitting ? (
-                <CircularProgress variant="indeterminate" thickness={8} color="inherit" size="small" />
+              {isSigning ? (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <CircularProgress variant="indeterminate" thickness={8} color={'success'} size="small" />
+                  <Typography>{t('Signing, please check Ledger...')}</Typography>
+                </Box>
+              ) : formik.isSubmitting ? (
+                <CircularProgress variant="indeterminate" thickness={8} color={'success'} size="small" />
               ) : (
                 t('Run Method')
               )}
@@ -89,7 +102,7 @@ const Buttons = ({ formik, handleOpenTutorial, helper }: ButtonProps) => {
       ) : (
         <Tooltip
           title={t(
-            "You're using the tracking feature and while tracking an address you can't invoke contracts. To interact with contracts please connect a wallet."
+            "You're using the tracking feature and while tracking an address you only can use read methods. Otherwise please connect a wallet."
           )}
           sx={{ maxWidth: '60xh' }}
           disableHoverListener={!isConnected}

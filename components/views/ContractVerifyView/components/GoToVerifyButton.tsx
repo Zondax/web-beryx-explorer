@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { fetchFilForm } from '@/api-client/beryx'
 import { useContractsStore } from '@/store/ui/contracts'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import { Search } from '@carbon/icons-react'
 import { Box, CircularProgress, Grid, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
 
@@ -71,7 +71,7 @@ const GoToVerifyButton = () => {
     searchValue = filForm
 
     handleForm(true)
-    router.push(`/v1/search/fil/${network.name}/address/${searchValue}`, undefined, {
+    router.push(`/search/fil/${network.name}/address/${searchValue}`, undefined, {
       shallow: true,
     })
   }, [inputValue, setInputError, setLoading, handleForm, network, router, t, upMd])

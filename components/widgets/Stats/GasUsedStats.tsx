@@ -135,7 +135,7 @@ const GasUsedStats = () => {
                     ),
                   },
                 }}
-                color={theme.palette.gradient1.level6}
+                color={theme.palette.primary.main}
               />
             ) : null}
           </ItemTile>

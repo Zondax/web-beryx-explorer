@@ -81,23 +81,6 @@ const ContractsStats = () => {
           ) : null}
         </ItemTile>
       </Grid>
-
-      {/* <Grid item xs={6} md={3} data-testid={'unique-contracts-invokes'}>
-        <ItemTile
-          title={'Number of Unique Contract Invokes'}
-          loading={getLoadingStatus(isLoadingUniqueContractsInvokes, isSuccessUniqueContractsInvokes)}
-          size="medium"
-          hasBorder
-        >
-          {uniqueContractsInvokesTotal !== undefined ? (
-            <StatsTile
-              data={{
-                value: uniqueContractsInvokesTotal,
-              }}
-            />
-          ) : null}
-        </ItemTile>
-      </Grid> */}
     </Grid>
   )
 }

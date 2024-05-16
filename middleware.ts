@@ -3,7 +3,7 @@ import { jwtDecode } from 'jwt-decode'
 import { NextRequest, NextResponse } from 'next/server'
 
 import { requestBeryxApiToken } from '@/api-client/auth'
-import { cookieAuthExpirationInSeconds, cookieAuthTokenName } from '@/config/config'
+import { cookieAuthExpirationInSeconds, cookieAuthTokenName, cookieAuthTokenPreName } from '@/config/config'
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
@@ -12,7 +12,12 @@ export async function middleware(request: NextRequest) {
   try {
     const parsedCookies = cookie.parse(request.headers.get('cookie') ?? '')
 
-    authToken = parsedCookies[cookieAuthTokenName]
+    if (process.env.NEXT_PUBLIC_BERYX_ENV === 'pre') {
+      authToken = parsedCookies[cookieAuthTokenPreName]
+    } else {
+      authToken = parsedCookies[cookieAuthTokenName]
+    }
+
     const decoded = jwtDecode(authToken)
     const currentTimestamp = Math.floor(Date.now() / 1000)
 
@@ -34,7 +39,12 @@ export async function middleware(request: NextRequest) {
     // Set the cookie to expire in 12 hours
     const expiryDate = new Date()
     expiryDate.setSeconds(expiryDate.getSeconds() + cookieAuthExpirationInSeconds)
-    response.cookies.set(cookieAuthTokenName, authToken, { expires: expiryDate })
+
+    if (process.env.NEXT_PUBLIC_BERYX_ENV === 'pre') {
+      response.cookies.set(cookieAuthTokenPreName, authToken, { expires: expiryDate })
+    } else {
+      response.cookies.set(cookieAuthTokenName, authToken, { expires: expiryDate })
+    }
 
     return response
   }

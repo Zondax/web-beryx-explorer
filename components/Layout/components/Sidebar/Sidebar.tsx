@@ -5,14 +5,13 @@ import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useWindowSize } from 'usehooks-ts'
 
-import { useResourcesStore } from '@/store/ui/resources'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'
 import { Box, ClickAwayListener, Grid, Unstable_Grid2 as Grid2, Grow, Typography, useTheme } from '@mui/material'
 
 import IsolatedButton from './IsolatedButton'
 import SidebarButton from './SidebarButton'
-import { NavigationItemProps, PAGES, navigationItems, resourcesItem } from './data'
+import { NavigationItemProps, PAGES, navigationItems } from './data'
 
 /**
  * @interface SideBarProps
@@ -32,7 +31,6 @@ const Sidebar = ({ activeTab }: SideBarProps) => {
   const theme = useTheme()
   const { network } = useAppSettingsStore(state => ({ network: state.network }))
   const { t } = useTranslation()
-  const setIsResourcesOpen = useResourcesStore(s => s.setIsOpen)
   const [visibleItems, setVisibleItems] = useState<number>(navigationItems.length)
   const { height } = useWindowSize()
   const [currentNavigationItems, setCurrentNavigationItems] = useState<Array<NavigationItemProps>>(
@@ -45,17 +43,10 @@ const Sidebar = ({ activeTab }: SideBarProps) => {
    */
   useEffect(() => {
     const FOOTER_NAVBAR_BUTTON_SPACES_HEIGHT = 154.5
-    const ITEM_HEIGHT = 58
+    const ITEM_HEIGHT = 60
     const calculatedTxNumber = Math.floor((height - FOOTER_NAVBAR_BUTTON_SPACES_HEIGHT) / ITEM_HEIGHT)
     setVisibleItems(Math.max(calculatedTxNumber, 1))
   }, [height])
-
-  /**
-   * Open or close the resources popup.
-   */
-  const handleResources = useCallback(() => {
-    setIsResourcesOpen(true)
-  }, [setIsResourcesOpen])
 
   /**
    * Open or close the more items popup.
@@ -122,17 +113,7 @@ const Sidebar = ({ activeTab }: SideBarProps) => {
             <SidebarButton type={'iconButton'} item={item} activeTab={activeTab} tooltip key={`sidebar-item-${item.name}`} />
           ))}
         </Grid2>
-        {currentNavigationItems.length <= visibleItems ? (
-          <IsolatedButton
-            handleClick={handleResources}
-            label={resourcesItem.name}
-            icon={
-              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '2rem', height: '2rem' }}>
-                {resourcesItem.icon}
-              </Box>
-            }
-          />
-        ) : (
+        {currentNavigationItems.length <= visibleItems ? null : (
           <IsolatedButton
             handleClick={handleMoreItems}
             label={getLabel()}
@@ -177,7 +158,6 @@ const Sidebar = ({ activeTab }: SideBarProps) => {
                 <SidebarButton type={'button'} item={item} activeTab={activeTab} />
               </Grid>
             ))}
-            <SidebarButton type={'button'} item={resourcesItem} activeTab={activeTab} action={handleResources} />
           </Box>
         </Grow>
       </Grid2>

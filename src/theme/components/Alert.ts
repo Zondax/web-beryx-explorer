@@ -1,11 +1,11 @@
-import { Components, PaletteOptions } from '@mui/material'
+import { Components, Palette } from '@mui/material'
 
 /**
  * This function returns the styles for the Alert component.
  * @param palette - The color palette of the application.
  * @returns The styles for the Alert component.
  */
-export const Alert = (palette: PaletteOptions): Components => {
+export const alertStyles = (palette: Palette): Components => {
   return {
     MuiAlert: {
       styleOverrides: {
@@ -20,17 +20,17 @@ export const Alert = (palette: PaletteOptions): Components => {
         },
         // Styles for the standard error Alert
         standardError: {
-          backgroundColor: palette.background?.level1,
-          color: '#D01F34',
-          outline: '0.5px solid #D01F34',
+          backgroundColor: palette.error.light,
+          color: palette.error.main,
+          outline: `1px solid ${palette.error.main}`,
           boxShadow: 'rgba(40, 40, 53, 0.05) 0px 13px 27px -5px, rgba(0, 0, 0, 0.2) 0px 8px 16px -8px',
         },
         // Styles for the filled error Alert
         filledError: {
-          backgroundColor: '#FF453A',
-          color: '#FFF',
+          backgroundColor: palette.error.light,
+          color: palette.error.main,
           '& .MuiAlert-icon': {
-            color: '#FFF',
+            color: palette.error.main,
           },
         },
         // Styles for the filled warning Alert

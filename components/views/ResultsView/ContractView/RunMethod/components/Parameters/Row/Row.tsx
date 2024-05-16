@@ -18,7 +18,7 @@ export interface RowParams {
   actions?: ActionTypes[]
 }
 
-export const rowHeight = 37
+export const rowHeight = 32
 export const rowGap = 10
 export const commonRowStyles = {
   bgcolor: 'background.level2',
@@ -128,12 +128,12 @@ const Row = ({ input, indexs, formik, actions = [] }: RowParams) => {
             ...commonRowStyles,
           }}
         >
-          <Typography variant="h5" fontWeight={400}>
+          <Typography variant="h5" component={'p'} fontWeight={400}>
             {input.name}
           </Typography>
         </Box>
         {/* Input text */}
-        <Box flex={1} sx={{ zIndex: 20 }}>
+        <Box flex={1} sx={{ zIndex: 20, alignItems: 'center', display: 'flex' }}>
           <InputText input={input} indexs={indexs} formik={formik} actions={actions} />
         </Box>
       </Grid>
@@ -158,7 +158,7 @@ const Row = ({ input, indexs, formik, actions = [] }: RowParams) => {
                 sx={{
                   width: '100%',
                   height: rowHeight,
-                  background: 'linear-gradient(#14151A 70%, #24282F)',
+                  background: `linear-gradient(${theme.palette.background.level1} 70%, ${theme.palette.background.level2})`,
                   borderRadius: '0.5rem',
                 }}
               />

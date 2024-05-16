@@ -2,6 +2,7 @@ import { useRouter } from 'next/router'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { Edit } from '@carbon/icons-react'
 import { Box, Divider, Grid, Unstable_Grid2 as Grid2, Typography, alpha, useTheme } from '@mui/material'
 
 import NotFoundTile from '../../common/NotFoundTile'
@@ -101,7 +102,12 @@ const ErrorView = () => {
 
         {/* Report a bug */}
         <Typography variant={'subtitle1'} sx={{ margin: '1rem 0 5rem 0', maxWidth: '40ch', textAlign: 'center' }}>
-          {t('To report a bug please use the Feedback tool from the right side of the screen.')}
+          <Box component={'span'} pr={'0.35rem'}>
+            {t('To report a bug please use the Feedback button in the navbar')}
+          </Box>
+          <Box component={'span'} position={'absolute'}>
+            <Edit size="16" />
+          </Box>
         </Typography>
       </Grid2>
     </Grid2>

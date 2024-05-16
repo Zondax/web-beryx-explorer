@@ -1,6 +1,5 @@
 import React from 'react'
 
-import { beryxExplorerVersion } from '@/config/config'
 import { NetworkUniqueId, Networks } from '@/config/networks'
 import {
   Activity,
@@ -35,10 +34,12 @@ export enum PAGES {
   CONTRACT_VERIFIER = 'Contract Verifier',
   RPC = 'RPC Node',
   NOT_FOUND = '404',
+  ERROR_500 = '500',
   INTERACT = 'Interact with Smart Contracts',
   ESTIMATE_GAS = 'Estimate Gas',
   TERMS_OF_SERVICE = 'Terms Of Service',
   CHANGELOG = 'Changelog',
+  RESOURCES = 'Resources',
 }
 
 /**
@@ -79,7 +80,6 @@ export const navigationItems: Array<NavigationItemProps> = [
     path: '/leaderboard',
     show: true,
     networkIds: [Networks.mainnet.uniqueId, Networks.calibration.uniqueId],
-    new: true,
   },
   {
     icon: <Activity size="24" />,
@@ -98,10 +98,9 @@ export const navigationItems: Array<NavigationItemProps> = [
   {
     icon: <CategoryNewEach size="24" />,
     name: PAGES.MEMPOOL,
-    path: `/${beryxExplorerVersion}/mempool`,
+    path: '/mempool',
     show: true,
     networkIds: [Networks.mainnet.uniqueId, Networks.calibration.uniqueId],
-    new: true,
   },
   {
     icon: <RainDrop size="24" />,
@@ -145,6 +144,13 @@ export const navigationItems: Array<NavigationItemProps> = [
     path: '/interact',
     show: true,
     networkIds: [Networks.mainnet.uniqueId, Networks.calibration.uniqueId],
+  },
+  {
+    icon: <Book size={24} />,
+    name: PAGES.RESOURCES,
+    path: '/resources',
+    show: true,
+    networkIds: [Networks.calibration.uniqueId, Networks.mainnet.uniqueId],
   },
 ]
 

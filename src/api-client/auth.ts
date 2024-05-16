@@ -23,8 +23,16 @@ export type BeryxToken = string & { readonly __brand: unique symbol }
  *
  */
 export const requestBeryxApiToken = async (): Promise<BeryxToken> => {
-  if (!!process.env.BERYX_API_TOKEN) {
-    return process.env.BERYX_API_TOKEN as any
+  if (Boolean(process.env.BERYX_API_TOKEN)) {
+    return process.env.BERYX_API_TOKEN as BeryxToken
+  }
+
+  if (
+    Boolean(process.env.NEXT_PUBLIC_BERYX_ENV) &&
+    process.env.NEXT_PUBLIC_BERYX_ENV === 'pre' &&
+    Boolean(process.env.NEXT_PUBLIC_BERYX_TOKEN_PRE)
+  ) {
+    return process.env.NEXT_PUBLIC_BERYX_TOKEN_PRE as BeryxToken
   }
 
   const network = Networks.mainnet

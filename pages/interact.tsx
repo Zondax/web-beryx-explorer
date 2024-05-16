@@ -11,7 +11,7 @@ import { useEffect } from 'react'
 
 import { getPageMetaData, metaTags } from '@/components/metaData'
 import { subscribeNatsSync } from '@/nats/useSubscribeNats'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 
 import { Layout } from '../components/Layout'
 import { PAGES } from '../components/Layout/components/Sidebar'

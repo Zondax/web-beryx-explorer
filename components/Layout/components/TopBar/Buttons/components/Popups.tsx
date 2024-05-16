@@ -20,7 +20,7 @@ const Popups = ({ name, handleMenuPopup, children }: { name: string; handleMenuP
   return (
     <Grid2
       container
-      bgcolor="background.level1"
+      bgcolor="background.level0"
       id={`${name}-popup`}
       sx={{
         position: 'relative',
@@ -33,7 +33,7 @@ const Popups = ({ name, handleMenuPopup, children }: { name: string; handleMenuP
         minHeight: '15rem',
         border: `1px solid ${theme.palette.background.level2}`,
         boxShadow: boxShadow(theme.palette.mode),
-        borderRadius: '8px',
+        borderRadius: '10px',
         filter: `drop-shadow(${theme.palette.mode === 'light' ? theme.shadows[2] : theme.shadows[3]})`,
       }}
     >
@@ -52,8 +52,8 @@ const Popups = ({ name, handleMenuPopup, children }: { name: string; handleMenuP
           {name}
         </Typography>
         <Tooltip title={t('Close')} placement="bottom" key={'close popup'}>
-          <IconButton color="info" sx={{ width: '2.5rem', padding: '0.25rem', borderRadius: '8px' }} onClick={handleMenuPopup}>
-            <Close size={24} />
+          <IconButton color="info" onClick={handleMenuPopup}>
+            <Close />
           </IconButton>
         </Tooltip>
       </Grid2>

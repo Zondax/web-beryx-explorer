@@ -3,7 +3,7 @@ import { SyntheticEvent, useCallback, useEffect, useMemo, useRef, useState } fro
 import { useTranslation } from 'react-i18next'
 
 import { GridToolbarColumnsButton, GridToolbarContainer, GridToolbarExport, GridToolbarFilterButton } from '@/components/muigrid/types'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import { Box, Grid, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material'
 import Tooltip from '@mui/material/Tooltip'
 
@@ -135,7 +135,7 @@ const Toolbar = ({ title, filters, setFilters }: { title?: string; filters?: Fil
 
   const titleComponent = useMemo(() => {
     return title ? (
-      <Typography variant="h5" textTransform={'capitalize'} lineHeight={1} marginLeft={'0.5rem'}>
+      <Typography variant="h5" component={'h1'} textTransform={'capitalize'} lineHeight={1} marginLeft={'1rem'}>
         {t(title)}
       </Typography>
     ) : null
@@ -150,24 +150,15 @@ const Toolbar = ({ title, filters, setFilters }: { title?: string; filters?: Fil
   }, [filters, setFilters])
 
   return (
-    <GridToolbarContainer sx={{ padding: '6px 0 0 0' }}>
+    <GridToolbarContainer sx={{ padding: '0.5rem 0 0 0' }}>
       <Grid container gap={'0.5rem'} justifyContent={'space-between'} alignItems={'center'}>
-        <Grid container width={'fit-content'} gap={'0.5rem'} alignItems={'center'}>
+        <Grid container width={{ sx: '100%', md: 'fit-content' }} gap={'0.5rem'} alignItems={'center'}>
           {titleComponent}
         </Grid>
         <Grid ref={filtersContainerRef} container width={'fit-content'} gap={'0.5rem'} alignItems={'center'}>
-          <GridToolbarColumnsButton
-            variant={'inputType'}
-            sx={{ padding: '0.125rem 0.5rem', borderRadius: '4px', minWidth: 'unset', gap: '0.25rem' }}
-          />
-          <GridToolbarExport
-            variant={'inputType'}
-            sx={{ padding: '0.125rem 0.5rem', borderRadius: '4px', minWidth: 'unset', gap: '0.25rem' }}
-          />
-          <GridToolbarFilterButton
-            componentsProps={{ button: { variant: 'inputType' } }}
-            sx={{ padding: '0.125rem 0.5rem', borderRadius: '4px', minWidth: 'unset', gap: '0.25rem' }}
-          />
+          <GridToolbarColumnsButton variant={'outlined'} size={'small'} />
+          <GridToolbarExport variant={'outlined'} size={'small'} />
+          <GridToolbarFilterButton componentsProps={{ button: { variant: 'outlined', size: 'small' } }} />
           {filters && setFilters ? <FilterButton filters={filters} setFilters={setFilters} /> : null}
           {currentMethod &&
             currentMethod.method !== 'all' &&

@@ -97,7 +97,7 @@ const BeryxAPI = () => {
             {t('Get free token')}
           </Button>
 
-          <Button href="https://docs.zondax.ch/Beryx" target="_blank" variant={'outlined'} size="medium">
+          <Button href="https://docs.zondax.ch/beryx-api" target="_blank" variant={'outlined'} size="medium">
             {t('Visit documentation')}
           </Button>
         </Grid>
@@ -122,7 +122,7 @@ const BeryxAPI = () => {
         <Typography variant="body1" component="p" textAlign={'center'}>
           {t('Dont forget that in order to access the Beryx API, youll need an API token.')}
         </Typography>
-        <Button href="https://auth.zondax.ch/docs" target="_blank" variant={'contained'} size="medium">
+        <Button href="https://docs.zondax.ch/beryx-api" target="_blank" variant={'contained'} size="medium">
           {t('Visit documentation')}
         </Button>
       </Box>

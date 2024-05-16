@@ -37,7 +37,7 @@ const ArticleView = ({ article }: ArticleViewProps) => {
       data-testid="article-view"
       sx={{
         borderRadius: '8px',
-        overflow: 'hidden',
+        overflowY: 'auto',
         width: '100%',
         height: upMd ? 'calc(100dvh - 2.25rem - 4rem)' : 'fit-content',
         display: 'flex',
@@ -49,8 +49,7 @@ const ArticleView = ({ article }: ArticleViewProps) => {
           backgroundColor: theme.palette.background.level1,
           borderRadius: '8px',
           width: 'fit-content',
-          height: '100%',
-          overflowY: 'auto',
+          height: 'fit-content',
           display: 'flex',
           flexDirection: 'column',
           padding: { xs: '0 2rem 4rem 2rem', md: '0 3rem 5rem 3rem' },

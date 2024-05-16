@@ -3,4 +3,4 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 export const SENTRY_DSN = process.env.SENTRY_DSN ?? process.env.NEXT_PUBLIC_SENTRY_DSN ?? ''
 
-export const sentryIsDev = Boolean(process.env.CI) ?? process.env.NODE_ENV === 'development'
+export const sentryIsDev = process.env.CI ? true : process.env.NODE_ENV === 'development'

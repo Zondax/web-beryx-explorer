@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Language, languageMap } from '@/config/config'
 import { useLatestStore } from '@/store/data/latest'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import { ExpandMore } from '@mui/icons-material'
 import { Unstable_Grid2 as Grid2, MenuItem, TextField, ToggleButton, ToggleButtonGroup, Typography, useTheme } from '@mui/material'
 
@@ -80,13 +80,7 @@ const SettingsPopup = () => {
         <Typography variant="body1" color="text.primary">
           {t('Theme')}
         </Typography>
-        <ToggleButtonGroup
-          orientation="horizontal"
-          value={theme.palette.mode}
-          exclusive
-          onChange={handleThemeChange}
-          sx={{ height: '2rem' }}
-        >
+        <ToggleButtonGroup orientation="horizontal" size="medium" value={theme.palette.mode} exclusive onChange={handleThemeChange}>
           <ToggleButton value="light" aria-label="light" sx={{ textTransform: 'none', color: theme.palette.text.primary }}>
             {t('Light')}
           </ToggleButton>
@@ -103,7 +97,7 @@ const SettingsPopup = () => {
    * CurrencySection component.
    * This component is responsible for rendering the currency selection section.
    */
-  const CurrencySection = () => {
+  const CurrencySection = useCallback(() => {
     const LoadingText = (
       <Typography variant="body1" color="text.primary" sx={{ minWidth: '12rem' }}>
         Loading...
@@ -115,7 +109,7 @@ const SettingsPopup = () => {
         id="currency-selector"
         select
         SelectProps={{ IconComponent: ExpandMore, MenuProps: { disableScrollLock: true, PaperProps: { sx: { maxHeight: 400 } } } }}
-        size="large"
+        size="medium"
         color="level1"
         name="currency"
         value={selectedCurrency}
@@ -149,55 +143,58 @@ const SettingsPopup = () => {
         {!latestCurrencyRates || latestCurrencyRates.length === 0 ? LoadingText : CurrencySelector}
       </Grid2>
     )
-  }
+  }, [handleCurrencyChange, latestCurrencyRates, selectedCurrency, t])
 
   /**
    * LanguageSection component.
    * This component is responsible for rendering the language selection section.
    */
-  const LanguageSection = () => (
-    <Grid2
-      sx={{
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      }}
-    >
-      <Typography variant="body1" color="text.primary">
-        {t('Language')}
-      </Typography>
-      <TextField
-        id="language-selector"
-        select
-        SelectProps={{
-          IconComponent: ExpandMore,
-          MenuProps: { disableScrollLock: true, PaperProps: { sx: { maxHeight: 400 } } },
-        }}
-        size="large"
-        color="level1"
-        name="language"
-        value={selectedLanguage}
-        onChange={handleLanguageChange}
+  const LanguageSection = useCallback(
+    () => (
+      <Grid2
         sx={{
-          minWidth: '12rem',
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
         }}
       >
-        {Object.keys(languageMap).map((item: string) => (
-          <MenuItem key={`language - ${item}`} value={item} id={`languageItem - ${item}`}>
-            <Typography variant={'body2'} color="text.primary" sx={{ textTransform: 'capitalize' }}>
-              {languageMap[item as Language]}
-            </Typography>
-          </MenuItem>
-        ))}
-      </TextField>
-    </Grid2>
+        <Typography variant="body1" color="text.primary">
+          {t('Language')}
+        </Typography>
+        <TextField
+          id="language-selector"
+          select
+          SelectProps={{
+            IconComponent: ExpandMore,
+            MenuProps: { disableScrollLock: true, PaperProps: { sx: { maxHeight: 400 } } },
+          }}
+          size="medium"
+          color="level1"
+          name="language"
+          value={selectedLanguage}
+          onChange={handleLanguageChange}
+          sx={{
+            minWidth: '12rem',
+          }}
+        >
+          {Object.keys(languageMap).map((item: string) => (
+            <MenuItem key={`language - ${item}`} value={item} id={`languageItem - ${item}`}>
+              <Typography variant={'body2'} color="text.primary" sx={{ textTransform: 'capitalize' }}>
+                {languageMap[item as Language]}
+              </Typography>
+            </MenuItem>
+          ))}
+        </TextField>
+      </Grid2>
+    ),
+    [handleLanguageChange, selectedLanguage, t]
   )
 
   return (
     <Grid2
       container
-      bgcolor="background.level1"
+      bgcolor="background.level0"
       sx={{
         alignItems: 'flex-start',
         zIndex: 200,
@@ -217,7 +214,7 @@ const SettingsPopup = () => {
           alignItems: 'center',
         }}
       >
-        {ThemeSection}
+        {/* {ThemeSection} */}
         <CurrencySection />
         <LanguageSection />
       </Grid2>

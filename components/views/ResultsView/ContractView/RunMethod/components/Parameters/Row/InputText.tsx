@@ -214,7 +214,7 @@ const InputText = ({ input, indexs, formik, actions = [] }: InputTextParams) => 
           <TextField
             data-testid="row-text-input"
             size="medium"
-            color="level0"
+            variant={'outlined'}
             name="value"
             type={['number'].includes(input.parsedType.type) ? 'number' : 'any'}
             value={value ? value : input.value ?? ''}
@@ -222,8 +222,9 @@ const InputText = ({ input, indexs, formik, actions = [] }: InputTextParams) => 
             onChange={handleInputChange}
             fullWidth
             sx={{
-              border: `1px solid ${input.status === 'error' ? theme.palette.error.main : theme.palette.background.level2} !important`,
-              borderRadius: '0.5rem',
+              '& .MuiInputBase-root': {
+                border: `1px solid ${input.status === 'error' ? theme.palette.error.main : theme.palette.background.level2} !important`,
+              },
             }}
           />
         ) : null}

@@ -1,4 +1,4 @@
-import { Components, PaletteOptions } from '@mui/material'
+import { Components, Palette } from '@mui/material'
 // noinspection ES6UnusedImports
 import type {} from '@mui/x-data-grid-pro/themeAugmentation'
 import type {} from '@mui/x-data-grid/themeAugmentation'
@@ -8,19 +8,12 @@ import type {} from '@mui/x-data-grid/themeAugmentation'
  * @param palette - The palette options from the theme.
  * @returns The styles for the DataGrid component.
  */
-export const DataGridStyle = (palette: PaletteOptions): Components => {
-  const commonBorderStyles = {
-    borderTop: `1px solid ${palette.tableChildrenRowBorder} !important`,
-    borderRight: `1px solid ${palette.tableChildrenRowBorder} !important`,
-    borderLeft: `1px solid ${palette.tableChildrenRowBorder} !important`,
-  }
-
+export const dataGridStyles = (palette: Palette): Components => {
   const commonChildRowStyles = {
-    backgroundColor: 'transparent !important',
+    backgroundColor: palette.background.level0,
     borderRadius: '0',
     margin: '0',
-    ...commonBorderStyles,
-    borderBottom: `1px solid ${palette.tableChildrenRowBorder} !important`,
+    // borderBottom: `1px solid ${palette.border?.level0} !important`,
   }
 
   return {
@@ -28,20 +21,30 @@ export const DataGridStyle = (palette: PaletteOptions): Components => {
       styleOverrides: {
         root: {
           border: 'none',
-          borderRadius: '6px',
-          padding: '0 6px 6px 6px',
+          borderRadius: '8px',
           borderCollapse: 'collapse',
+
+          '& .MuiDataGrid-withBorderColor': {
+            borderColor: palette.border?.level0,
+          },
+
           '.parent-row': {
-            backgroundColor: `${palette.tableParentRowBackground} !important`,
-            borderRadius: '6px',
-            ...commonBorderStyles,
-            borderBottom: `1px solid ${palette.tableParentRowBackground} !important`,
+            // backgroundColor: `${palette.tableParentRowBackground} !important`,
+            // borderRadius: '6px',
+            // ...commonBorderStyles,
+
+            borderBottom: `1px solid ${palette.border?.level0} !important`,
+            ':hover': {
+              background: `${palette.background.level1} !important`,
+            },
           },
           '.alone-child-row': {
-            backgroundColor: 'transparent !important',
-            borderRadius: '6px',
-            ...commonBorderStyles,
-            borderBottom: `1px solid ${palette.tableBorder} !important`,
+            // backgroundColor: 'transparent !important',
+            backgroundColor: palette.background.level0,
+            borderBottom: `1px solid ${palette.border?.level0} !important`,
+            ':hover': {
+              background: `${palette.background.level1} !important`,
+            },
           },
           '.child-row': {
             ...commonChildRowStyles,
@@ -50,30 +53,30 @@ export const DataGridStyle = (palette: PaletteOptions): Components => {
             ...commonChildRowStyles,
           },
           '.child-row:has(+.alone-child-row)': {
-            ...commonBorderStyles,
-            borderRadius: '0 0 6px 6px',
-            marginBottom: '4px',
+            borderBottom: `1px solid ${palette.border?.level0} !important`,
+            // borderRadius: '0 0 6px 6px',
+            // marginBottom: '4px',
           },
           '.child-row:has(+.parent-row)': {
-            ...commonBorderStyles,
-            borderRadius: '0 0 6px 6px',
-            marginBottom: '4px',
+            borderBottom: `1px solid ${palette.border?.level0} !important`,
+            // borderRadius: '0 0 6px 6px',
+            // marginBottom: '4px',
           },
           '.parent-row:has(+.child-row), .MuiDataGrid-row--detailPanelExpanded': {
-            ...commonBorderStyles,
-            borderRadius: '6px 6px 0 0',
-            margin: '4px 0 0 0',
+            borderBottom: `1px solid ${palette.border?.level0} !important`,
+            // borderRadius: '6px 6px 0 0',
+            // margin: '4px 0 0 0',
           },
           '.alone-child-row:has(+.child-row)': {
-            ...commonBorderStyles,
-            borderRadius: '6px 6px 0 0',
-            margin: '4px 0 0 0',
+            borderBottom: `1px solid ${palette.border?.level0} !important`,
+            // borderRadius: '6px 6px 0 0',
+            // margin: '4px 0 0 0',
           },
           '.child-row:last-of-type': {
             borderRadius: '0 0 6px 6px',
           },
           '.child-row[aria-selected=true]': {
-            backgroundColor: `${palette.tableChildRowBackgroundFocused} !important`,
+            backgroundColor: `${palette.background.level1} !important`,
           },
           '.indent-row .indent-icon': {
             display: 'none',
@@ -82,7 +85,7 @@ export const DataGridStyle = (palette: PaletteOptions): Components => {
             display: 'inline-block',
           },
           '.parent-row[aria-selected=true]': {
-            backgroundColor: `${palette.tableParentRowBackgroundFocused} !important`,
+            backgroundColor: `${palette.background.level2} !important`,
           },
           '.simple-row': {
             ':hover': {
@@ -99,24 +102,29 @@ export const DataGridStyle = (palette: PaletteOptions): Components => {
           color: palette.text?.secondary,
         },
         columnHeader: {
-          padding: '0.5rem 0.5rem 0 0.5rem',
+          padding: '0 1.125rem !important',
           ':focus-within': {
             outline: 'none',
           },
         },
         footerContainer: {
-          borderColor: `${palette.tableBorder} !important`,
+          borderColor: palette.border?.level0,
+          minHeight: '44px',
         },
         cell: {
           color: palette.text?.primary,
           border: 'none',
-          padding: '0 0.5rem',
+          padding: '0 1.125rem !important',
           ':focus-within': {
             outline: 'none',
           },
         },
         row: {
+          margin: '0 !important',
           borderBottom: '0.5px solid rgba(81, 81, 81, 1)',
+          '&.Mui-hovered': {
+            backgroundColor: palette.background.level1,
+          },
         },
         treeDataGroupingCellToggle: {
           svg: {

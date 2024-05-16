@@ -170,6 +170,7 @@ const MetadataForm = ({
             <Button
               variant="inputType"
               component="label"
+              size="large"
               endIcon={<Upload size={16} color={theme.palette.text.primary} />}
               sx={styleUploadButton(theme)}
             >

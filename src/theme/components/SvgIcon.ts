@@ -5,7 +5,7 @@ import { Components } from '@mui/material'
  * @description This constant represents the styles for the MuiSvgIcon component.
  * @type {Components}
  */
-export const SvgIcon: Components = {
+export const svgIconStyles: Components = {
   MuiSvgIcon: {
     /**
      * @property styleOverrides

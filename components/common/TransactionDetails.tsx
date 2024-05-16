@@ -9,7 +9,6 @@ import { Close, Script } from '@carbon/icons-react'
 import {
   Backdrop,
   Box,
-  Button,
   CircularProgress,
   Fade,
   Unstable_Grid2 as Grid,
@@ -191,7 +190,6 @@ const TransactionDetails = ({ content }: TransactionDetailsProps) => {
           <Grid
             data-testid={'transaction-details-modal'}
             container
-            bgcolor="background.level1"
             sx={{
               position: 'absolute',
               top: '50%',
@@ -200,12 +198,15 @@ const TransactionDetails = ({ content }: TransactionDetailsProps) => {
               width: '50rem',
               maxWidth: upMd ? '80vw' : 'calc(100vw - 1rem)',
               boxShadow: boxShadow(theme.palette.mode),
-              borderRadius: '10px',
+              borderRadius: '12px',
+              overflow: 'hidden',
               filter: `drop-shadow(${theme.palette.mode === 'light' ? theme.shadows[2] : theme.shadows[3]})`,
               display: 'flex',
               flexDirection: 'column',
               gap: '0.1rem',
               padding: '0rem',
+              border: `1px solid ${theme.palette.border?.level0}`,
+              backgroundColor: theme.palette.background?.level1,
             }}
           >
             <Grid xs={12}>
@@ -215,21 +216,19 @@ const TransactionDetails = ({ content }: TransactionDetailsProps) => {
                   height: '40rem',
                   maxHeight: '80vh',
                   borderRadius: '8px',
-                  border: `1px solid ${theme.palette.background.level2}`,
                 }}
               >
                 <Panel
                   tabs={[{ name: t('Full Transaction Details') }, { name: 'Metadata' }, { name: t('Decoded Parameters') }]}
                   actionButtons={[
-                    <Button
+                    <IconButton
                       key="transaction-details-close-button"
-                      variant={'text'}
-                      sx={{ minWidth: 'unset', padding: '0.5rem 0.5rem', height: '1.9rem' }}
+                      color="info"
                       onClick={handleCloseModal}
                       data-testid={'transaction-details-close-button'}
                     >
-                      <Close size={20} />
-                    </Button>,
+                      <Close />
+                    </IconButton>,
                   ]}
                 >
                   {[renderFullDetails(), renderMetadata(), renderParams()]}

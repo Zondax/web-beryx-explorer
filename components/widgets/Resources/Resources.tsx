@@ -2,6 +2,7 @@ import { Box } from '@mui/material'
 
 import { LinkCardProps } from '../../common/LinkCard'
 import LinkResources from './LinkResources'
+import { otherResources } from './ResourcesData'
 
 /**
  * Interface for ResourcesProps
@@ -19,6 +20,7 @@ interface ResourcesProps {
  * @returns - Returns a box containing resource links
  */
 const Resources = ({ resourcesMetaInfo }: ResourcesProps) => {
+  const resources = resourcesMetaInfo?.concat(otherResources)
   return (
     <Box
       width={'100%'}
@@ -30,7 +32,7 @@ const Resources = ({ resourcesMetaInfo }: ResourcesProps) => {
         margin: { xs: '0 1rem', md: 'unset' },
       }}
     >
-      <LinkResources resourcesMetaInfo={resourcesMetaInfo} />
+      <LinkResources preview resourcesMetaInfo={resources} />
     </Box>
   )
 }

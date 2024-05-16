@@ -3,27 +3,19 @@ import { useTranslation } from 'react-i18next'
 
 import { Language, languageMap } from '@/config/config'
 import { useLatestStore } from '@/store/data/latest'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
+import { Light, Moon } from '@carbon/icons-react'
 import { ExpandMore } from '@mui/icons-material'
-import { Unstable_Grid2 as Grid2, MenuItem, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material'
+import { Box, Grid, IconButton, MenuItem, TextField, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 
-import { PAGES } from '../../../Layout/components/Sidebar'
-
-/**
- * Interface for MobileMenuProps
- */
-interface MobileMenuProps {
-  hasSearchBar?: boolean
-  activeTab?: PAGES
-  tabsHeight?: number
-}
+import FeedbackButton from 'components/Layout/components/TopBar/Buttons/FeedbackButton'
 
 /**
  * Renders a settings panel with options for theme, currency, and language selection.
  *
  */
-const SettingsPanel = ({ tabsHeight }: MobileMenuProps) => {
+const SettingsPanel = ({ setIsMenuOpen }: { setIsMenuOpen: (status: boolean) => void }) => {
   const theme = useTheme()
   const { t } = useTranslation()
 
@@ -38,15 +30,7 @@ const SettingsPanel = ({ tabsHeight }: MobileMenuProps) => {
     [setFiatCurrency]
   )
 
-  const handleThemeChange = useCallback(
-    (event: React.MouseEvent<HTMLElement>, nextView: string) => {
-      // if the user clicks in the current mode, we don't change it
-      if (nextView) {
-        toggleAppTheme()
-      }
-    },
-    [toggleAppTheme]
-  )
+  const handleThemeChange = useCallback(toggleAppTheme, [toggleAppTheme])
 
   const handleLanguageChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -56,38 +40,12 @@ const SettingsPanel = ({ tabsHeight }: MobileMenuProps) => {
     [setLanguage]
   )
 
-  /**
-   * Creates a Typography component with the given text.
-   * @param text - The text to be displayed in the Typography component.
-   * @returns A Typography component with the given text.
-   */
-  const createOptionTitleTypography = (text: string) => (
-    <Typography variant="body1" color="text.primary">
-      {t(text)}
-    </Typography>
-  )
-
-  const ThemeTypography = createOptionTitleTypography('Theme')
-  const CurrencyTypography = createOptionTitleTypography('Currency')
-  const LanguageTypography = createOptionTitleTypography('Language')
-
-  const ToggleButtonGroupComponent = (
-    <ToggleButtonGroup orientation="horizontal" value={theme.palette.mode} exclusive onChange={handleThemeChange} sx={{ height: '2rem' }}>
-      <ToggleButton value="light" aria-label="light" sx={{ textTransform: 'none', color: theme.palette.text.primary }}>
-        {t('Light')}
-      </ToggleButton>
-      <ToggleButton value="dark" aria-label="dark" sx={{ textTransform: 'none', color: theme.palette.text.primary }}>
-        {t('Dark')}
-      </ToggleButton>
-    </ToggleButtonGroup>
-  )
-
   const currencyMenuItems = useMemo(() => {
     if (!latestCurrencyRates || !latestCurrencyRates.length) {
       return (
         <MenuItem>
           <Typography variant={'body2'} color="text.primary">
-            No currencies available
+            {t('No currencies available')}
           </Typography>
         </MenuItem>
       )
@@ -99,7 +57,7 @@ const SettingsPanel = ({ tabsHeight }: MobileMenuProps) => {
         </Typography>
       </MenuItem>
     ))
-  }, [latestCurrencyRates])
+  }, [latestCurrencyRates, t])
 
   const languageMenuItems = useMemo(() => {
     if (Object.keys(languageMap).length) {
@@ -114,11 +72,11 @@ const SettingsPanel = ({ tabsHeight }: MobileMenuProps) => {
     return (
       <MenuItem>
         <Typography variant={'body2'} color="text.primary">
-          No languages available
+          {t('No languages available')}
         </Typography>
       </MenuItem>
     )
-  }, [])
+  }, [t])
 
   const TextFieldCurrency = useMemo(
     () => (
@@ -132,7 +90,8 @@ const SettingsPanel = ({ tabsHeight }: MobileMenuProps) => {
         value={latestCurrencyRates?.length ? selectedCurrency : ''}
         onChange={handleCurrencyChange}
         sx={{
-          minWidth: '12rem',
+          minWidth: '9rem',
+          width: '9rem',
         }}
       >
         {currencyMenuItems}
@@ -156,7 +115,8 @@ const SettingsPanel = ({ tabsHeight }: MobileMenuProps) => {
         value={selectedLanguage}
         onChange={handleLanguageChange}
         sx={{
-          minWidth: '12rem',
+          minWidth: '9rem',
+          width: '9rem',
         }}
       >
         {languageMenuItems}
@@ -165,81 +125,105 @@ const SettingsPanel = ({ tabsHeight }: MobileMenuProps) => {
     [selectedLanguage, handleLanguageChange, languageMenuItems]
   )
 
-  /**
-   * GridOptionContainer is a functional component that takes children as a parameter.
-   * It returns a Grid2 component with specific styling and the children inside it.
-   *
-   * @param children - The elements to be displayed inside the Grid2 component.
-   * @returns A Grid2 component with specific styling and the children inside it.
-   */
-  const GridOptionContainer = (children: React.ReactNode) => (
-    <Grid2
-      sx={{
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      }}
-    >
-      {children}
-    </Grid2>
-  )
-
-  return (
-    <Grid2
-      sx={{
-        padding: '0',
-        paddingTop: '1rem',
-        display: 'flex',
-        justifyContent: 'center',
-        maxHeight: `calc(100% - ${tabsHeight}px)`,
-        height: 'fit-content',
-      }}
-    >
-      <Grid2
-        container
-        bgcolor="background.level1"
+  const ThemeToggle = useMemo(() => {
+    return (
+      <IconButton
+        className="sunSettingAnimationContainer"
+        color="info"
+        size="large"
+        id={'topbar-theme-button'}
+        onClick={handleThemeChange}
         sx={{
-          alignItems: 'flex-start',
-          zIndex: 200,
-          display: 'flex',
-          flexDirection: 'column',
-          width: '100%',
-          borderRadius: theme.spacing(1),
+          position: 'relative',
+          overflow: 'hidden',
+          zIndex: 10000,
+          '&:hover': {
+            backgroundColor: theme.palette.background.opposite.level1,
+            transition: 'background-color 0.35s 0.3s ease-in-out',
+            '& svg': {
+              color: theme.palette.text.opposite.primary,
+              transition: 'color 0.35s 0.3s ease-in-out',
+            },
+          },
         }}
       >
-        <Grid2
-          sx={{
-            zIndex: 210,
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            padding: '1rem 1rem',
-            gap: '1rem',
-            alignItems: 'center',
-          }}
-        >
-          {GridOptionContainer(
-            <>
-              {ThemeTypography}
-              {ToggleButtonGroupComponent}
-            </>
-          )}
-          {GridOptionContainer(
-            <>
-              {CurrencyTypography}
-              {TextFieldCurrency}
-            </>
-          )}
-          {GridOptionContainer(
-            <>
-              {LanguageTypography}
-              {TextFieldLanguage}
-            </>
-          )}
-        </Grid2>
-      </Grid2>
-    </Grid2>
+        <Box className="sunSetting" sx={{ position: 'absolute', top: '100%', left: 0, width: '100%', height: '100%' }}>
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '-100%',
+              left: '0%',
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            {theme.palette.mode === 'light' ? <Light /> : <Moon />}
+          </Box>
+        </Box>
+
+        <Box className="sunRising" sx={{ position: 'absolute', top: '100%', left: 0, width: '100%', height: '100%' }}>
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '0%',
+              left: '-100%',
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              transform: 'rotate(-90deg)',
+            }}
+          >
+            {theme.palette.mode === 'light' ? <Moon /> : <Light />}
+          </Box>
+        </Box>
+      </IconButton>
+    )
+  }, [handleThemeChange, theme.palette.background.opposite.level1, theme.palette.mode, theme.palette.text.opposite.primary])
+
+  const closeMenu = useCallback(() => {
+    setIsMenuOpen(false)
+  }, [setIsMenuOpen])
+
+  return (
+    <Grid
+      container
+      sx={{
+        padding: '2rem 0 2rem 0',
+      }}
+      spacing={'0.5rem'}
+    >
+      <Grid
+        item
+        xs={12}
+        sx={{
+          display: 'flex',
+          gap: '0.5rem',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: 'fit-content',
+        }}
+      >
+        {TextFieldLanguage}
+        {TextFieldCurrency}
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        sx={{
+          display: 'flex',
+          gap: '0.5rem',
+          justifyContent: 'center',
+        }}
+      >
+        <FeedbackButton buttonSize="large" prevAction={closeMenu} />
+        {ThemeToggle}
+      </Grid>
+    </Grid>
   )
 }
 

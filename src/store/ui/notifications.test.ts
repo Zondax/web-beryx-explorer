@@ -13,10 +13,7 @@ describe('useNotificationsStore', () => {
   // The addNotification action should add a new notification to the store and set newNotification to true.
   it('addNotification updates store', () => {
     const mockNotification = {
-      id: '1',
       title: 'Test Notification',
-      time: '12:00',
-      date: '2022-01-01',
       status: 'confirm',
       tag: ['test'],
     }
@@ -25,9 +22,10 @@ describe('useNotificationsStore', () => {
       notificationsStore().addNotification(mockNotification)
     })
     const notifications = notificationsStore().notifications
+    const savedNotification = notifications.find(({ title }: { title: string }) => title === mockNotification.title)
     act(() => {
       const newNotification = notificationsStore().newNotification
-      expect(notifications).toContain(mockNotification)
+      expect(savedNotification).not.toBe(undefined)
       expect(newNotification).toBe(true)
     })
   })
@@ -35,10 +33,7 @@ describe('useNotificationsStore', () => {
   // The deleteNotification action should remove a specific notification from the store.
   it('deleteNotification removes notification from store', () => {
     const mockNotification = {
-      id: 'mockId',
       title: 'Mock Notification',
-      time: '12:00',
-      date: '2022-01-01',
       status: 'confirm',
       tag: ['mock'],
     }
@@ -46,28 +41,28 @@ describe('useNotificationsStore', () => {
     act(() => {
       notificationsStore().addNotification(mockNotification)
     })
+    const notifications = notificationsStore().notifications
+    const savedNotification = notifications.find(({ title }: { title: string }) => title === mockNotification.title)
+
     act(() => {
-      notificationsStore().deleteNotification(mockNotification.id)
+      expect(savedNotification).not.toBe(undefined)
+      notificationsStore().deleteNotification(savedNotification.id)
     })
-    expect(notificationsStore().notifications).not.toContain(mockNotification)
+    const deletedNotification = notificationsStore().notifications.find(({ id }: { id: string }) => id === savedNotification.id)
+
+    expect(deletedNotification).toBe(undefined)
   })
 
   // The deleteAll action should remove all notifications from the store.
   it('deleteAll clears all notifications from store', () => {
     const mockNotifications = [
       {
-        id: 'mockId1',
         title: 'Mock Notification 1',
-        time: '12:00',
-        date: '2022-01-01',
         status: 'confirm',
         tag: ['mock'],
       },
       {
-        id: 'mockId2',
         title: 'Mock Notification 2',
-        time: '12:00',
-        date: '2022-01-01',
         status: 'confirm',
         tag: ['mock'],
       },

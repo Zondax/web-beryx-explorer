@@ -2,10 +2,12 @@ import axios from 'axios'
 import Head from 'next/head'
 
 import { fetchTransactionDetails } from '@/api-client/beryx'
-import { LoadingStatus, beryxExplorerVersion } from '@/config/config'
+import { LoadingStatus } from '@/config/config'
 import { NetworkType } from '@/config/networks'
 import { useSearchStore } from '@/store/data/search'
 import { captureException } from '@sentry/nextjs'
+
+import { LinkCardCategory } from 'components/common/LinkCard/types'
 
 import { PAGES } from '../../components/Layout/components/Sidebar'
 import { LinkCardProps } from '../../components/common/LinkCard'
@@ -15,10 +17,11 @@ interface MetaDataProps {
   metaDescription: string
   metaImage: string
   metaURL: string
+  metaType?: 'website' | 'article'
+  canonicalURL?: string
 }
 interface MetaTagsProps {
   metaData: MetaDataProps
-  type?: 'website' | 'article'
 }
 
 // https://moz.com/learn/seo/meta-description#related-resources:~:text=Don't%20include%20double%20quotation%20marks
@@ -36,7 +39,7 @@ export const sanitizeDescription = (plainText?: string): undefined | string => {
  * @param type - The type of metadata. The default value is 'website'.
  * @returns The JSX of meta tags
  */
-export const metaTags = ({ metaData, type = 'website' }: MetaTagsProps) => {
+export const metaTags = ({ metaData }: MetaTagsProps) => {
   return (
     <Head>
       <title>{metaData.metaTitle}</title>
@@ -46,7 +49,7 @@ export const metaTags = ({ metaData, type = 'website' }: MetaTagsProps) => {
       <meta key="meta description" name="description" content={sanitizeDescription(metaData.metaDescription)} />
 
       {/* <!-- Open Graph / Facebook --> */}
-      <meta key="og type" property="og:type" content={type} />
+      <meta key="og type" property="og:type" content={metaData.metaType || 'website'} />
       <meta key="og url" property="og:url" content={metaData.metaURL} />
       <meta key="og title" property="og:title" content={metaData.metaTitle} />
       <meta key="og description" property="og:description" content={sanitizeDescription(metaData.metaDescription)} />
@@ -58,6 +61,8 @@ export const metaTags = ({ metaData, type = 'website' }: MetaTagsProps) => {
       <meta key="twitter title" property="twitter:title" content={metaData.metaTitle} />
       <meta key="twitter description" property="twitter:description" content={sanitizeDescription(metaData.metaDescription)} />
       <meta key="twitter image" property="twitter:image" content={metaData.metaImage} />
+
+      {metaData.canonicalURL && <link rel="canonical" href={metaData.canonicalURL} />}
     </Head>
   )
 }
@@ -116,11 +121,29 @@ export const fetchResourcesMetaData = async (links: string[]) => {
   for (const link of links) {
     const metaData = await fetchLinkMetaData(link)
     if (metaData !== 'error') {
-      linksMetaData.push(metaData)
+      linksMetaData.push({ ...metaData, category: LinkCardCategory.ECOSYSTEM })
     }
   }
 
   return linksMetaData
+}
+/**
+ * This function fetches metadata for resource cards from an array of resource information.
+ * @param resources - The array of resource information containing URLs and categories
+ * @returns An array containing the successfully fetched metadata for resource cards
+ */
+export const fetchResourceCardsMetaData = async (resources: { url: string; category: LinkCardCategory; priority?: boolean }[]) => {
+  const resourceCardsMetaData: LinkCardProps[] = []
+
+  for (const resource of resources) {
+    const metaData = await fetchResourcesMetaData([resource.url])
+    if (metaData.length > 0) {
+      const internalMetaData = { ...metaData[0], category: resource.category, priority: resource.priority ?? false }
+      resourceCardsMetaData.push(internalMetaData)
+    }
+  }
+
+  return resourceCardsMetaData
 }
 
 /**
@@ -128,12 +151,12 @@ export const fetchResourcesMetaData = async (links: string[]) => {
  * @param page - The name of the page
  * @returns An object containing the metadata of the page
  */
-export function getPageMetaData(page: PAGES) {
-  const defaultMeta = {
-    metaTitle: 'Beryx',
+export function getPageMetaData(page: PAGES): MetaDataProps {
+  const defaultMeta: MetaDataProps = {
+    metaTitle: 'Beryx: Blockchain Explorer, Dashboards, Faucet and Tools',
     metaDescription:
       'Beryx is a platform developed by Zondax that includes public historical data, streaming data and metrics for Filecoin blockchain.',
-    metaImage: 'https://beryx.zondax.ch/beryx-og.png',
+    metaImage: 'https://beryx.zondax.ch/main.png',
     metaURL: 'https://beryx.zondax.ch',
   }
 
@@ -141,72 +164,124 @@ export function getPageMetaData(page: PAGES) {
     [PAGES.HOME]: defaultMeta,
     [PAGES.EXPLORE]: {
       ...defaultMeta,
-      metaTitle: 'Beryx - Explorer',
+      metaTitle: 'Beryx: Dive into the Filecoin Ecosystem',
+      metaDescription:
+        'Explore the vast Filecoin ecosystem with Beryx. Discover nodes, transactions, and more in an intuitive interface. Open 24/7.',
     },
     [PAGES.LEADERBOARD]: {
       ...defaultMeta,
-      metaTitle: 'Beryx - Leaderboard',
+      metaTitle: 'Leaderboard: Track Top Filecoin Performers | Beryx',
+      metaDescription:
+        "See who's leading in the Filecoin network with Beryx Leaderboard. Rankings updated daily to reflect the most active and influential nodes.",
       metaURL: 'https://beryx.zondax.ch/leaderboard',
+      metaImage: 'https://beryx.zondax.ch/leaderboard.png',
     },
     [PAGES.DASHBOARD]: {
       ...defaultMeta,
-      metaTitle: 'Beryx - Dashboard',
+      metaTitle: 'Dashboard: Filecoin Insights at a Glance | Beryx',
+      metaDescription:
+        'Access personalized insights and metrics on the Filecoin network with your Beryx Dashboard. Monitor performance, transactions, and more.',
       metaURL: 'https://beryx.zondax.ch/dashboard',
+      metaImage: 'https://beryx.zondax.ch/dashboard.png',
     },
     [PAGES.MEMPOOL]: {
       ...defaultMeta,
-      metaTitle: 'Beryx - Mempool',
-      metaURL: `https://beryx.zondax.ch/${beryxExplorerVersion}/mempool`,
+      metaTitle: 'Mempool: Real-time Transaction Monitoring | Beryx',
+      metaDescription:
+        'Stay updated with real-time transaction monitoring in the Filecoin network with Beryx Mempool. Explore pending transactions and mempool status.',
+      metaURL: 'https://beryx.zondax.ch/mempool',
+      metaImage: 'https://beryx.zondax.ch/mempool.png',
     },
     [PAGES.FAUCET]: {
       ...defaultMeta,
-      metaTitle: 'Beryx - Faucet',
+      metaTitle: 'Faucet: Get Filecoin Test Tokens | Beryx',
+      metaDescription:
+        'Claim Filecoin test tokens with Beryx Faucet. A crucial tool for developers and users for testing and development on the Filecoin network.',
       metaURL: 'https://beryx.zondax.ch/faucet',
+      metaImage: 'https://beryx.zondax.ch/faucet.png',
     },
     [PAGES.ADDRESS_CONVERTER]: {
       ...defaultMeta,
-      metaTitle: 'Beryx - Address Converter',
+      metaTitle: 'Address Converter: Filecoin Ethereum compatible | Beryx',
+      metaDescription:
+        'Easily convert Filecoin addresses with Beryx Address Converter. Supports multiple formats for seamless integration and usage.',
       metaURL: 'https://beryx.zondax.ch/address-converter',
+      metaImage: 'https://beryx.zondax.ch/converter.png',
     },
     [PAGES.CONTRACT_VERIFIER]: {
       ...defaultMeta,
-      metaTitle: 'Beryx - Contract Verifier',
+      metaTitle: 'Contract Verifier: Ensure Smart Contract Integrity by verifying source code | Beryx',
+      metaDescription:
+        'Verify the integrity of Filecoin smart contracts with Beryx Contract Verifier. A step towards secure and reliable contract deployment.',
       metaURL: 'https://beryx.zondax.ch/contract-verifier',
+      metaImage: 'https://beryx.zondax.ch/verifier.png',
     },
     [PAGES.RPC]: {
       ...defaultMeta,
-      metaTitle: 'Beryx - Calibration Public RPC Node',
+      metaTitle: 'Filecoin RPC Node: Access Filecoin Mainnet and Calibration Networks | Beryx',
+      metaDescription:
+        'Connect to the Filecoin network with Beryx Calibration Public RPC Node. Reliable access for developers and users alike.',
       metaURL: 'https://beryx.zondax.ch/rpc',
+      metaImage: 'https://beryx.zondax.ch/rpc.png',
     },
     [PAGES.RECENT_ACTIVITY]: {
       ...defaultMeta,
-      metaTitle: 'Beryx - Recent Activity',
+      metaTitle: 'Recent Activity: Latest Filecoin Tipsets, Transactions and Contract Invokes | Beryx',
+      metaDescription:
+        'Keep up with the latest activity on the Filecoin network with Beryx. Real-time updates on transactions, tipsets, blocks, contracts and more.',
       metaURL: 'https://beryx.zondax.ch/recent-activity',
+      metaImage: 'https://beryx.zondax.ch/activity.png',
     },
     [PAGES.NOT_FOUND]: {
       ...defaultMeta,
-      metaTitle: 'Beryx - 404',
+      metaTitle: '404: Page Not Found | Beryx',
+      metaDescription:
+        'The page you are looking for might have been removed, had its name changed, or is temporarily unavailable on Beryx.',
       metaURL: 'https://beryx.zondax.ch/404',
+    },
+    [PAGES.ERROR_500]: {
+      ...defaultMeta,
+      metaTitle: '500: Server Error | Beryx',
+      metaDescription:
+        "We're experiencing a server issue. Please try again later or contact support if the problem persists. Beryx is here to help.",
+      metaURL: 'https://beryx.zondax.ch/500',
     },
     [PAGES.INTERACT]: {
       ...defaultMeta,
-      metaTitle: 'Beryx - Interact with Smart Contracts',
+      metaTitle: 'Interact with Filecoin Smart Contracts | Beryx',
+      metaDescription:
+        'Easily interact with Filecoin smart contracts using Beryx. A user-friendly interface for executing and testing smart contracts.',
       metaURL: 'https://beryx.zondax.ch/interact',
+      metaImage: 'https://beryx.zondax.ch/interact.png',
     },
     [PAGES.ESTIMATE_GAS]: {
       ...defaultMeta,
-      metaTitle: 'Beryx - Gas Estimator',
+      metaTitle: 'Gas Estimator: Optimize Your Transactions | Beryx',
+      metaDescription:
+        'Estimate gas costs for your Filecoin transactions with Beryx Gas Estimator. Optimize spending and improve transaction efficiency.',
       metaURL: 'https://beryx.zondax.ch/estimate_gas',
+      metaImage: 'https://beryx.zondax.ch/estimate.png',
     },
     [PAGES.TERMS_OF_SERVICE]: {
       ...defaultMeta,
-      metaTitle: 'Beryx - Terms of Service',
+      metaTitle: 'Terms of Service | Beryx',
+      metaDescription:
+        'Understand the terms and conditions for using Beryx. Our commitment to transparency and user trust outlined in our Terms of Service.',
       metaURL: 'https://beryx.zondax.ch/terms-of-service',
     },
     [PAGES.CHANGELOG]: {
       ...defaultMeta,
-      metaTitle: 'Beryx - Changelog',
+      metaTitle: 'Changelog: Stay Updated with New Features | Beryx',
+      metaDescription:
+        'Discover the latest updates, improvements, and new features on Beryx. Our changelog keeps you informed about our continuous development.',
       metaURL: 'https://beryx.zondax.ch/changelog',
+      metaImage: 'https://beryx.zondax.ch/changelog.png',
+    },
+    [PAGES.RESOURCES]: {
+      ...defaultMeta,
+      metaTitle: 'Resources: Find the most relevant resources for Filecoin | Beryx',
+      metaDescription:
+        'Find the most relevant resources for Filecoin like documentation, events and social media. Beryx Resources is a collection of resources that are relevant to the Filecoin network.',
     },
   }
 
@@ -230,5 +305,34 @@ export const fetchMetadata = async (id: string, tx_network: NetworkType) => {
     }
   } catch {
     useSearchStore.getState().setSearchResultMetadata({ loadingStatus: LoadingStatus.Error, data: undefined })
+  }
+}
+
+/**
+ * This function generates a custom message inviting users to explore more based on the type and value provided.
+ * @param type - The type of the object (e.g., address, tx, height, etc.)
+ * @param value - The value associated with the type.
+ * @returns A custom message styled as a website metadata description.
+ */
+export const getMetadataDescriptionForItem = (type: string, value: string, network: string): string => {
+  switch (type.toLowerCase()) {
+    case 'address':
+      return `View address ${value} in Filecoin ${network}. Find balance, ator type, Ethereum address or mempool activity. Analyze statistics including gas consumption, contract creates or invokes.`
+
+    case 'txs':
+    case 'tx':
+    case 'transactions':
+    case 'transaction':
+      return `Check transaction details for ${value} in Filecoin ${network}, such as status, tipset height, transaction method, amount of gas used, metadata, transaction logs and internal messages.`
+
+    case 'tipset':
+      return `Inspect the tipset ${value} in Filecoin ${network}. Get insights into its composition and related transactions, view parent tipset, CID and blocks.`
+
+    case 'block':
+    case 'block-cid':
+      return `Review the block with CID ${value} in Filecoin ${network} and see block miner, tipset height, filter transactions, and find its place in the chain.`
+
+    default:
+      return `Explore ${value} in Filecoin blockchain. Beryx is a platform developed by Zondax that includes public historical data, streaming data and metrics.`
   }
 }

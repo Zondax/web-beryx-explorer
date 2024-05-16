@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { ContractVerificationRequirements } from '@/api-client/beryx.types'
 import { useMutationContractVerify } from '@/data/beryx'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import { Unstable_Grid2 as Grid2, useTheme } from '@mui/material'
 
 import { Form, ResultsView, Tutorial } from './Components'

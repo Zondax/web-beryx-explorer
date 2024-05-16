@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next'
 
 import { useSearchType } from '@/data/beryx'
 import { HistoryItem, useHistoryStore } from '@/store/ui/history'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import { decodeInput } from '@/utils/inputDetection'
-import { Search } from '@carbon/icons-react'
-import { Button, CircularProgress, Grid, TextField, Typography, useTheme } from '@mui/material'
+import { CloseFilled, Search } from '@carbon/icons-react'
+import { Button, CircularProgress, ClickAwayListener, Grid, IconButton, TextField, Typography, useTheme } from '@mui/material'
 import { Box } from '@mui/system'
 
 import HelperTextPopper from './HelperTextPopper'
@@ -21,14 +21,13 @@ export const HISTORY_DISPLAY_MAX_SIZE = 8
 /**
  * @interface SearchBarProps
  * @description defines the properties for the SearchBar component
- * @property hasSearchButton
  * @property mobileMenu
  * @property {object} properties
  * @property placeholder
  * @property border
  */
 export interface SearchBarProps {
-  hasSearchButton: boolean
+  hero?: boolean
   mobileMenu?: boolean
   properties?: {
     minWidth?: string | number
@@ -39,27 +38,32 @@ export interface SearchBarProps {
   placeholder?: string
   border?: boolean
   navbar?: boolean
+  showHistory?: boolean
 }
 
-export const SEARCH_BAR_WIDTH = '40rem'
+export const SEARCH_BAR_WIDTH = '30rem'
 
 /**
  * @description LoadingIndicator component
  */
-const LoadingIndicator = ({ showLoading }: { showLoading: boolean }) =>
-  showLoading ? <CircularProgress size={16} sx={{ position: 'absolute', right: '1rem', top: 'calc(50% - 8px)', zIndex: '200' }} /> : null
+export const LoadingIndicator = ({ showLoading }: { showLoading: boolean }) =>
+  showLoading ? (
+    <CircularProgress
+      size={16}
+      sx={{ display: { xs: 'none', md: 'inline-block' }, position: 'absolute', right: '1rem', top: 'calc(50% - 8px)', zIndex: '200' }}
+    />
+  ) : null
 
 /**
  * @function SearchBar
  * @description This component is used to search for transactions, tipsets, addresses, and contracts
- * @param hasSearchButton - Placeholder text for the input
  * @param placeholder - Placeholder text for the input
  * @param mobileMenu - Indicate if it's a mobile menu
  * @param properties - Properties for the input
  * @param border - Border element for the input
  * @param navbar - Is the searchbar situated in the navbar
  */
-const SearchBar = ({ hasSearchButton, placeholder, mobileMenu, properties, border, navbar }: SearchBarProps) => {
+const SearchBar = ({ placeholder, mobileMenu, properties, border, navbar, showHistory = true, hero = false }: SearchBarProps) => {
   const theme = useTheme()
   const { t } = useTranslation()
 
@@ -144,7 +148,7 @@ const SearchBar = ({ hasSearchButton, placeholder, mobileMenu, properties, borde
 
     if (!searchTypeResult || searchTypeResult.length === 0) {
       setShowLoading(false)
-      setHelperText(<>{t("Sorry! We don't recognize it. Please double check, there might be a typo.")}</>)
+      setHelperText(t("Sorry! We don't recognize it. Please double check, there might be a typo."))
       return
     }
 
@@ -156,12 +160,12 @@ const SearchBar = ({ hasSearchButton, placeholder, mobileMenu, properties, borde
       return
     }
 
-    if (router.asPath === `/v1/search/fil/${network.name}/${decodedInput.objectType}/${decodedInput.filForm}`) {
+    if (router.asPath === `/search/fil/${network.name}/${decodedInput.objectType}/${decodedInput.filForm}`) {
       router.reload()
       return
     }
 
-    router.push(`/v1/search/fil/${network.name}/${decodedInput.objectType}/${decodedInput.filForm}`, undefined, {
+    router.push(`/search/fil/${network.name}/${decodedInput.objectType}/${decodedInput.filForm}`, undefined, {
       shallow: true,
     })
   }, [searchTypeResult, inputValue, router, network.name, t])
@@ -179,7 +183,7 @@ const SearchBar = ({ hasSearchButton, placeholder, mobileMenu, properties, borde
         }
 
         if (inputValue === '') {
-          setHelperText(<>{t('Please enter a value')}</>)
+          setHelperText(t('Please enter a value'))
           setAnchorEl(event.currentTarget)
           return
         }
@@ -187,7 +191,7 @@ const SearchBar = ({ hasSearchButton, placeholder, mobileMenu, properties, borde
         // valid invalid characters
         const letters = /^[0-9a-zA-Z]+$/
         if (!letters.test(inputValue)) {
-          setHelperText(<>{t('Invalid characters')}</>)
+          setHelperText(t('Invalid characters'))
           setAnchorEl(event.currentTarget)
           return
         }
@@ -247,7 +251,6 @@ const SearchBar = ({ hasSearchButton, placeholder, mobileMenu, properties, borde
    */
   const handleClose = useCallback(() => {
     setIsHistoryOpen(false)
-    setAnchorEl(null)
     setSelectedElementIndex(-1)
   }, [])
 
@@ -267,77 +270,124 @@ const SearchBar = ({ hasSearchButton, placeholder, mobileMenu, properties, borde
     setHelperText(undefined)
   }, [])
 
+  /**
+   * @description This function handles the event of clearing the input value. It sets the input value to an empty string and the helper text to undefined.
+   */
+  const handleClearInput = useCallback(() => {
+    setInputValue('')
+    setHelperText(undefined)
+  }, [])
+
+  /**
+   * @description This function handles the rendering of the search actions. It checks if the search is loading and returns a loading indicator if it is. If the input value is not empty, it returns a close button that clears the input value.
+   */
+  const searchActions = useCallback(() => {
+    if (showLoading) {
+      return (
+        <CircularProgress
+          size={16}
+          sx={{ display: { xs: 'none', md: 'inline-block' }, position: 'absolute', right: '1rem', top: 'calc(50% - 8px)', zIndex: '200' }}
+        />
+      )
+    }
+    if (inputValue) {
+      return (
+        <IconButton
+          onClick={handleClearInput}
+          size={'small'}
+          sx={{ position: 'absolute', right: '0.125rem', top: '50%', transform: 'translateY(-50%)', zIndex: '200' }}
+        >
+          <CloseFilled color={theme.palette.text.tertiary} />
+        </IconButton>
+      )
+    }
+  }, [showLoading, inputValue, handleClearInput, theme.palette.text.tertiary])
+
   return (
     <Grid
       container
       gap={1}
       sx={{
         width: { xs: '100%', sm: properties?.width ?? 'fit-content' },
-        flexDirection: 'row',
-        alignItems: 'flex-start',
-        justifyContent: 'center',
         position: 'relative',
+        fontSize: { xs: '16px !important' },
       }}
     >
-      <LoadingIndicator showLoading={showLoading} />
-      <TextField
-        ref={textFieldRef}
-        id={'track-search-bar-input'}
-        data-testid="search-bar"
-        label={
-          <Box display="flex" gap={'0.5rem'} alignItems={'center'}>
-            <Search />
-            <Typography variant="body1">
-              {placeholder ?? `${t('Search Address / Block / Contract / Tipset / Transaction CID in ')} ${network.name}`}
-            </Typography>
-          </Box>
-        }
-        InputLabelProps={{
-          style: {
-            borderRadius: navbar ? '4px' : '6px',
-            maxHeight: properties?.maxHeight ? `calc(${properties?.maxHeight} - 2px)` : 'inherit',
-          },
-        }}
-        size="large"
-        color="level0"
-        value={inputValue}
-        aria-describedby={helperText ? 'simple-popper' : undefined}
-        onChange={handleSearchInputChange}
-        onKeyDown={handleKeyDown}
-        onFocus={handleFocus}
-        onClick={handleClick}
-        inputProps={{
-          style: {
-            maxHeight: properties?.maxHeight ? `calc(${properties?.maxHeight} - 2px)` : 'inherit',
-            borderRadius: navbar ? '4px !important' : '6px',
-          },
-        }}
-        sx={{
-          width: { xs: '100%', sm: properties?.width ?? SEARCH_BAR_WIDTH },
-          minWidth: properties?.minWidth ? properties?.minWidth : '20rem',
-          maxWidth: properties?.maxWidth ? properties?.maxWidth : SEARCH_BAR_WIDTH,
-          maxHeight: properties?.maxHeight ? properties?.maxHeight : 'inherit',
-          borderRadius: navbar ? '4px !important' : '6px !important',
-          border: border ? `1px solid ${theme.palette.primary.main}` : 'none',
-          '.MuiInputBase-root': {
-            borderRadius: navbar ? '3.5px' : '5.75px',
-          },
-        }}
-      />
-      {hasSearchButton && (
-        <Button id="search-button" onClick={search} variant="contained" size="large">
-          {t('Search Address / Block / Contract / Tipset / Transaction CID in ')}
-        </Button>
-      )}
+      <ClickAwayListener onClickAway={clickAwayHandler}>
+        <Grid
+          container
+          ref={textFieldRef}
+          gap={1}
+          sx={{
+            width: { sm: properties?.width ?? 'fit-content' },
+            flexWrap: 'nowrap',
+            alignItems: 'flex-start',
+          }}
+        >
+          <LoadingIndicator showLoading={showLoading} />
+          {searchActions()}
+
+          <TextField
+            id={'track-search-bar-input'}
+            data-testid="search-bar"
+            variant={'outlined'}
+            size={hero ? 'large' : 'medium'}
+            label={
+              <Box display="flex" gap={'0.5rem'} alignItems={'center'}>
+                <Search color={hero ? theme.palette.common.black : undefined} />
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: hero ? theme.palette.common.black : undefined,
+                  }}
+                >
+                  {placeholder ?? t('Search in Filecoin')}
+                  {hero && !placeholder && <span style={{ textTransform: 'capitalize', marginLeft: '0.35rem' }}>{network.name}</span>}
+                </Typography>
+              </Box>
+            }
+            value={inputValue}
+            aria-describedby={helperText ? 'simple-popper' : undefined}
+            onChange={handleSearchInputChange}
+            onKeyDown={handleKeyDown}
+            onFocus={handleFocus}
+            onClick={handleClick}
+            InputProps={{
+              style: {
+                color: hero ? theme.palette.common.black : undefined,
+              },
+            }}
+            sx={{
+              width: { xs: '100%', sm: hero ? SEARCH_BAR_WIDTH : '100%', md: hero ? SEARCH_BAR_WIDTH : '15rem' },
+              '.MuiInputBase-root': {
+                backgroundColor: hero ? theme.palette.common.white : undefined,
+                border: hero ? `3px solid ${theme.palette.primary.main}` : undefined,
+                borderRadius: hero ? '8px' : undefined,
+              },
+            }}
+          />
+          {inputValue && (
+            <Button
+              id="search-button"
+              onClick={search}
+              variant="contained"
+              size="large"
+              sx={{ minWidth: 'unset', display: { xs: 'flex', md: 'none' } }}
+            >
+              {showLoading ? <CircularProgress size={16} sx={{}} /> : t('Search')}
+            </Button>
+          )}
+        </Grid>
+      </ClickAwayListener>
       <HelperTextPopper
         helperText={helperText}
         anchorEl={anchorEl}
-        clickAwayHandler={clickAwayHandler}
         properties={properties}
         border={border ?? false}
         theme={theme}
+        navbar={navbar}
       />
-      {anchorEl ? (
+      {anchorEl && showHistory ? (
         <HistoryPopover
           isHistoryOpen={isHistoryOpen}
           helperText={helperText}

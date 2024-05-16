@@ -1,8 +1,6 @@
 import { AxiosError } from 'axios'
-import { format } from 'date-fns-tz'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { v4 } from 'uuid'
 
 import { GridPagination, GridSortModel } from '@/components/muigrid/types'
 import { TABLE_TYPE } from '@/config/tables'
@@ -40,6 +38,7 @@ interface SearchTablesProps {
   noRowsIcon?: React.JSX.Element
   limitRows?: number
   hideBorder?: boolean
+  noBorderRadius?: boolean
   sort?: Sort[]
 }
 
@@ -58,11 +57,12 @@ const SearchTables = ({
   hideFooter = false,
   limitRows,
   hideBorder = false,
+  noBorderRadius = false,
   sort: propSort,
 }: SearchTablesProps) => {
   const router = useRouter()
 
-  const { searchInputNetwork: network, searchType, searchInputValue, currentResult, setCurrentResult } = useSearchStore()
+  const { searchInputNetwork: network, searchType, searchInputType, searchInputValue, currentResult, setCurrentResult } = useSearchStore()
 
   const addNotification = useNotificationsStore(s => s.addNotification)
 
@@ -94,6 +94,7 @@ const SearchTables = ({
   const [totalTxs, setTotalTxs] = useState<number | undefined>(undefined)
   const [fetchedPages, setFetchedPages] = useState<PagesProps[]>([{ page: 1 }])
   const [paginationModel, setPaginationModel] = useState(initPaginationModel)
+  const [isFirstSearch, setIsFirstSearch] = useState<boolean>(true)
 
   /**
    * Update the page when the paginationModel changes (the user changes the page).
@@ -144,14 +145,15 @@ const SearchTables = ({
     return {
       input: searchInputValue,
       network,
-      type: searchType,
+      inputType: searchInputType,
+      objectType: searchType,
       method: activeMethodType,
       level: filters.level,
       evm: filters.evm,
       sort,
       page: currentPage,
     }
-  }, [searchInputValue, network, searchType, filters, sort, currentPage])
+  }, [searchInputValue, network, searchType, searchInputType, filters, sort, currentPage])
 
   /**
    * Request the transactions
@@ -233,11 +235,8 @@ const SearchTables = ({
         }
       } else if (errorCode && errorDescriptions[errorCode]) {
         addNotification({
-          id: v4(),
           title: '',
           description: errorDescriptions[errorCode],
-          time: format(new Date(), 'KK:mm aa'),
-          date: format(new Date(), 'MMM dd'),
           status: 'error',
           tag: ['search'],
         })
@@ -280,10 +279,32 @@ const SearchTables = ({
         newCurrentResult.totalTxs = newTotalTxs
         setTotalTxs(newTotalTxs)
       }
+      setCurrentResult(newCurrentResult)
       if (txsResult?.transactions.length === 0) {
         setTotalTxs(0)
+
+        const currentType = filters.methodType?.find(({ active }) => active)
+        const activeMethodType = currentType ? currentType.method : undefined
+
+        // If the user is searching "All" transactions, all is disabled and there are no incoming transactions,
+        // the filter will change automatically to "Outgoing"
+        if (isFirstSearch && activeMethodType === 'incoming' && [undefined, 'all'].includes(router.query.type as string)) {
+          setIsFirstSearch(false)
+          const newFilters = {
+            ...filters,
+            methodType: filters.methodType
+              ? [...filters.methodType].map(option => {
+                  const newOption = { ...option }
+                  newOption.active = option.method === 'outgoing'
+                  return newOption
+                })
+              : [],
+          }
+          handleFilterChange(newFilters)
+        }
+      } else {
+        setIsFirstSearch(false)
       }
-      setCurrentResult(newCurrentResult)
     }
     /**
      * Save the total number of current transactions and the data of the next page.
@@ -355,6 +376,7 @@ const SearchTables = ({
         paginationMode="server"
         serverPagination={ServerPagination}
         hideBorder={hideBorder}
+        noBorderRadius={noBorderRadius}
         sortModel={sort}
         sortingMode={'server'}
         onSortModelChange={handleSortModelChange}

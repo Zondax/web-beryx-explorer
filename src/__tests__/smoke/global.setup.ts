@@ -11,7 +11,7 @@ import { LinkCollector } from '@/utils/linkCollector'
 import { chromium } from '@playwright/test'
 
 // TODO: reenable other starting points
-// const initialLinks = ['/', '/v1/mempool', '/address_converter', '/contract_verifier', '']
+// const initialLinks = ['/', '/mempool', '/address_converter', '/contract_verifier', '']
 const initialLinks = ['/']
 const cacheFile = '.discoveredUrls.json'
 const maxUrls = 100 // Maximum number of URLs to explore

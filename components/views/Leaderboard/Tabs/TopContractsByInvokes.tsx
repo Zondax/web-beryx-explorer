@@ -1,6 +1,6 @@
 import { TABLE_TYPE } from '@/config/tables'
 import { useTopContractsByInvokes } from '@/data/beryx'
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 
 import Table from 'components/widgets/Table'
 
@@ -17,6 +17,7 @@ const TopContractsByInvokes = () => {
       key="list of top contracts by invokes on the blockchain"
       rowData={topContracts?.results ?? []}
       mode="normal"
+      hideBorder
       tableType={TABLE_TYPE.TOP_CONTRACTS_BY_INVOKES}
       disableColumnFilter
       disableColumnReorder

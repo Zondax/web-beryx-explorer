@@ -10,7 +10,8 @@ import Turnstile from 'react-turnstile'
 import { ContractVerificationRequirements } from '@/api-client/beryx.types'
 import { CloudflareTurnstileSiteKey } from '@/config/config'
 import { useSearchStore } from '@/store/data/search'
-import { Alert, Box, FormHelperText, Grid, Typography, useTheme } from '@mui/material'
+import { Construction } from '@carbon/icons-react'
+import { Box, FormHelperText, Grid, Tooltip, Typography, useTheme } from '@mui/material'
 
 import FilecoinIcon from '../../../Icons/Filecoin'
 import { SourceCode, VerifyButton } from './Sections'
@@ -43,6 +44,23 @@ const Form = ({ formik, address }: { formik: FormikProps<ContractVerificationReq
         <Typography variant="body1" mb={'1rem'}>
           {t('Source code verification provides transparency for users interacting with smart contracts.')}
         </Typography>
+        <Tooltip title={t('If you have a bug to report, please use the feedback tool in the navbar.')} arrow>
+          <Grid
+            container
+            wrap="nowrap"
+            gap={'1rem'}
+            mb={'1rem'}
+            bgcolor={'background.level2'}
+            sx={{ borderRadius: '6px', padding: '0.5rem 1rem' }}
+          >
+            <Box width={30} pt={'0.75rem'}>
+              <Construction size={20} color={theme.palette.text.secondary} />
+            </Box>
+            <Typography variant="body1" p={'0.5rem 0'} color={'text.secondary'}>
+              {t("We provide support for upgradable and proxy contracts, although it's currently in the beta testing phase.")}
+            </Typography>
+          </Grid>
+        </Tooltip>
         <Box mb={'1rem'}>
           <Typography variant="body1" gutterBottom>
             {t('Contract address')}:
@@ -66,9 +84,6 @@ const Form = ({ formik, address }: { formik: FormikProps<ContractVerificationReq
           </Typography>
         </Box>
       </Grid>
-      <Alert severity="warning" variant={'outlined'} sx={{ padding: '0.5rem 1rem' }}>
-        {t('We currently do not offer support for upgradable and proxy contracts.')}
-      </Alert>
       <Box width={'100%'}>
         <form onSubmit={formik.handleSubmit}>
           <Grid container spacing={4}>

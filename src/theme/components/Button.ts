@@ -1,23 +1,11 @@
-import { Components, PaletteOptions } from '@mui/material'
-
-import { darkPallete } from '../palette'
-
-/**
- * This module declaration is extending the ButtonPropsVariantOverrides interface
- * from the @mui/material/Button module to include an inputType property.
- */
-declare module '@mui/material/Button' {
-  interface ButtonPropsVariantOverrides {
-    inputType: true
-  }
-}
+import { Components, Palette } from '@mui/material'
 
 /**
  * This function returns the styles for the Button component.
  * @param palette - The color palette of the application.
  * @returns The styles for the Button component.
  */
-export const ButtonStyles = (palette: PaletteOptions): Components => {
+export const buttonStyles = (palette: Palette): Components => {
   return {
     MuiButton: {
       // Variants for the Button component
@@ -34,7 +22,29 @@ export const ButtonStyles = (palette: PaletteOptions): Components => {
             },
             '&:hover': {
               color: palette.mode === 'light' ? palette.background?.level0 : palette.text?.primary,
-              backgroundColor: palette.mainDark,
+              backgroundColor: palette.primary.dark,
+              '#badge-text': {
+                color: palette.mainDark,
+              },
+              '&:disabled': {
+                backgroundColor: palette.background?.level2,
+                color: palette.text?.disabled,
+              },
+            },
+          },
+        },
+        {
+          // Variant for the inputType property
+          props: { variant: 'link' },
+          style: {
+            minWidth: 'unset !important',
+            color: palette.text?.primary,
+
+            '#badge-text': {
+              color: palette.background?.level0,
+            },
+            '&:hover': {
+              backgroundColor: palette.background?.level2,
               '#badge-text': {
                 color: palette.mainDark,
               },
@@ -42,18 +52,62 @@ export const ButtonStyles = (palette: PaletteOptions): Components => {
           },
         },
         {
+          // Variant for the inputType property
+          props: { variant: 'outlined' },
+          style: {
+            backgroundColor: palette.background?.level0,
+            border: `1px solid ${palette.border?.level0}`,
+            minWidth: 'unset !important',
+            color: palette.text?.primary,
+            '#badge-text': {
+              color: palette.background?.level0,
+            },
+            '&:hover': {
+              backgroundColor: palette.background?.level2,
+              color: palette.text?.primary,
+              border: `1px solid ${palette.border?.level0}`,
+              '#badge-text': {
+                color: palette.mainDark,
+              },
+            },
+          },
+        },
+        {
+          // Variant for the inputType property
+          props: { variant: 'contained' },
+          style: {
+            backgroundColor: palette.primary.main,
+            border: `1px solid ${palette.primary.main}`,
+            color: palette.text?.primary,
+            '#badge-text': {
+              color: palette.background?.level0,
+            },
+            '&:hover': {
+              backgroundColor: palette.primary.dark,
+              border: `1px solid ${palette.primary.dark}`,
+              '#badge-text': {
+                color: palette.mainDark,
+              },
+            },
+            '&:disabled': {
+              backgroundColor: palette.background?.level2,
+              border: `1px solid ${palette.background?.level2}`,
+              color: palette.text?.disabled,
+            },
+          },
+        },
+        {
           // Variant for the small size property
           props: { size: 'small' },
           style: {
-            height: '2.2rem',
-            padding: '8px 16px',
+            height: '28px',
+            padding: '8px 12px',
             fontSize: '0.875rem',
-            minWidth: '100px',
+            minWidth: '90px',
+            borderRadius: '6px',
+            gap: '0.25rem',
             '& .MuiButton-endIcon': {
               paddingLeft: '0.5rem',
-            },
-            '&.MuiButton-outlined': {
-              height: 'calc(2.2rem + 1.5px)',
             },
           },
         },
@@ -61,18 +115,17 @@ export const ButtonStyles = (palette: PaletteOptions): Components => {
           // Variant for the medium size property
           props: { size: 'medium' },
           style: {
-            height: '2.5rem',
-            padding: '12px 24px',
-            fontSize: '1rem',
-            minWidth: '112px',
+            height: '34px',
+            fontSize: '0.875rem',
+            padding: '0 0.75rem',
+            minWidth: '2rem',
+            borderRadius: '8px',
+            gap: '0.25rem',
             '& .MuiButton-endIcon': {
-              paddingLeft: '1rem',
+              paddingLeft: '0.5rem',
             },
             '& .MuiButton-startIcon': {
-              paddingRight: '1rem',
-            },
-            '&.MuiButton-outlined': {
-              height: 'calc(2.5rem + 1.5px)',
+              paddingRight: '0.5rem',
             },
           },
         },
@@ -85,14 +138,12 @@ export const ButtonStyles = (palette: PaletteOptions): Components => {
             fontSize: '1.125rem',
             minWidth: '124px',
             minHeight: '40px',
+            borderRadius: '8px',
             '& .MuiButton-endIcon': {
               paddingLeft: '1rem',
             },
             '& .MuiButton-startIcon': {
               paddingRight: '1rem',
-            },
-            '&.MuiButton-outlined': {
-              height: 'calc(2.8rem + 1.5px)',
             },
           },
         },
@@ -101,8 +152,9 @@ export const ButtonStyles = (palette: PaletteOptions): Components => {
       styleOverrides: {
         root: {
           textTransform: 'none',
-          fontWeight: 'bold',
+          fontWeight: 600,
           boxShadow: 'none',
+          borderRadius: '8px',
           display: 'flex',
           '&>*': {
             pointerEvents: 'none',
@@ -111,8 +163,9 @@ export const ButtonStyles = (palette: PaletteOptions): Components => {
             boxShadow: 'none',
           },
           '&.Mui-disabled': {
-            opacity: 0.7,
-            background: palette.tableParentRowBackground,
+            background: palette.background?.level3,
+            border: `1px solid ${palette.background?.level3}`,
+            color: palette.text?.tertiary,
           },
           '& .MuiButton-endIcon': {
             marginRight: '0',
@@ -122,69 +175,9 @@ export const ButtonStyles = (palette: PaletteOptions): Components => {
             marginRight: '0',
             marginLeft: '0',
           },
-        },
-        containedPrimary: {
-          background: palette.main,
-          '& .MuiCircularProgress-root': {
-            color: `${darkPallete.text?.primary} !important`,
-          },
-
-          '&:hover': {
-            background: palette.mainDark,
-          },
-        },
-        containedSecondary: {
-          color: '#FFF',
-          backgroundColor: palette.mode === 'light' ? '#3252C7' : '#5373E7',
-          '& p, & svg': {
-            color: '#FFF',
-          },
-          '&:hover': {
-            backgroundColor: palette.text?.primary,
-            color: palette.background?.level0,
-            '& p, & svg': {
-              color: palette.background?.level0,
-            },
-          },
-        },
-        containedInherit: {
-          backgroundColor: palette.background?.level2,
-          color: palette.text?.primary,
-
-          '&:hover': {
-            backgroundColor: palette.text?.secondary,
-          },
-        },
-        outlinedPrimary: {
-          border: `1px solid ${palette.mode === 'light' ? '#3252C7' : '#4967D4'}`,
-          color: palette.mode === 'light' ? '#3252C7' : '#A0B2CD',
-          background: 'rgba(73, 103, 213, 0.1)',
-          '&:hover': {
-            border: '1px solid #0059b3',
-            backgroundColor: 'rgba(0, 112, 243, 0.1)',
-          },
-        },
-        outlinedSecondary: {
-          border: `1px solid ${palette.mode === 'light' ? '#3252C7' : '#5373E7'}`,
-          color: palette.mode === 'light' ? '#3252C7' : '#5373E7',
-          '&:hover': {
-            border: '1px solid #b26500',
-            backgroundColor: 'rgba(255, 145, 0, 0.1)',
-          },
-        },
-        textPrimary: {
-          color: palette.text?.secondary,
-          fontWeight: '400',
-          '&:hover': {
-            color: palette.text?.primary,
-            backgroundColor: palette.background?.level2,
-          },
-        },
-        textSecondary: {
-          color: '#404040',
-          fontWeight: '400',
-          '&:hover': {
-            backgroundColor: 'rgba(255, 145, 0, 0.1)',
+          '&.MuiButton-fullWidth': {
+            width: '100%',
+            justifyContent: 'space-between',
           },
         },
       },

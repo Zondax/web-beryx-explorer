@@ -12,7 +12,7 @@ describe('HeroSection', () => {
    */
   it('renders without crashing', async () => {
     await renderWithProviders(<HeroSection />)
-    await waitFor(() => expect(screen.getByText('Start exploring the Filecoin Network.')).toBeInTheDocument())
-    expect(screen.getByText('Start exploring the Filecoin Network.')).toBeInTheDocument()
+    await waitFor(() => expect(screen.getByText('Explore and Interact with Filecoin Ecosystem')).toBeInTheDocument())
+    expect(screen.getByText('Explore and Interact with Filecoin Ecosystem')).toBeInTheDocument()
   })
 })

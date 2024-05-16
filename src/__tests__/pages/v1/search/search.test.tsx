@@ -1,7 +1,7 @@
 import { renderWithProviders } from '@/helpers/jest-react'
 import { screen } from '@testing-library/react'
 
-import SearchController from '../../../../../pages/v1/search/[[...slug]]'
+import SearchController from '../../../../../pages/search/[[...slug]]'
 
 describe('Search Page', () => {
   it('renders without crashing', async () => {

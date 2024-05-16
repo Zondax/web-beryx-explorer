@@ -3,6 +3,8 @@ import { TFunction } from 'i18next'
 import { ObjectType } from '@/routes/parsing'
 import { CategoryItem } from '@porscheofficial/cookie-consent-banner/dist/types/components/cookie-consent-banner/types'
 
+import { LinkCardCategory } from 'components/common/LinkCard/types'
+
 /**
  * @enum dataType
  * @description Enum for data types.
@@ -60,6 +62,12 @@ export const cookieAuthExpirationInSeconds = 12 * 3600
 export const cookieAuthTokenName = 'beryxAuthToken'
 
 /**
+ * @constant cookieAuthTokenPreName
+ * @description Name of the cookie authentication token for the pre environment.
+ */
+export const cookieAuthTokenPreName = 'beryxAuthTokenPre'
+
+/**
  * @constant amountFormat
  * @description Big Number amount format.
  */
@@ -80,6 +88,8 @@ export const amountFormat = {
  */
 export const currentApiVersion = 'v3'
 
+export const beryxUrlBase = process.env.NEXT_PUBLIC_BERYX_ENV === 'pre' ? 'https://api.zondax.net' : 'https://api.zondax.ch'
+
 /**
  * @typedef BeryxUrl
  * @description Type for chain agnostic URL.
@@ -91,6 +101,7 @@ export type BeryxUrl = {
   node: string
   backend: string
   faucet: string
+  mempool: string
   baseApiUrl: string
   baseProtectedApiUrl: string
 }
@@ -104,13 +115,14 @@ export type BeryxUrl = {
  */
 export const getBeryxUrl = (chainSlug: string, networkName: string): BeryxUrl => {
   return {
-    data: `https://api.zondax.ch/${chainSlug}/data/${currentApiVersion}/${networkName}`,
-    tools: `https://api.zondax.ch/${chainSlug}/tools/${currentApiVersion}/${networkName}`,
-    stats: `https://api.zondax.ch/${chainSlug}/stats/${currentApiVersion}/${networkName}`,
-    node: `https://api.zondax.ch/${chainSlug}/node/${networkName}/rpc/v1`,
-    backend: `https://api.zondax.ch/${chainSlug}/decoder/v3/${networkName}`,
-    faucet: `https://api.zondax.ch/${chainSlug}/faucet/${networkName}`,
-    baseApiUrl: 'https://api.zondax.ch',
+    data: `${beryxUrlBase}/${chainSlug}/data/${currentApiVersion}/${networkName}`,
+    tools: `${beryxUrlBase}/${chainSlug}/tools/${currentApiVersion}/${networkName}`,
+    stats: `${beryxUrlBase}/${chainSlug}/stats/${currentApiVersion}/${networkName}`,
+    node: `${beryxUrlBase}/${chainSlug}/node/${networkName}/rpc/v1`,
+    backend: `${beryxUrlBase}/${chainSlug}/decoder/v3/${networkName}`,
+    faucet: `${beryxUrlBase}/${chainSlug}/faucet/${networkName}`,
+    baseApiUrl: beryxUrlBase,
+    mempool: `${beryxUrlBase}/${chainSlug}/mempool/${currentApiVersion}/${networkName}`,
     baseProtectedApiUrl: 'https://protected-api.zondax.ch',
   }
 }
@@ -143,12 +155,26 @@ export const ConsentAvailableCategories = (t: TFunction<'translation', undefined
  * @constant developerResources
  * @description Array of developer resources URLs.
  */
-export const developerResources: string[] = [
-  'https://github.com/filecoin-project/filecoin-solidity',
-  'https://ethindia.co',
-  'https://www.npmjs.com/package/@zondax/beryx',
-  'https://fvm.filecoin.io/',
-  'https://github.com/filecoin-project/awesome-filecoin/tree/main',
+export const developerResources: { url: string; category: LinkCardCategory; priority?: boolean }[] = [
+  { url: 'https://ethglobal.com/events/hackfs2024', category: LinkCardCategory.SOCIAL_EVENTS, priority: true },
+  { url: 'https://filecoin.io/', category: LinkCardCategory.ECOSYSTEM },
+  { url: 'https://docs.filecoin.io/', category: LinkCardCategory.ECOSYSTEM },
+  { url: 'https://www.npmjs.com/package/@zondax/beryx', category: LinkCardCategory.DEVELOPERS },
+  { url: 'https://github.com/Zondax/web-beryx-explorer', category: LinkCardCategory.DEVELOPERS },
+  { url: 'https://github.com/filecoin-project/community#forums', category: LinkCardCategory.SOCIAL_EVENTS },
+  { url: 'https://ethglobal.com/events/sydney', category: LinkCardCategory.SOCIAL_EVENTS },
+  { url: 'https://lu.ma/fil-munich', category: LinkCardCategory.SOCIAL_EVENTS },
+  { url: 'https://lu.ma/fil-orb-lisbon', category: LinkCardCategory.SOCIAL_EVENTS },
+
+  // old
+  // { url: 'https://linktr.ee/filecoinio', category: LinkCardCategory.DEVELOPERS },
+  // { url: 'https://docs.filecoin.io', category: LinkCardCategory.DEVELOPERS },
+  // { url: 'https://github.com/filecoin-project/filecoin-solidity', category: LinkCardCategory.DEVELOPERS },
+  // { url: 'https://ethindia.co', category: LinkCardCategory.SOCIAL_EVENTS },
+  // { url: 'https://www.npmjs.com/package/@zondax/beryx', category: LinkCardCategory.ECOSYSTEM },
+  // { url: 'https://fvm.filecoin.io/', category: LinkCardCategory.ECOSYSTEM },
+  // { url: 'https://github.com/filecoin-project/awesome-filecoin/tree/main', category: LinkCardCategory.DEVELOPERS },
+  // { url: 'https://github.com/Zondax/web-beryx-explorer', category: LinkCardCategory.ECOSYSTEM },
 ]
 
 /**
@@ -254,3 +280,23 @@ export const beryxExplorerVersion = 'v1'
  * @description Type for frequency.
  */
 export type FrequencyType = 'hourly' | 'daily' | 'weekly' | 'monthly'
+
+/**
+ * Type alias for frequency types
+ */
+export enum StatsFrequency {
+  CURRENT = 'current',
+  PREVIOUS_DAY = 'previous_day',
+  PREVIOUS_HOUR = 'previous_hour',
+  PREVIOUS_WEEK = 'previous_week',
+}
+
+/**
+ * Frequency stats mapped
+ */
+export const statsFrequencyMapped: { [key in StatsFrequency]: FrequencyType } = {
+  current: 'hourly',
+  previous_hour: 'hourly',
+  previous_day: 'daily',
+  previous_week: 'weekly',
+}

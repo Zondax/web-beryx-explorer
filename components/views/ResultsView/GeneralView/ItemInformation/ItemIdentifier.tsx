@@ -129,7 +129,6 @@ const ItemIdentifier = ({ searchItemType }: ItemIdentifierProps) => {
           <ToggleButtonGroup
             disabled={!canViewEthForm || !ethAddress}
             size="small"
-            color="primary"
             value={addressType}
             exclusive
             onChange={handleAddressType}

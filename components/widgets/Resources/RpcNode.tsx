@@ -1,10 +1,10 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useAppSettingsStore } from '@/store/ui/settings'
+import useAppSettingsStore from '@/store/ui/settings'
 import { copyContent } from '@/utils/text'
 import { Copy } from '@carbon/icons-react'
-import { Box, Button, Grid, Paper, Typography, useTheme } from '@mui/material'
+import { Box, Grid, IconButton, Typography } from '@mui/material'
 import { captureException } from '@sentry/nextjs'
 
 /**
@@ -15,7 +15,6 @@ import { captureException } from '@sentry/nextjs'
  */
 const RpcNode = () => {
   const { t } = useTranslation()
-  const theme = useTheme()
 
   /**
    * Get 'network' state from the store
@@ -45,8 +44,6 @@ const RpcNode = () => {
         alignItems: 'center',
         gap: '1rem',
         width: '100%',
-        mt: '5rem',
-        background: theme.palette.background.level1,
       }}
     >
       <Grid container direction={'column'} alignItems={'center'} justifyContent="center" display={'flex'} marginBottom={'3rem'}>
@@ -57,24 +54,25 @@ const RpcNode = () => {
           {t('If your project requires data retrieval, you can refer to our publicly available hosted endpoint of Lotus.')}
         </Typography>
       </Grid>
-      <Paper
-        variant={'elevation'}
-        elevation={1}
+      <Box
         sx={{
           padding: '0.25rem 0.5rem 0.25rem 1.75rem',
           display: 'flex',
           alignItems: 'center',
           gap: '1rem',
           maxWidth: { xs: '20rem', md: 'fit-content' },
+          backgroundColor: 'background.level2',
+          borderRadius: '8px',
+          height: '3.25rem',
         }}
       >
         <pre style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
           <code className={'language'}>{network.rpcNode ?? ''}</code>
         </pre>
-        <Button variant="text" sx={{ minWidth: 'unset', width: '2.5rem', height: '2.5rem', padding: '0' }} onClick={handleOnClick}>
+        <IconButton color="info" onClick={handleOnClick}>
           <Copy />
-        </Button>
-      </Paper>
+        </IconButton>
+      </Box>
     </Box>
   )
 }

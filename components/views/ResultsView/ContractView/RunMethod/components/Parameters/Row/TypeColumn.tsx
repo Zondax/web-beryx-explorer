@@ -97,7 +97,7 @@ const TypeColumn = ({ input, indexes }: TypeColumnParams) => {
         borderRadius={'50%'}
       />
       {/* Type */}
-      <Typography variant="h5" fontWeight={400}>
+      <Typography variant="h5" component={'p'} fontWeight={400}>
         {input.type}
       </Typography>
       {renderHelp(input.type)}

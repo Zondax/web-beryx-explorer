@@ -4,7 +4,7 @@
  * The component uses material-ui's `Paper` and `useTheme` to create a thematic and structured UI section.
  */
 // import necessary dependencies
-import { Grid, Paper } from '@mui/material'
+import { Box, Grid } from '@mui/material'
 
 import RpcNode from '../../widgets/Resources/RpcNode'
 
@@ -24,17 +24,25 @@ const RpcView = () => {
     <Grid
       container
       direction="column"
-      sx={{ width: '100%', height: { xs: '80vh', md: 'fit-content' }, display: 'flex', alignItems: 'center', padding: '0 1rem' }}
+      sx={{
+        width: '100%',
+        height: { xs: '80vh', md: '80vh' },
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '0 1rem',
+      }}
     >
-      <Paper
+      <Box
         sx={{
           maxWidth: '70rem',
           padding: '5rem auto 0 auto',
-          background: 'transparent',
+          backgroundColor: 'background.level0',
+          borderRadius: '12px',
         }}
       >
         <RpcNode />
-      </Paper>
+      </Box>
     </Grid>
   )
 }

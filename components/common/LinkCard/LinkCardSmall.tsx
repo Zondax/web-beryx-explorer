@@ -106,9 +106,9 @@ const LinkCardSmall: React.FC<LinkCardProps> = ({ title, url, imageUrl, domain }
       const cardHalo = el.querySelector('.card-halo') as HTMLElement
       el.style.zIndex = 'auto'
 
-      hoverEffect(el, cardHalo, el.clientHeight, el.clientWidth, theme.palette.mode)
+      hoverEffect(el, cardHalo, el.clientHeight, el.clientWidth, theme)
     }
-  }, [theme.palette.mode, upMd])
+  }, [theme, upMd])
 
   return (
     <Link href={url} target="_blank">

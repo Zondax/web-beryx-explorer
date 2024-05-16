@@ -84,7 +84,7 @@ const SmallBalanceChart = ({ data, color }: SmallBalanceChartProps) => {
       },
       backgroundColor: theme.palette.background.level2,
       borderWidth: 1,
-      borderColor: theme.palette.tableBorder,
+      borderColor: theme.palette.border?.level0,
       padding: [4, 8, 4, 8],
       textStyle: {
         color: theme.palette.text.primary,

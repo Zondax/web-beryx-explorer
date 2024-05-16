@@ -3,7 +3,7 @@ import { act } from 'react-dom/test-utils'
 import { Networks } from '@/config/networks'
 import { hookHelper } from '@/helpers/jest'
 
-import { useAppSettingsStore } from './settings'
+import useAppSettingsStore from './settings'
 
 describe('useAppSettingsStore', () => {
   // The initial state is returned when the function is called for the first time.
