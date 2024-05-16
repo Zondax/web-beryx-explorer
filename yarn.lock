@@ -6793,7 +6793,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.0.0, axios@npm:^1.6.1, axios@npm:^1.6.2, axios@npm:^1.6.8":
+"axios@npm:^1.0.0, axios@npm:^1.6.1, axios@npm:^1.6.2":
   version: 1.6.8
   resolution: "axios@npm:1.6.8"
   dependencies:
@@ -20290,7 +20290,6 @@ __metadata:
     "@zondax/beryx": "npm:^2.0.2"
     "@zondax/izari-filecoin": "npm:^1.2.1"
     "@zondax/ledger-filecoin": "npm:^0.13.0"
-    axios: "npm:^1.6.8"
     bignumber.js: "npm:^9.1.2"
     cookies-next: "npm:^4.1.1"
     cors: "npm:^2.8.5"
