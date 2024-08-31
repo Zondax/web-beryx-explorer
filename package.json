@@ -204,7 +204,7 @@
     "turbo": "^1.13.2",
     "typedoc": "^0.25.13",
     "typescript": "^5.4.4",
-    "webpack": "^5.91.0"
+    "webpack": "^5.94.0"
   },
   "packageManager": "yarn@4.1.1",
   "volta": {
