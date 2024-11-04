@@ -21,7 +21,7 @@ const Contracts = () => {
 
   return (
     <>
-      <Box sx={{ paddingTop: { xs: '8rem', md: '5rem' }, marginTop: { xs: '-8rem', md: '-5rem' } }} id="contract-stats">
+      <Box sx={{ paddingTop: { xs: '8rem', md: '8rem' }, marginTop: { xs: '-8rem', md: '-8rem' } }} id="contract-stats">
         <Typography variant={'h4'} component="span">
           {t('Contracts')}
         </Typography>

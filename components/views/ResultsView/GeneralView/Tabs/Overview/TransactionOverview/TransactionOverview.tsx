@@ -106,11 +106,8 @@ const TransactionOverview = () => {
       }
       const { error } = await repeatSearch(network, searchValue, searchInputType, searchType)
       setSearchResultMempoolJson(undefined)
-      if (error) {
-        await router.push('/404')
-      }
     }
-  }, [searchResultJson, searchResultMempoolJson, network, searchValue, searchType, searchInputType, setSearchResultMempoolJson, router])
+  }, [searchResultJson, searchResultMempoolJson, network, searchValue, searchType, searchInputType, setSearchResultMempoolJson])
 
   const getMetadata = useCallback(fetchMetadata, [setSearchResultMetadata])
 
@@ -237,7 +234,7 @@ const TransactionOverview = () => {
     if (!txsResult.total_txs) {
       return '-'
     }
-    return (txsResult.total_txs - 1).toString()
+    return BigNumber(txsResult.total_txs - 1).toFormat(0, amountFormat)
   }, [txsResult])
 
   // Create an object to store repetitive data for OverviewItems

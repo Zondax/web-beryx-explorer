@@ -3,22 +3,30 @@ import {
   GridCallbackDetails as GridCallbackDetailsStandard,
   GridFeatureMode as GridFeatureModeStandard,
   GridPagination as GridPaginationStandard,
+  GridRowIdGetter as GridRowIdGetterStandard,
+  GridRowId as GridRowIdStandard,
+  GridSortDirection as GridSortDirectionStandard,
   GridSortModel as GridSortModelStandard,
   GridToolbarColumnsButton as GridToolbarColumnsButtonStandard,
   GridToolbarContainer as GridToolbarContainerStandard,
   GridToolbarExport as GridToolbarExportStandard,
   GridToolbarFilterButton as GridToolbarFilterButtonStandard,
+  GridValidRowModel as GridValidRowModelStandard,
 } from '@mui/x-data-grid'
 import {
   GridCallbackDetails as GridCallbackDetailsPro,
   GridControlledStateReasonLookup as GridControlledStateReasonLookupPro,
   GridFeatureMode as GridFeatureModePro,
   GridPagination as GridPaginationPro,
+  GridRowIdGetter as GridRowIdGetterPro,
+  GridRowId as GridRowIdPro,
+  GridSortDirection as GridSortDirectionPro,
   GridSortModel as GridSortModelPro,
   GridToolbarColumnsButton as GridToolbarColumnsButtonPro,
   GridToolbarContainer as GridToolbarContainerPro,
   GridToolbarExport as GridToolbarExportPro,
   GridToolbarFilterButton as GridToolbarFilterButtonPro,
+  GridValidRowModel as GridValidRowModelPro,
 } from '@mui/x-data-grid-pro'
 
 /**
@@ -69,3 +77,23 @@ export type GridCallbackDetails<T extends keyof GridControlledStateReasonLookupP
  * GridFeatureMode is a type that represents the feature mode of the grid.
  */
 export type GridFeatureMode = GridFeatureModeStandard | GridFeatureModePro
+
+/**
+ * GridFeatureMode is a type that represents the feature mode of the grid.
+ */
+export type GridRowIdGetter = GridRowIdGetterStandard | GridRowIdGetterPro
+
+/**
+ * GridRowId is a type that represents the feature mode of the grid.
+ */
+export type GridRowId = GridRowIdStandard | GridRowIdPro
+
+/**
+ * GridValidRowModel is a type that represents the feature mode of the grid.
+ */
+export type GridValidRowModel = GridValidRowModelStandard | GridValidRowModelPro
+
+/**
+ * GridSortDirection is a type that represents the feature mode of the grid.
+ */
+export type GridSortDirection = GridSortDirectionStandard | GridSortDirectionPro

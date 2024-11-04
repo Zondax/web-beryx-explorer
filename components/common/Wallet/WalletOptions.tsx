@@ -7,8 +7,7 @@ import useWalletStore, { WalletProvider } from '@/store/wallets/wallet'
 import { CloseFilled } from '@carbon/icons-react'
 import { Box, Button, CircularProgress, Unstable_Grid2 as Grid, TextField, Tooltip, Typography, debounce, useTheme } from '@mui/material'
 
-import { BetaBox } from 'components/views/ResultsView/ContractView/RunMethod/components/Parameters/Parameters'
-
+import BetaLabel from '../BetaLabel/BetaLabel'
 import LedgerIcon from '../Icons/Ledger'
 import MetamaskIcon from '../Icons/Metamask'
 
@@ -233,7 +232,7 @@ const WalletOptions = () => {
                 disableInteractive
                 arrow
               >
-                <BetaBox />
+                <BetaLabel />
               </Tooltip>
             </Grid>
             <Grid xs={6} container alignItems={'center'} gap={1}>

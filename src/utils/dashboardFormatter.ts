@@ -6,9 +6,16 @@ import { isAfter } from 'date-fns'
 import { ContractsProps, GasUsedProps } from '@/api-client/beryx.types'
 import { FrequencyType } from '@/config/config'
 
-import { availableUnits } from '../../components/views/ResultsView/ContractView/RunMethod/config'
 import { getDateUTCFromTimestamp, getFollowingDate, isDateEqual } from './dates'
-import { DecimalUnits, FilUnits, FormatFilOption, FormatNumberOption, formatFilOptions, formatNumberOptions } from './numbers'
+import {
+  DecimalUnits,
+  FilUnits,
+  FilUnitsDecimals,
+  FormatFilOption,
+  FormatNumberOption,
+  formatFilOptions,
+  formatNumberOptions,
+} from './numbers'
 
 /**
  * @function getFormattedValues
@@ -47,9 +54,10 @@ export const getFormattedValues = ({ values }: { values: { value: number }[] }):
  * @param values - An array of objects with a value property
  * @returns An object containing the formatted values and the unit used
  */
-export const getFormattedFilValues = (values: { value: number }[]): { values: { value: number }[]; unit: FilUnits } => {
+export const getFormattedFilValues = (values: { value: number }[], decimals?: number): { values: { value: number }[]; unit: FilUnits } => {
   let currentUnit: FormatFilOption | undefined
 
+  // Iterate through the formatFilOptions to find the appropriate unit based on the values
   for (const { unit, minValue } of formatFilOptions) {
     if (values.some(elem => elem.value >= minValue)) {
       currentUnit = { unit, minValue }
@@ -57,25 +65,58 @@ export const getFormattedFilValues = (values: { value: number }[]): { values: { 
     }
   }
 
+  // If a suitable unit is found, convert the values to that unit
   if (currentUnit) {
     values = values.map(elem => {
-      let transformedValue: number
-      switch (currentUnit?.unit) {
-        case 'FIL':
-          transformedValue = parseFloat(availableUnits['attoFIL'](elem.value.toString()).toWhole())
-          elem.value = transformedValue % 1 !== 0 ? parseFloat(transformedValue.toFixed(2)) : transformedValue
-          break
-        case 'nanoFIL':
-          transformedValue = parseFloat(availableUnits['attoFIL'](elem.value.toString()).toNano())
-          elem.value = transformedValue % 1 !== 0 ? parseFloat(transformedValue.toFixed(2)) : transformedValue
-          break
-        default:
-      }
+      const { value } = convertAndFormatFilValue(elem.value, 'attoFIL', currentUnit, decimals)
+      elem.value = value
       return elem
     })
   }
 
+  // Return the formatted values and the unit used
   return { values, unit: currentUnit?.unit ?? 'attoFIL' }
+}
+
+/**
+ * @function convertAndFormatFilValue
+ * @description Convert and format a fil value from one unit to another.
+ * @param value - The value to be converted
+ * @param unit - The current unit of the value
+ * @param nextUnit - The next unit to which the value should be converted (optional)
+ * @returns An object containing the converted value and the unit used
+ */
+export const convertAndFormatFilValue = (
+  value: number,
+  unit: FilUnits,
+  nextUnit?: FormatFilOption,
+  decimals?: number
+): { value: number; unit: FilUnits } => {
+  // Convert the value to attoFIL based on the current unit
+  const attoValue: number = value * 10 ** FilUnitsDecimals[unit]
+
+  let currentUnit: FormatFilOption | undefined = nextUnit
+
+  // If the next unit is not provided, determine the appropriate unit based on the attoValue
+  if (!currentUnit) {
+    for (const elem of formatFilOptions) {
+      if (attoValue >= elem.minValue) {
+        currentUnit = elem
+        break
+      }
+    }
+  }
+
+  let transformedValue: number = attoValue
+  // Convert the attoValue to the appropriate unit
+  if (currentUnit) {
+    transformedValue = attoValue / 10 ** FilUnitsDecimals[currentUnit.unit]
+  }
+  // Format the transformed value
+  value = transformedValue % 1 !== 0 && decimals ? parseFloat(transformedValue.toFixed(decimals)) : transformedValue
+
+  // Return the converted value and the unit used
+  return { value, unit: currentUnit?.unit ?? 'attoFIL' }
 }
 
 /**

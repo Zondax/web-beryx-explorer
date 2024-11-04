@@ -1,6 +1,8 @@
 import { SyntheticEvent, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+// Local components
+import { TokenInfo } from '@/api-client/beryx.types'
 import { ObjectType, formattedObjectType } from '@/routes/parsing'
 import { useSearchStore } from '@/store/data/search'
 import { useContractsStore } from '@/store/ui/contracts'
@@ -16,7 +18,8 @@ import {
   useTheme,
 } from '@mui/material'
 
-// Local components
+import TokenName from 'components/common/TokenName/TokenName'
+
 import ItemIdentifierLabel from '../../../../common/ItemIdentifierLabel'
 import Verified from './Verified'
 
@@ -51,6 +54,8 @@ const ItemIdentifier = ({ searchItemType }: ItemIdentifierProps) => {
   const { t } = useTranslation()
   const upMd = useMediaQuery(useTheme().breakpoints.up('md'))
   const searchValue: string = useSearchStore(s => s.searchInputValue)
+  const erc20Info: TokenInfo | undefined = useSearchStore(s => s.searchResult.json?.erc20Info)
+
   const searchType = useSearchStore(s => s.searchType)
   const network = useSearchStore(s => s.searchInputNetwork)
   const ethAddress = useContractsStore(state => state.ethAddress)
@@ -67,6 +72,7 @@ const ItemIdentifier = ({ searchItemType }: ItemIdentifierProps) => {
         setCanViewEthForm(searchValue.toLowerCase().startsWith('f4'))
         break
       case ObjectType.CONTRACT:
+      case ObjectType.ERC20:
       case ObjectType.TXS:
         setCanViewEthForm(true)
         break
@@ -108,7 +114,13 @@ const ItemIdentifier = ({ searchItemType }: ItemIdentifierProps) => {
             {translate(t, formattedObjectType[searchItemType])}
           </Typography>
         )}
-        {searchItemType === ObjectType.CONTRACT && network ? <Verified /> : null}
+        {searchItemType === ObjectType.CONTRACT || (searchItemType === ObjectType.ERC20 && network) ? <Verified /> : null}
+        {searchItemType === ObjectType.ERC20 && erc20Info && (
+          <>
+            <Divider orientation="vertical" variant="fullWidth" flexItem sx={{ m: '0.25rem 0' }} />
+            <TokenName description={erc20Info?.description} ticker={erc20Info?.ticker} />
+          </>
+        )}
         <Divider orientation="vertical" variant="fullWidth" flexItem sx={{ m: '0.25rem 0' }} />
         {searchItemType === ObjectType.UNKNOWN ? (
           <Skeleton variant="rounded" width={'8rem'} height={'1.75rem'} />

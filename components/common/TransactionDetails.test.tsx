@@ -1,4 +1,4 @@
-import { act } from 'react-dom/test-utils'
+import { act } from 'react'
 
 import { renderWithProviders } from '@/helpers/jest-react'
 import '@testing-library/jest-dom'

@@ -29,10 +29,9 @@ const TipsetTimestamp: React.FC = () => {
       <Typography variant="body1" lineHeight={1} fontSize={'0.75rem'} width={'max-content'} sx={{ whiteSpace: 'nowrap' }}>
         {t('Latest Tipset')}
       </Typography>
-      <Link href={`/recent_activity?tab=tipsets`} passHref>
+      <Link href={`/recent_activity?tab=tipsets`}>
         <Typography
           variant={'captionMono'}
-          component={'a'}
           color={'text.primary'}
           lineHeight={1}
           width={'max-content'}

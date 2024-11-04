@@ -7,7 +7,7 @@ import OverviewItem from './OverviewItem'
 describe('OverviewItem', () => {
   const label = 'Test Label'
   const content = 'Test Content'
-  const icon = <GasStationFilled width={16} height={16} color={'#f00'} />
+  const icon = <GasStationFilled width={16} height={16} color={'#f00'} data-testid={'overview-item-icon'} />
 
   it('should render the label, content, and icon correctly', async () => {
     await renderWithProviders(<OverviewItem label={label} content={content} icon={icon} />)

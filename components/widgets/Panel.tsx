@@ -10,6 +10,8 @@ import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
 import { Box, Button, Card, Unstable_Grid2 as Grid, Grow, Tab, Tooltip, Typography, useTheme } from '@mui/material'
 
+import BetaLabel from 'components/common/BetaLabel/BetaLabel'
+
 import SourceCodeFileIcon from '../common/CodeFileIcon'
 
 /**
@@ -75,6 +77,7 @@ export interface PanelTab {
   disabled?: boolean
   canClose?: boolean
   onClose?: (fileName: string) => void
+  beta?: boolean
 }
 
 /**
@@ -255,7 +258,10 @@ const Panel = ({
                         tab.canClose ? (
                           <TabLabel label={t(tab.name)} active={activeTab === index.toString()} onClose={tab.onClose} />
                         ) : (
-                          t(tab.name)
+                          <Box display={'flex'} alignItems={'center'} gap={'0.5rem'}>
+                            {t(tab.name)}
+                            {tab.beta ? <BetaLabel size={'small'} /> : null}
+                          </Box>
                         )
                       }
                       disabled={tab.disabled}

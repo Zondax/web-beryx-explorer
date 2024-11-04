@@ -102,7 +102,10 @@ describe('accounts', () => {
    * Test for getting account general information for the mainnet network.
    */
   test('get account info for mainnet', async () => {
-    const accountInfoResponse = await fetchAccountInfo('f410fjf57ur552leb5khcoyvsi3tbc6wzosswogikjly', Networks.mainnet)
+    const accountInfoResponse = await fetchAccountInfo(
+      'f3u54wclxf5osictiuptwyhnu5nmdma6cdum4n7pdmanmflqt25srrtlwxjur5uhly2k476dhfwrierfa6o5pa',
+      Networks.mainnet
+    )
     expect(accountInfoResponse).toBeDefined()
     expect(Object.keys(accountInfoResponse).length).toBeGreaterThan(0)
   })
@@ -262,14 +265,14 @@ describe('tools', () => {
      * Test for converting a hash from ETH to FIL form.
      */
     test('Success - Not error - Hash ETH to FIL', async () => {
-      const filForm = await fetchFilForm('0xc5266c89359a68bb90f130556338941b90ac980532894209c045f0bd775e68fa', Networks.mainnet)
+      const filForm = await fetchFilForm('0x37878c623d87d5e99bea602b9b72886676f3def0', Networks.mainnet)
       expect(filForm).toBeDefined()
       expect(filForm).not.toBe('error')
     })
 
     test('Success - Hash ETH to FIL', async () => {
-      const filForm = await fetchFilForm('0xc5266c89359a68bb90f130556338941b90ac980532894209c045f0bd775e68fa', Networks.mainnet)
-      expect(filForm).toBe('bafy2bzaced4e57ohp2ahawau4crfurp7qnkruejxktz6cw3u6pxrao3tg6ek4')
+      const filForm = await fetchFilForm('0x37878c623d87d5e99bea602b9b72886676f3def0', Networks.mainnet)
+      expect(filForm).toBe('f410fg6dyyyr5q7k6tg7kmavzw4uimz3phxxqmfk2mky')
     })
 
     test('Success - Hash ETH to ETH', async () => {
@@ -289,8 +292,8 @@ describe('tools', () => {
      * Test for converting a hash from FIL to ETH form.
      */
     test('Success - Hash FIL to ETH', async () => {
-      const ethForm = await fetchEthForm('bafy2bzaced2wv36tv4xpdheznfyujpsnko7umirgi5y2btjaynkhyxhobo5vs', Networks.mainnet)
-      expect(ethForm).toBe('0x6e60d01ffb23c4c0fd198cd4e8335e5d44039be9f9c4e579cdf47ecac8d00e61')
+      const ethForm = await fetchEthForm('bafy2bzaceaxp4uiturympyjsjcqdkjjcxxmfsyrxpz34ekj3rdot5gkhb5epw', Networks.mainnet)
+      expect(ethForm).toBe('0x6f6feabd34d5ff44d278c0feb9344fe11dadf61bd3a336ca00277ce8767bd284')
     })
 
     test('Success - Hash FIL to FIL', async () => {
@@ -312,7 +315,7 @@ describe('tools', () => {
    */
   describe('Validate address', () => {
     test('Success ETH', async () => {
-      const isValid = await fetchAddressValid('0x2c8693c035ff2ec33eff3e233d80d3efe23e1913', Networks.calibration)
+      const isValid = await fetchAddressValid('0x497bfa47bdd2c81ea8e2762b246e6117ad974a56', Networks.calibration)
       expect(isValid).toBe(true)
     })
     test('Success FIL', async () => {

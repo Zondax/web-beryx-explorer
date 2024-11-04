@@ -71,7 +71,7 @@ const GoToVerifyButton = () => {
     searchValue = filForm
 
     handleForm(true)
-    router.push(`/search/fil/${network.name}/address/${searchValue}`, undefined, {
+    router.push(`/fil/${network.name}/address/${searchValue}`, undefined, {
       shallow: true,
     })
   }, [inputValue, setInputError, setLoading, handleForm, network, router, t, upMd])

@@ -23,7 +23,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
-import { FilEthAddress } from '@zondax/izari-filecoin/address'
+import { Address } from '@zondax/izari-filecoin/address'
 import { NetworkPrefix } from '@zondax/izari-filecoin/artifacts'
 
 import { FAQData } from './FAQData'
@@ -81,10 +81,15 @@ const AddressConverterView = () => {
 
       if (conversionWay === 'FIL2ETH') {
         try {
-          const ethAddr = FilEthAddress.fromString(inputValue).toEthAddressHex(true)
-          setResultAddress(ethAddr)
-          setStatus('fulfilled')
-          return
+          const filAddr = Address.fromString(inputValue)
+          if (Address.isAddressId(filAddr) || Address.isFilEthAddress(filAddr)) {
+            const ethAddr = filAddr.toEthAddressHex(true)
+            setResultAddress(ethAddr)
+            setStatus('fulfilled')
+            return
+          }
+
+          throw new Error('the address cannot be converted to eth equivalent')
         } catch {
           setInputError(t('Invalid address') ?? '')
           setStatus('failed')
@@ -93,7 +98,7 @@ const AddressConverterView = () => {
       }
 
       try {
-        const filAddr = await FilEthAddress.fromEthAddress(NetworkPrefix.Mainnet, inputValue)
+        const filAddr = await Address.fromEthAddress(NetworkPrefix.Mainnet, inputValue)
         setResultAddress(filAddr.toString())
         setStatus('fulfilled')
         return
@@ -230,12 +235,11 @@ const AddressConverterView = () => {
                     variant="contained"
                     size="large"
                     fullWidth
+                    sx={{ justifyContent: 'center' }}
                   >
                     <input hidden type="submit" />
 
-                    <Typography variant="body1" fontFamily={'Sora'} fontWeight={500} sx={{ color: 'inherit' }} alignItems={'center'}>
-                      {renderContent()}
-                    </Typography>
+                    {renderContent()}
                   </Button>
                 </Grid>
                 <Grid item width={'fit-content'}>

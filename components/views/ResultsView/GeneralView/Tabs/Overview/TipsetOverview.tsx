@@ -1,6 +1,7 @@
+import BigNumber from 'bignumber.js'
 import { useTranslation } from 'react-i18next'
 
-import { LoadingStatus } from '@/config/config'
+import { LoadingStatus, amountFormat } from '@/config/config'
 import { ObjectType } from '@/routes/parsing'
 import { useSearchStore } from '@/store/data/search'
 import { newDateFormat } from '@/utils/dates'
@@ -127,7 +128,7 @@ const TipsetOverview = () => {
       isLoading: jsonLoadingStatus === LoadingStatus.Loading,
       label: t('Number of Transactions'),
       description: t('Indicates the total number of transactions in the tipset. Internal messages are not included.') ?? '',
-      content: searchResultJson?.total_txs !== undefined ? searchResultJson?.total_txs : undefined,
+      content: searchResultJson?.total_txs !== undefined ? BigNumber(searchResultJson.total_txs).toFormat(0, amountFormat) : undefined,
       icon: undefined,
     },
   ]

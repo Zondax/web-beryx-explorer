@@ -17,14 +17,12 @@ interface WalletButtonProps {
 }
 
 /**
- * Buttons component.
+ * WalletButton component.
  *
- * This component provides the interface for the top bar buttons.
+ * This component renders a button in the top bar for wallet interactions.
  *
- * @param menuItems - The menu items.
- * @param setMenuItems - The function to set the menu items.
- *
- * @returns The JSX element of the Buttons component.
+ * @param {WalletButtonProps} props - The props for the component.
+ * @returns {JSX.Element} The rendered component.
  */
 const WalletButton: React.FC<WalletButtonProps> = ({ level = 'second' }) => {
   const { t } = useTranslation()
@@ -32,19 +30,17 @@ const WalletButton: React.FC<WalletButtonProps> = ({ level = 'second' }) => {
   const { isConnected, provider, gatherData, openWallet, setOpenWallet, switchChain } = useWalletStore(s => s)
   const { filAddr, ethAddr, network: walletNetwork } = useWalletStore(s => s.walletInfo)
   const { network } = useAppSettingsStore(state => ({ network: state.network }))
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState<boolean>(false)
 
-  const address = useMemo(() => {
-    return filAddr ?? ethAddr
-  }, [filAddr, ethAddr])
+  const address = useMemo(() => filAddr ?? ethAddr, [filAddr, ethAddr])
 
   const handleClick = useCallback(() => {
     setOpen(prev => !prev)
-  }, [setOpen])
+  }, [])
 
   const handleClickAway = useCallback(() => {
     setOpen(false)
-  }, [setOpen])
+  }, [])
 
   useEffect(() => {
     if (isConnected && walletNetwork) {
@@ -53,20 +49,20 @@ const WalletButton: React.FC<WalletButtonProps> = ({ level = 'second' }) => {
         subscribeNatsSync(network, 'mempool')
       } else {
         switchChain(network)
-        handleClick()
+        setOpen(true)
       }
     }
   }, [walletNetwork, gatherData, isConnected, network, switchChain, handleClick])
 
   useEffect(() => {
     if (openWallet) {
-      handleClick()
+      setOpen(true)
       setOpenWallet(false)
     }
-  }, [handleClick, openWallet, setOpenWallet])
+  }, [openWallet, setOpenWallet])
 
-  return (
-    <ClickAwayListener onClickAway={handleClickAway}>
+  const renderWallet = useCallback(() => {
+    return (
       <Box>
         <Tooltip
           title={!isConnected ? t('Connect wallet') : t('Open wallet')}
@@ -120,8 +116,14 @@ const WalletButton: React.FC<WalletButtonProps> = ({ level = 'second' }) => {
           </Box>
         </Grow>
       </Box>
-    </ClickAwayListener>
-  )
+    )
+  }, [address, handleClick, isConnected, level, network, open, provider, t, theme])
+
+  if (open) {
+    return <ClickAwayListener onClickAway={handleClickAway}>{renderWallet()}</ClickAwayListener>
+  }
+
+  return renderWallet()
 }
 
 export default WalletButton

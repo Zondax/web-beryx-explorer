@@ -15,6 +15,7 @@ import StatsTile from 'components/views/MempoolView/components/StatsTile'
 import { ItemTile } from 'components/widgets/Charts'
 
 import GlobalBaseFee from './GlobalBaseFee'
+import GlobalBaseFeeVariations from './GlobalBaseFeeVariations'
 import MempoolTable from './MempoolTable'
 import MethodSelector from './MethodSelector'
 import RangeButton from './RangeButton'
@@ -394,6 +395,9 @@ const MempoolStats = () => {
                 />
               ) : null}
             </ItemTile>
+          </Grid>
+          <Grid item xs={12} md={6} lg={4} height={{ md: 'calc(100% / 3)', lg: 'calc(100% / 4)' }}>
+            <GlobalBaseFeeVariations rangeSelected={rangeSelected} />
           </Grid>
           <Grid container item xs={12} height={{ xs: '20rem', lg: '22.5rem' }} display={{ xs: 'none', lg: 'flex' }}>
             <MempoolTable

@@ -111,7 +111,7 @@ export const lightPallete: Palette = {
   primary: {
     main: '#0090FF',
     light: '#407AEB',
-    dark: '#A6B1D6',
+    dark: '#0076D1',
     contrastText: '#fff',
   },
   secondary: {
@@ -192,7 +192,7 @@ export const lightPallete: Palette = {
     level0: '#FFFFFF',
     level1: '#F2F4FA',
     level2: '#E9EBF5',
-    level3: '#DDE0EC',
+    level3: '#D6D8E5',
     opposite: {
       level0: '#F2F4FA',
       level1: '#000000',
@@ -325,7 +325,7 @@ export const darkPallete: Palette = {
     level0: '#11151C', // Adjusted for dark mode
     level1: '#0A0C11', // Darker for depth
     level2: '#232733', // Further darkened for contrast
-    level3: '#020304', // Near black for maximum depth
+    level3: '#333847', // Near black for maximum depth
     opposite: {
       level0: '#F2F4FA', // Maintained for contrast
       level1: '#FFFFFF', // Pure white for contrast

@@ -36,7 +36,7 @@ const SearchExamples = ({ properties }: SearchExamplesProps) => {
   )
 
   const ExampleButtons = examplesData.map(({ name, data, type }) => (
-    <Link href={`/search/${network.slug}/${type}/${data}`} key={`${name}-${data}`} passHref>
+    <Link href={`/${network.slug}/${type}/${data}`} key={`${name}-${data}`} passHref>
       <Button
         size="small"
         variant={'outlined'}

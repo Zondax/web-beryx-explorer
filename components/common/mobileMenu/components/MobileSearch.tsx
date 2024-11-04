@@ -2,6 +2,7 @@ import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { InputErrors } from '@/config/inputErrors'
 import { useSearchType } from '@/data/beryx'
 import { HistoryItem, useHistoryStore } from '@/store/ui/history'
 import useAppSettingsStore from '@/store/ui/settings'
@@ -74,7 +75,7 @@ const MobileSearch = () => {
 
     if (!searchTypeResult || searchTypeResult.length === 0) {
       setShowLoading(false)
-      setHelperText(t("Sorry! We don't recognize it. Please double check, there might be a typo."))
+      setHelperText(t(InputErrors.NOT_FOUND))
       return
     }
 
@@ -82,16 +83,16 @@ const MobileSearch = () => {
 
     if (decodedInput.error) {
       setShowLoading(false)
-      setHelperText(t(decodedInput.error) ?? t("Sorry! We don't recognize it. Please double check, there might be a typo."))
+      setHelperText(t(decodedInput.error) ?? t(InputErrors.NOT_FOUND))
       return
     }
 
-    if (router.asPath === `/search/fil/${network.name}/${decodedInput.objectType}/${decodedInput.filForm}`) {
+    if (router.asPath === `/fil/${network.name}/${decodedInput.objectMainType}/${decodedInput.filForm}`) {
       router.reload()
       return
     }
 
-    router.push(`/search/fil/${network.name}/${decodedInput.objectType}/${decodedInput.filForm}`, undefined, {
+    router.push(`/fil/${network.name}/${decodedInput.objectMainType}/${decodedInput.filForm}`, undefined, {
       shallow: true,
     })
   }, [searchTypeResult, inputValue, router, network.name, t])

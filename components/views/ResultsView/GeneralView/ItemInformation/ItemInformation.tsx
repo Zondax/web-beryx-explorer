@@ -1,8 +1,8 @@
 import { ObjectType } from '@/routes/parsing'
 import { Box, Unstable_Grid2 as Grid, useMediaQuery, useTheme } from '@mui/material'
 
+import ItemActions from './ItemActions/ItemActions'
 import ItemIdentifier from './ItemIdentifier'
-import ItemStats from './ItemStats/ItemStats'
 
 /**
  * Type for the props of the ItemInformation component
@@ -50,7 +50,7 @@ const ItemInformation = ({ searchItemType }: ItemInformationProps) => {
       </Box>
 
       {/* Component to display the item stats */}
-      <ItemStats searchItemType={searchItemType} />
+      <ItemActions searchItemType={searchItemType} />
     </Grid>
   )
 }

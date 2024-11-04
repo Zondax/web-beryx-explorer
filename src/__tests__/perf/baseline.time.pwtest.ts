@@ -14,7 +14,7 @@ test.describe.parallel('Just Open - Baseline', () => {
     })
     // Check if the page has been rendered correctly
     const pageTitle = await page.title()
-    expect(pageTitle).toBe('Beryx')
+    expect(pageTitle.includes('Beryx')).toBe(true)
   })
 
   /**

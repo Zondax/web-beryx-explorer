@@ -6,7 +6,7 @@ import DashboardController from '../../../pages/dashboard'
 describe('Dashboard Page', () => {
   it('renders without crashing', async () => {
     await renderWithProviders(<DashboardController />)
-    const elements = screen.getAllByText('Dashboard')
+    const elements = screen.getAllByText('Gas Used')
     expect(elements.length).toBeGreaterThan(0)
   })
 })

@@ -47,7 +47,7 @@ const LinkResources = ({ resourcesMetaInfo, hasHoverEffect = false, preview = fa
         </Typography>
         <Grid container spacing={2}>
           {resourcesMetaInfo
-            .toSorted(compareByPriority)
+            ?.sort(compareByPriority)
             .filter(item => item.category === category)
             .map(filteredItem => (
               <Grid item xs={12} sm={6} md={4} key={`link card - ${filteredItem.title}`}>
@@ -80,7 +80,7 @@ const LinkResources = ({ resourcesMetaInfo, hasHoverEffect = false, preview = fa
         </Typography>
         <Grid container spacing={2} mb={4}>
           {resourcesMetaInfo
-            ?.toSorted(compareByPriority)
+            ?.sort(compareByPriority)
             .filter(item => item.category === LinkCardCategory.ECOSYSTEM || item.category === LinkCardCategory.DEVELOPERS || item.priority)
             .slice(0, 6)
             .map(filteredItem => (

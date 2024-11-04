@@ -102,6 +102,10 @@ const ProTable = ({
   sortingMode,
   onSortModelChange,
   selectedRowIndex,
+  toolbar,
+  getRowId,
+  detailPanelExpandedRowIds,
+  onDetailPanelExpandedRowIdsChange,
 }: TableProps) => {
   const apiRef = useGridApiRef()
   const theme = useTheme()
@@ -120,13 +124,17 @@ const ProTable = ({
       return []
     }
 
+    if (getRowId) {
+      return rowData
+    }
+
     return rowData.map((elem: { id?: string }, index: number) => {
       if (!elem.id) {
         return { ...elem, id: index.toString() }
       }
       return elem
     })
-  }, [rowData])
+  }, [rowData, getRowId])
 
   /**
    * @description Event handler for key up event on a cell
@@ -293,7 +301,7 @@ const ProTable = ({
         display: 'flex',
         flexDirection: 'column',
         width: '100%',
-        height: fixedHeight ? '40rem' : '100%',
+        height: fixedHeight ?? '100%',
         borderRadius: noBorderRadius ? 0 : '12px',
         overflow: 'hidden',
       }}
@@ -313,7 +321,7 @@ const ProTable = ({
           slots={{
             detailPanelExpandIcon: KeyboardArrowDown,
             detailPanelCollapseIcon: KeyboardArrowUp,
-            toolbar: renderToolbar,
+            toolbar: toolbar ?? renderToolbar,
             loadingOverlay: LinearProgress,
             noResultsOverlay: renderNoResultsOverlay,
             noRowsOverlay: renderNoResultsOverlay,
@@ -337,11 +345,14 @@ const ProTable = ({
           // Detail properties
           getDetailPanelHeight={getDetailPanelContent ? getDetailPanelHeight : undefined}
           getDetailPanelContent={getDetailPanelContent}
+          detailPanelExpandedRowIds={detailPanelExpandedRowIds}
+          onDetailPanelExpandedRowIdsChange={onDetailPanelExpandedRowIdsChange}
           rowThreshold={0}
           getRowSpacing={getRowSpacing}
           sortModel={sortModel ?? undefined}
           sortingMode={sortingMode ?? 'client'}
           onSortModelChange={onSortModelChange ?? undefined}
+          getRowId={getRowId}
         />
       </StyledBox>
     </Box>

@@ -78,7 +78,7 @@ export const buttonStyles = (palette: Palette): Components => {
           style: {
             backgroundColor: palette.primary.main,
             border: `1px solid ${palette.primary.main}`,
-            color: palette.text?.primary,
+            color: palette.mode === 'light' ? palette.text?.opposite.primary : palette.text?.primary,
             '#badge-text': {
               color: palette.background?.level0,
             },
@@ -177,7 +177,6 @@ export const buttonStyles = (palette: Palette): Components => {
           },
           '&.MuiButton-fullWidth': {
             width: '100%',
-            justifyContent: 'space-between',
           },
         },
       },

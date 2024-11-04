@@ -12,9 +12,9 @@ jest.mock('next/router', () => ({
 }))
 
 /**
- * Describes a test suite for LeaderbordView component.
+ * Describes a test suite for LeaderboardView component.
  */
-describe('LeaderbordView', () => {
+describe('LeaderboardView', () => {
   /**
    * Test case: Should render the page and show the panel.
    */
@@ -23,11 +23,11 @@ describe('LeaderbordView', () => {
 
     const title = screen.getByTestId('leaderbord-panel')
     const richList = screen.getByText('Rich List')
-    const topContracts = screen.getByText('Top Contracts By Unique Users')
     const topAccounts = screen.getByText('Top Accounts By Gas Used')
+    const topAccountsByValueExchanged = screen.getByText('Top Accounts By Value Exchanged')
     expect(title).toBeDefined()
     expect(richList).toBeVisible()
     expect(topAccounts).toBeVisible()
-    expect(topContracts).toBeVisible()
+    expect(topAccountsByValueExchanged).toBeVisible()
   })
 })

@@ -50,7 +50,7 @@ export default async function handler(request: NextRequest) {
           <Image
             width={IMAGE_WIDTH}
             height={IMAGE_HEIGHT}
-            src={'https://beryx.zondax.ch/beryx-og.png'}
+            src={'https://beryx.io/beryx-og.png'}
             alt="OG Image"
             style={{
               maxWidth: '100%',

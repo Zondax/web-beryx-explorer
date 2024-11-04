@@ -15,6 +15,7 @@ export type TabProps = {
   content?: React.JSX.Element
   show: boolean
   disable?: boolean
+  beta?: boolean
 }
 
 export interface SearchedItemTabProps {
@@ -26,10 +27,15 @@ export interface SearchedItemTabProps {
   code: TabProps
   interact: TabProps
   verified_contracts: TabProps
-  logs: TabProps
   stats: TabProps
   richList: TabProps
   topContracts: TabProps
   topAccounts: TabProps
   topContractsByInvokes: TabProps
+  topAccountsByValueExchanged: TabProps
+  topContractsByValueExchanged: TabProps
+  events: TabProps
+  proposals: TabProps
+  stateTrace: TabProps
+  richestContracts: TabProps
 }

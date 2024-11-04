@@ -85,7 +85,7 @@ const NetworkSelector: React.FC<NetworkSelectorProps> = ({ buttonSize = 'medium'
       setNetwork(network)
       switchChain(network)
 
-      if (router.route.indexOf('/search/') > -1) {
+      if (router.route.indexOf('/fil/') > -1) {
         router.push('/')
       }
       handleCloseMenu()

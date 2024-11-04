@@ -1,7 +1,9 @@
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { createRef, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { InputErrors } from '@/config/inputErrors'
 import { useSearchType } from '@/data/beryx'
 import { HistoryItem, useHistoryStore } from '@/store/ui/history'
 import useAppSettingsStore from '@/store/ui/settings'
@@ -146,9 +148,16 @@ const SearchBar = ({ placeholder, mobileMenu, properties, border, navbar, showHi
   const search = useCallback(async () => {
     setShowLoading(true)
 
+    const isTestnetWithF = network.uniqueId === 'fil/calibration' && inputValue.startsWith('f')
+
     if (!searchTypeResult || searchTypeResult.length === 0) {
+      let tempHelperText = InputErrors.NOT_FOUND as string
+      if (isTestnetWithF) {
+        tempHelperText +=
+          ' However, next time please use an address that starts with “t” when searching in Calibration because it is a testnet.'
+      }
       setShowLoading(false)
-      setHelperText(t("Sorry! We don't recognize it. Please double check, there might be a typo."))
+      setHelperText(t(tempHelperText))
       return
     }
 
@@ -156,19 +165,39 @@ const SearchBar = ({ placeholder, mobileMenu, properties, border, navbar, showHi
 
     if (decodedInput.error) {
       setShowLoading(false)
-      setHelperText(t(decodedInput.error) ?? t("Sorry! We don't recognize it. Please double check, there might be a typo."))
+
+      /**
+       * @description This block checks if the network is 'fil/calibration' and the input value starts with 'f'.
+       * If the decoded input error includes 'Not Found', it suggests using an address that starts with 't'
+       * and provides a link to the corrected address.
+       */
+      if (decodedInput.error === InputErrors.USE_TESTNET_ADDRESS) {
+        const testnetAddress = `t${inputValue.slice(1)}`
+        setHelperText(
+          <>
+            {t(InputErrors.USE_TESTNET_ADDRESS)}{' '}
+            <Link href={`/fil/${network.name}/${decodedInput.objectMainType}/${testnetAddress}`} style={{ fontWeight: 700 }}>
+              {testnetAddress}
+            </Link>
+            ?
+          </>
+        )
+        return
+      }
+
+      setHelperText(t(decodedInput.error) ?? t(InputErrors.NOT_FOUND))
       return
     }
 
-    if (router.asPath === `/search/fil/${network.name}/${decodedInput.objectType}/${decodedInput.filForm}`) {
+    if (router.asPath === `/fil/${network.name}/${decodedInput.objectMainType}/${decodedInput.filForm ?? decodedInput.ethForm}`) {
       router.reload()
       return
     }
 
-    router.push(`/search/fil/${network.name}/${decodedInput.objectType}/${decodedInput.filForm}`, undefined, {
+    router.push(`/fil/${network.name}/${decodedInput.objectMainType}/${decodedInput.filForm ?? decodedInput.ethForm}`, undefined, {
       shallow: true,
     })
-  }, [searchTypeResult, inputValue, router, network.name, t])
+  }, [searchTypeResult, inputValue, router, network, t])
 
   /**
    * @function handleKeyDown
@@ -177,22 +206,23 @@ const SearchBar = ({ placeholder, mobileMenu, properties, border, navbar, showHi
    */
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
+      setAnchorEl(event.currentTarget)
       if (event.key === 'Enter') {
         if (!network) {
           return
         }
 
         if (inputValue === '') {
-          setHelperText(t('Please enter a value'))
           setAnchorEl(event.currentTarget)
+          setHelperText(t('Please enter a value'))
           return
         }
 
         // valid invalid characters
-        const letters = /^[0-9a-zA-Z]+$/
+        const letters = /^[0-9a-zA-Z-]+$/
         if (!letters.test(inputValue)) {
-          setHelperText(t('Invalid characters'))
           setAnchorEl(event.currentTarget)
+          setHelperText(t('Invalid characters'))
           return
         }
 
@@ -295,13 +325,20 @@ const SearchBar = ({ placeholder, mobileMenu, properties, border, navbar, showHi
         <IconButton
           onClick={handleClearInput}
           size={'small'}
-          sx={{ position: 'absolute', right: '0.125rem', top: '50%', transform: 'translateY(-50%)', zIndex: '200' }}
+          sx={{
+            position: 'absolute',
+            right: '0.5rem',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            zIndex: '200',
+            backgroundColor: hero ? theme.palette.common.white : undefined,
+          }}
         >
           <CloseFilled color={theme.palette.text.tertiary} />
         </IconButton>
       )
     }
-  }, [showLoading, inputValue, handleClearInput, theme.palette.text.tertiary])
+  }, [showLoading, inputValue, handleClearInput, theme.palette, hero])
 
   return (
     <Grid

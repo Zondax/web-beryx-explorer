@@ -42,18 +42,20 @@ export const toggleButtonStyles = (palette: Palette): Components => {
             backgroundColor: palette.background?.level2,
           },
           '&.Mui-selected': {
-            color: palette.text?.primary,
+            color: palette.mode === 'light' ? palette.text?.opposite.primary : palette.text?.primary,
             backgroundColor: palette.primary.main,
             '&:hover': {
-              backgroundColor: palette.primary.light,
+              backgroundColor: palette.primary.dark,
             },
           },
           '&.Mui-disabled': {
             opacity: '0.25',
             pointerEvents: 'auto',
             backgroundColor: palette.background?.level0,
+            color: palette.text?.secondary,
             '&.Mui-selected': {
               backgroundColor: palette.background.level0,
+              color: palette.text?.secondary,
             },
           },
         },

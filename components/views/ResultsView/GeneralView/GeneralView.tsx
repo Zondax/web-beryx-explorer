@@ -29,6 +29,7 @@ const GeneralView = () => {
   const searchValue: string = useSearchStore(s => s.searchInputValue)
   const searchItemType = useSearchStore(s => s.searchItemType)
   const searchType = useSearchStore(s => s.searchType)
+  const searchResultJson = useSearchStore(s => s.searchResult.json)
   const searchIsContract = useSearchStore(s => s.isContract)
   const itemInfo = useSearchStore(s => s.searchResult.json)
 
@@ -41,7 +42,13 @@ const GeneralView = () => {
 
   const { network } = useAppSettingsStore(state => ({ network: state.network }))
 
-  const tabs = useMemo(() => searchedItemTabs[searchItemType], [searchItemType])
+  const tabs = useMemo(() => {
+    let currentTabs = searchedItemTabs[searchItemType]
+    if (searchResultJson?.actor_type !== 'multisig') {
+      currentTabs = currentTabs.filter(({ id }) => !['proposals', 'state-trace'].includes(id))
+    }
+    return currentTabs
+  }, [searchItemType, searchResultJson])
 
   /**
    * useEffect hook to handle tab changes and interactions.
@@ -75,23 +82,29 @@ const GeneralView = () => {
         if (!itemInfo) {
           break
         }
-        if (searchIsContract || (Object.keys(itemInfo).includes('actor_type') && itemInfo.actor_type === 'evm')) {
-          setSearchItemType(ObjectType.CONTRACT)
-          setIsContract(true)
+        if (searchItemType === ObjectType.ERC20) {
           break
         }
-        setSearchItemType(ObjectType.ADDRESS)
+        if (searchIsContract) {
+          setSearchItemType(ObjectType.CONTRACT)
+        } else if (itemInfo?.actor_type === 'evm') {
+          setSearchItemType(ObjectType.CONTRACT)
+          setIsContract(true)
+        } else {
+          setSearchItemType(ObjectType.ADDRESS)
+        }
         break
       case ObjectType.TIPSET:
       case ObjectType.TXS:
       case ObjectType.BLOCK:
+      case ObjectType.EVENT:
         setSearchItemType(searchType)
         break
       default:
         setSearchItemType(ObjectType.UNKNOWN)
         break
     }
-  }, [itemInfo, searchIsContract, searchType, searchValue, setIsContract, setSearchItemType])
+  }, [itemInfo, searchIsContract, searchType, searchValue, searchItemType, setIsContract, setSearchItemType])
 
   /**
    * handleTabChange is a function that handles the tab change event.
@@ -130,7 +143,7 @@ const GeneralView = () => {
     return (
       <Panel
         contentToDownload={''}
-        tabs={tabs.map((item: TabProps) => ({ name: item.name, disabled: !item.show }))}
+        tabs={tabs.map((item: TabProps) => ({ name: item.name, disabled: !item.show, beta: item.beta }))}
         tabBackgroundColor={theme.palette.background.level1}
         tabBorderColor={theme.palette.border?.level1}
         currentTab={activeTab}

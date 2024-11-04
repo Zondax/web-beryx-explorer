@@ -13,7 +13,7 @@ import RichList from './RichList'
 /**
  * Create some mock data for testing
  */
-const mockData: { results: RichListProps[] } = {
+export const mockData: { results: RichListProps[] } = {
   results: [
     {
       unified_account: 'f02',

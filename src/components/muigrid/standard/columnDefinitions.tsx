@@ -2,12 +2,13 @@ import BigNumber from 'bignumber.js'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { amountFormat, chainDecimals, truncateMaxCharacters } from '@/config/config'
+import { LoadingStatus, amountFormat, chainDecimals, truncateMaxCharacters } from '@/config/config'
 import { ObjectType } from '@/routes/parsing'
 import { useSearchStore } from '@/store/data/search'
 import useAppSettingsStore from '@/store/ui/settings'
 import { cellAmount } from '@/utils/conversion'
 import { newDateFormat, timeSince } from '@/utils/dates'
+import { formatOneBalance } from '@/utils/format'
 import { getNumberColor } from '@/utils/ui'
 import { Box, Unstable_Grid2 as Grid, Tooltip, Typography } from '@mui/material'
 import {
@@ -18,8 +19,15 @@ import {
   gridStringOrNumberComparator,
 } from '@mui/x-data-grid'
 
+import { CodeViewTypes } from 'components/common/CodeView'
+import ExpandableIconButton from 'components/common/ExpandableIconButton/ExpandableIconButton'
 import MempoolTransactionStatus from 'components/common/MempoolTransactionStatus'
+import TokenName from 'components/common/TokenName/TokenName'
 import TypeTransactionIconContainer from 'components/common/TypeTransactionIcon'
+import OverviewItem from 'components/views/ResultsView/GeneralView/Tabs/Overview/OverviewItem'
+import DetailPanelLayout from 'components/widgets/DetailPanelLayout'
+import MetadataPanelDetail from 'components/widgets/MetadataPanelDetail/MetadataPanelDetail'
+import OverviewCodeBlockTile from 'components/widgets/OverviewCodeBlockTile'
 
 import {
   ActorTypeLabel,
@@ -819,6 +827,8 @@ export interface NumberColumnProps {
   sortable?: boolean
   decimals?: number
   headerTooltip?: string
+  align?: 'right' | 'left'
+  headerAlign?: 'right' | 'left'
 }
 
 /**
@@ -843,16 +853,18 @@ export const numberColumn = ({
   headerTooltip,
   sortable = false,
   decimals,
+  align = 'right',
+  headerAlign = 'right',
 }: NumberColumnProps): GridColDef => {
   return {
     field,
     headerName: label,
     type: 'number',
     minWidth: minWidth ?? 100,
-    maxWidth: maxWidth,
+    maxWidth,
     flex: 1,
-    align: 'right',
-    headerAlign: 'right',
+    align,
+    headerAlign,
     sortable,
     sortComparator: gridStringOrNumberComparator,
     /**
@@ -949,7 +961,11 @@ export const stringColumn = ({
     renderCell: (params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>) => {
       return (
         <Typography variant="body1" color={!params.value ? 'text.secondary' : 'text.primary'}>
-          {!params.value ? '—' : params.value}
+          {(typeof params.value === 'string' && params.value !== '') || typeof params.value === 'number'
+            ? params.value
+            : params.value
+              ? JSON.stringify(params.value, null, 2)
+              : '—'}
         </Typography>
       )
     },
@@ -1057,11 +1073,15 @@ export const boxColumn = ({
   }
 }
 
+export interface CodeViewParams {
+  type?: CodeViewTypes
+}
+
 /**
  * Function to create a column for code view
  * @returns A column definition for the grid
  */
-export const codeViewColumn = (): GridColDef => {
+export const codeViewColumn = ({ type = 'transaction' }: CodeViewParams): GridColDef => {
   return {
     headerName: 'Details',
     field: 'details',
@@ -1077,7 +1097,7 @@ export const codeViewColumn = (): GridColDef => {
       if (columns.length === 0) {
         return ''
       }
-      return <CodeView content={params.row} />
+      return <CodeView content={params.row} type={type} />
     },
   }
 }
@@ -1336,11 +1356,11 @@ export const rankColumn = ({ field, label, headerIcon, sortable = false, showPri
         }
         switch (params.id) {
           case '0':
-            return <FirstPositionIcon size={54} />
+            return <FirstPositionIcon size={22} />
           case '1':
-            return <SecondPositionIcon size={54} />
+            return <SecondPositionIcon size={22} />
           case '2':
-            return <ThirdPositionIcon size={54} />
+            return <ThirdPositionIcon size={22} />
           default:
             return (
               <Typography variant="body1" fontWeight={500} fontSize={'0.875rem'} color="text.primary">
@@ -1352,7 +1372,7 @@ export const rankColumn = ({ field, label, headerIcon, sortable = false, showPri
       return (
         <Box
           sx={{
-            width: '1.5rem',
+            width: '24px',
             height: '1.5rem',
             display: 'flex',
             alignItems: 'center',
@@ -1583,6 +1603,190 @@ export const valueExchangeBalanceColumn = ({
             sx={{ whitSspace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
           >
             {formattedValue}
+          </Typography>
+        </Tooltip>
+      )
+    },
+  }
+}
+
+/**
+ * expandEventColumn component
+ *
+ * @param props - The properties passed to the component
+ * @param props.field - The field of the column
+ * @param props.label - The label of the column
+ * @param props.headerIcon - The icon of the header
+ * @param props.sortable - Whether the column is sortable
+ * @returns A GridColDef object
+ */
+export const expandEventColumn = ({ field, sortable = false }: GenericColumnProps): GridColDef => {
+  return {
+    field,
+    headerName: '',
+    type: 'string',
+    minWidth: 50,
+    maxWidth: 50,
+    flex: 1,
+    sortable,
+    cellClassName: (params: any) => {
+      if (params?.row?.deleted) {
+        return 'font-transparent'
+      }
+      return ''
+    },
+    sortComparator: gridStringOrNumberComparator,
+
+    renderCell: (params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>) => {
+      return (
+        <ExpandableIconButton params={params}>
+          <MetadataPanelDetail params={params} />
+        </ExpandableIconButton>
+      )
+    },
+  }
+}
+
+/**
+ * expandProposalColumn component
+ *
+ * @param props - The properties passed to the component
+ * @param props.field - The field of the column
+ * @param props.label - The label of the column
+ * @param props.headerIcon - The icon of the header
+ * @param props.sortable - Whether the column is sortable
+ * @returns A GridColDef object
+ */
+export const expandProposalColumn = ({ field, sortable = false }: GenericColumnProps): GridColDef => {
+  return {
+    field,
+    headerName: '',
+    type: 'string',
+    minWidth: 50,
+    maxWidth: 50,
+    flex: 1,
+    sortable,
+    cellClassName: (params: any) => {
+      if (params?.row?.deleted) {
+        return 'font-transparent'
+      }
+      return ''
+    },
+    sortComparator: gridStringOrNumberComparator,
+
+    renderCell: (params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>) => {
+      return (
+        <ExpandableIconButton params={params}>
+          <Box display={'flex'} width={'100%'} height={'100%'}>
+            <DetailPanelLayout loading={LoadingStatus.Success}>
+              <OverviewItem
+                key={JSON.stringify(params.row.value)}
+                label={'Value'}
+                content={<OverviewCodeBlockTile data={params.row.value} label={'Value'} wordWrap={'on'} height={'12rem'} />}
+              />
+            </DetailPanelLayout>
+          </Box>
+        </ExpandableIconButton>
+      )
+    },
+  }
+}
+
+/**
+ * TokenNameColumn component
+ *
+ * @param props - The properties passed to the component
+ * @param props.field - The field of the column
+ * @param props.label - The label of the column
+ * @param props.headerIcon - The icon of the header
+ * @param props.sortable - Whether the column is sortable
+ * @returns A GridColDef object
+ */
+export const tokenNameColumn = ({ field, label, headerIcon, sortable = false }: GenericColumnProps): GridColDef => {
+  return {
+    field,
+    headerName: label,
+    type: 'string',
+    minWidth: 330,
+    flex: 1,
+    sortable,
+    renderHeader: () => <RenderHeader label={label} headerIcon={headerIcon} />,
+    cellClassName: (params: any) => {
+      if (params?.row?.deleted) {
+        return 'font-transparent'
+      }
+      return ''
+    },
+    sortComparator: gridStringOrNumberComparator,
+
+    renderCell: (params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>) => {
+      if (!params.value) {
+        return (
+          <Typography variant="body1" color="text.secondary">
+            —
+          </Typography>
+        )
+      }
+      const description = params.row.description || ''
+      const ticker = params.row.ticker || ''
+
+      return <TokenName description={description} ticker={ticker} />
+    },
+  }
+}
+
+/**
+ * totalSupplyColumn component
+ *
+ * @param props - The properties passed to the component
+ * @param props.field - The field of the column
+ * @param props.label - The label of the column
+ * @param props.headerIcon - The icon of the header
+ * @param props.sortable - Whether the column is sortable
+ * @returns A GridColDef object
+ */
+export const totalSupplyColumn = ({ field, label, headerIcon, sortable = false, minWidth }: GenericColumnProps): GridColDef => {
+  return {
+    field,
+    headerName: label,
+    type: 'string',
+    minWidth,
+    flex: 1,
+    sortable,
+    align: 'right',
+    renderHeader: () => <RenderHeader label={label} headerIcon={headerIcon} />,
+    cellClassName: (params: any) => {
+      if (params?.row?.deleted) {
+        return 'font-transparent'
+      }
+      return ''
+    },
+    sortComparator: gridStringOrNumberComparator,
+
+    renderCell: (params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>) => {
+      if (!params.value) {
+        return (
+          <Typography variant="body1" color="text.secondary">
+            —
+          </Typography>
+        )
+      }
+
+      const decimals = params.row.decimals
+      const formattedTotalSupply = formatOneBalance(params.value, decimals)
+      const bigNumTotalSupply = BigNumber(formattedTotalSupply)
+
+      let totalSupply = ''
+      if (bigNumTotalSupply.isLessThan(BigNumber(0.01))) {
+        totalSupply = bigNumTotalSupply.toFormat(amountFormat)
+      } else {
+        totalSupply = bigNumTotalSupply.dp(2, BigNumber.ROUND_DOWN).toFormat(2, amountFormat)
+      }
+
+      return (
+        <Tooltip title={formattedTotalSupply} arrow>
+          <Typography variant="caption" component={'p'} color={'text.primary'} lineHeight={'100%'}>
+            {totalSupply ?? '-'}
           </Typography>
         </Tooltip>
       )
