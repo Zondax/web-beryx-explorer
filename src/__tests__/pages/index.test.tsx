@@ -6,7 +6,7 @@ import HomeController from '../../../pages'
 describe('Home Page', () => {
   it('renders without crashing', async () => {
     await renderWithProviders(<HomeController />)
-    const elements = screen.getAllByText('Home')
-    expect(elements.length).toBeGreaterThan(0)
+    const heroSectionTitle = screen.getByTestId('hero-section-title')
+    expect(heroSectionTitle).toBeInTheDocument()
   })
 })

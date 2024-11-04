@@ -1,3 +1,6 @@
+import BigNumber from 'bignumber.js'
+
+import { amountFormat } from '@/config/config'
 import { Grid, Typography } from '@mui/material'
 
 interface BarTileProps {
@@ -13,7 +16,7 @@ const ItemLabel = ({ label, value }: { label: React.ReactNode; value: number | s
       {label}
     </Typography>
     <Typography variant="body2" color={'text.primary'} data-testid={'max-label'}>
-      {typeof value === 'number' ? value.toFixed(2) : value}
+      {typeof value === 'number' ? BigNumber(value).toFormat(2, amountFormat) : value}
     </Typography>
   </Grid>
 )

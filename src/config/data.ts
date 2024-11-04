@@ -70,6 +70,7 @@ enum descriptions {
   transaction = 'Filecoin implements a transaction ledger via a blockchain, in which each block must be accompanied by a proof-of-work based on a cryptographic hash function.',
   tipset = 'Set of blocks that each have the same height and parent tipset; the Filecoin blockchain is a chain of tipsets, rather than a chain of blocks.',
   block = 'A fundamental concept in Filecoin. Every block refers to at least one parent block; that is, a block produced in a prior epoch.',
+  event = 'Event description',
 }
 
 /**
@@ -142,6 +143,13 @@ export function getNetworkExamples(network: NetworkType): NetworkExamples[] {
           linkDesc: 'View transaction example',
           data: 'bafy2bzaceab3xcn7qkcuj5oyifa6dn3ihke55bdmerphef4r6aorjdhk3uriq',
         },
+        {
+          name: 'Event',
+          type: ObjectType.EVENT,
+          description: descriptions.event,
+          linkDesc: 'View event example',
+          data: 'sector-precommitted',
+        },
       ]
     case Networks.calibration.uniqueId:
       return [
@@ -150,7 +158,7 @@ export function getNetworkExamples(network: NetworkType): NetworkExamples[] {
           type: ObjectType.ADDRESS,
           description: descriptions.address,
           linkDesc: 'View address example',
-          data: 'f410fns2biispboi54xb3mfxhadruuulsyfe73avfmey',
+          data: 't410fns2biispboi54xb3mfxhadruuulsyfe73avfmey',
         },
         {
           name: 'Block',
@@ -164,7 +172,7 @@ export function getNetworkExamples(network: NetworkType): NetworkExamples[] {
           type: ObjectType.ADDRESS,
           description: descriptions.address,
           linkDesc: 'View contract example',
-          data: 'f410fjf57ur552leb5khcoyvsi3tbc6wzosswogikjly',
+          data: 't410fjf57ur552leb5khcoyvsi3tbc6wzosswogikjly',
         },
         {
           name: 'Tipset',
@@ -179,6 +187,13 @@ export function getNetworkExamples(network: NetworkType): NetworkExamples[] {
           description: descriptions.transaction,
           linkDesc: 'View transaction example',
           data: 'bafy2bzaceam3ihtqa73ru2bdvwoyaouwjwktsonkvs3rwwrn3z43e3xh3y4fk',
+        },
+        {
+          name: 'Event',
+          type: ObjectType.EVENT,
+          description: descriptions.event,
+          linkDesc: 'View event example',
+          data: '0x9d228d69b5fdb8d273a2336f8fb8612d039631024ea9bf09c424a9503aa078f0',
         },
       ]
     default: {

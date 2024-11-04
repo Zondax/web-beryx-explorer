@@ -12,6 +12,7 @@
  */
 import { SearchType } from '@/api-client/beryx.types'
 import { InputType } from '@/config/config'
+import { InputErrors } from '@/config/inputErrors'
 import { setTestAuthToken } from '@/helpers/jest'
 import { ObjectType } from '@/routes/parsing'
 import { DecodedInput, decodeInput, startsWithFAndNumber } from '@/utils/inputDetection'
@@ -32,6 +33,7 @@ const decodeInputValues: { input: string; type: SearchType; output: DecodedInput
     output: {
       inputType: InputType.HEIGHT,
       objectType: ObjectType.TIPSET,
+      objectMainType: ObjectType.TIPSET,
       filForm: '2708613',
       ethForm: undefined,
     },
@@ -47,6 +49,7 @@ const decodeInputValues: { input: string; type: SearchType; output: DecodedInput
     output: {
       inputType: InputType.FILECOIN_ADDRESS,
       objectType: ObjectType.ADDRESS,
+      objectMainType: ObjectType.ADDRESS,
       filForm: 'f410fogpbj7ftms5qkze32us6w3ckfugu5ivx4eoycoi',
       ethForm: '0x719e14fcb364bb05649bd525eb6c4a2d0d4ea2b7',
     },
@@ -63,6 +66,7 @@ const decodeInputValues: { input: string; type: SearchType; output: DecodedInput
     output: {
       inputType: InputType.HASH,
       objectType: ObjectType.TXS,
+      objectMainType: ObjectType.TXS,
       filForm: 'bafy2bzacecc2qmykfi4axq2tjfc3xj4naeaygcqhj572muwqigehr443aifgu',
       ethForm: undefined,
     },
@@ -79,6 +83,7 @@ const decodeInputValues: { input: string; type: SearchType; output: DecodedInput
     output: {
       inputType: InputType.HASH,
       objectType: ObjectType.BLOCK,
+      objectMainType: ObjectType.BLOCK,
       filForm: 'bafy2bzaceb2udtsfnbz6viwq3mscy4msh4tcr5lhy7fscweovpsk4ksnl4sgu',
       ethForm: undefined,
     },
@@ -118,7 +123,7 @@ describe('Input type detection', () => {
       type: 'height',
       indexed: true,
     }
-    const expectedOutput: DecodedInput = { error: 'no input', objectType: undefined, filForm: undefined, ethForm: undefined }
+    const expectedOutput: DecodedInput = { error: InputErrors.NO_INPUT, objectType: undefined, filForm: undefined, ethForm: undefined }
     const output = await decodeInput(input, type)
     expect(output).toEqual(expectedOutput)
   })

@@ -113,6 +113,7 @@ interface SearchActions {
   setSearchInputNetwork: (network: NetworkType) => void
   // @deprecated migrate to react-query
   setSearchResultJson: (json: any) => void
+  addToSearchResultJson: (additionalJson: any) => void
   // @deprecated migrate to react-query
   setSearchResultMempoolJson: (mempoolJson: any) => void
   // @deprecated migrate to react-query
@@ -181,6 +182,15 @@ export const useSearchStore = create<SearchState & SearchActions>()(
       set(state => {
         state.searchResult.json = json
       }),
+    addToSearchResultJson: (additionalJson: any) => {
+      set(state => {
+        if (state.searchResult.json) {
+          state.searchResult.json = { ...state.searchResult.json, ...additionalJson }
+        } else {
+          state.searchResult.json = additionalJson
+        }
+      })
+    },
     setSearchResultMempoolJson: (mempoolJson: any) =>
       set(state => {
         state.searchResult.mempoolJson = mempoolJson

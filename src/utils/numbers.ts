@@ -1,8 +1,29 @@
 /**
- * This file contains utility functions for formatting numbers and FIL values.
- * @module numbers
+ * @constant
+ * @type {readonly string[]}
+ * @description An array of FIL units.
  */
-export type FilUnits = 'FIL' | 'miliFIL' | 'microFIL' | 'nanoFIL' | 'picoFIL' | 'femtoFIL' | 'attoFIL'
+export const FilUnitsArray = ['FIL', 'miliFIL', 'microFIL', 'nanoFIL', 'picoFIL', 'femtoFIL', 'attoFIL'] as const
+
+/**
+ * @constant
+ * @type {{ [key: string]: number }}
+ * @description An object representing the decimal places for each FIL unit (comparing with attoFIL).
+ */
+export const FilUnitsDecimals = {
+  FIL: 18,
+  miliFIL: 15,
+  microFIL: 12,
+  nanoFIL: 9,
+  picoFIL: 6,
+  femtoFIL: 3,
+  attoFIL: 0,
+}
+/**
+ * @typedef {('FIL' | 'miliFIL' | 'microFIL' | 'nanoFIL' | 'picoFIL' | 'femtoFIL' | 'attoFIL')} FilUnits
+ * @description A type representing the possible FIL units.
+ */
+export type FilUnits = (typeof FilUnitsArray)[number]
 
 /**
  * @description This type represents the units for decimal numbers.

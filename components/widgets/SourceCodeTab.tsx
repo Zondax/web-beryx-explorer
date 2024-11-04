@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { useContractsStore } from '@/store/ui/contracts'
 import { File, Folder } from '@/utils/serialize'
 import { ExpandLess, ExpandMore } from '@mui/icons-material'
-import { Box, Collapse, List, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material'
+import { Box, Collapse, List, ListItemButton, ListItemIcon, ListItemText, Tooltip, Typography } from '@mui/material'
 
 import CodeFileIcon from '../common/CodeFileIcon'
 import { FolderIcon, FolderOpenIcon } from '../common/Icons'
@@ -63,7 +63,17 @@ export const RenderFile = ({ fileName, file, level }: { fileName: string; file: 
  * @param props.folder - The folder object.
  * @param props.level - The level of the folder in the folder structure.
  */
-export const RenderFolder = ({ folderName, folder, level }: { folderName: string; folder: Folder; level: number }) => {
+export const RenderFolder = ({
+  folderName,
+  folder,
+  level,
+  disabled,
+}: {
+  folderName: string
+  folder: Folder
+  level: number
+  disabled?: boolean
+}) => {
   const [open, setOpen] = useState(false)
 
   /**
@@ -71,12 +81,15 @@ export const RenderFolder = ({ folderName, folder, level }: { folderName: string
    * Toggles the open state of the folder.
    */
   const handleClick = useCallback(() => {
+    if (disabled) {
+      return
+    }
     setOpen(!open)
-  }, [open])
+  }, [open, disabled])
 
   return (
     <>
-      <ListItemButton onClick={handleClick} sx={{ ml: 3 * level, gap: '0.2rem' }}>
+      <ListItemButton onClick={handleClick} sx={{ ml: 3 * level, gap: '0.2rem' }} disabled={disabled}>
         <ListItemIcon sx={{ minWidth: '1.5rem' }}>{open ? <FolderOpenIcon size={16} /> : <FolderIcon size={15} />}</ListItemIcon>
         <ListItemText primary={folderName} />
         {open ? <ExpandLess /> : <ExpandMore />}
@@ -110,18 +123,67 @@ const SourceCodeTab = () => {
         variant="caption"
         component={'p'}
         color="text.secondary"
-        sx={{ display: { xs: 'none', md: 'flex' }, paddingLeft: '1.25rem', margin: '1rem 0' }}
+        sx={{
+          display: { xs: 'none', md: 'flex' },
+          paddingBottom: '0.45rem',
+          margin: '1rem 0 1rem 1.25rem',
+          borderBottom: '1px solid',
+          borderColor: 'border.level1',
+        }}
       >
         {t('Contract files')}
       </Typography>
 
-      {Object.entries(sourceCode || {}).map(([name, item]) =>
-        item.type === 'folder' ? (
+      {sourceCode['Source Code'] === undefined && (
+        <Tooltip title={t('Source code is not available because the contract is not verified.')}>
+          <span>
+            <RenderFolder
+              folderName={'Source Code'}
+              folder={{ type: 'folder', children: {} }}
+              level={0}
+              key={`folder ${name} - 1`}
+              disabled
+            />
+          </span>
+        </Tooltip>
+      )}
+
+      {Object.entries(sourceCode || {}).map(([name, item]) => {
+        if (name === 'Source Code') {
+          return item.type === 'folder' ? (
+            <RenderFolder folderName={name} folder={item} level={0} key={`folder ${name} - 1`} />
+          ) : (
+            <RenderFile fileName={name} file={item} level={0} key={`file ${name} - 1`} />
+          )
+        }
+        return null
+      })}
+
+      <Typography
+        variant="caption"
+        component={'p'}
+        color="text.secondary"
+        sx={{
+          display: { xs: 'none', md: 'flex' },
+          paddingBottom: '0.45rem',
+          margin: '2.5rem 0 1rem 1.25rem',
+          borderBottom: '1px solid',
+          borderColor: 'border.level1',
+        }}
+      >
+        {t('Other files')}
+      </Typography>
+
+      {Object.entries(sourceCode || {}).map(([name, item]) => {
+        if (name === 'Source Code') {
+          return null
+        }
+        return item.type === 'folder' ? (
           <RenderFolder folderName={name} folder={item} level={0} key={`folder ${name} - 1`} />
         ) : (
           <RenderFile fileName={name} file={item} level={0} key={`file ${name} - 1`} />
         )
-      )}
+      })}
     </Box>
   )
 }

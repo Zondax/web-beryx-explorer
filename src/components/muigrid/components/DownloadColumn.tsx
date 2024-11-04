@@ -26,7 +26,7 @@ export const DownloadColumn = ({ row, fileName }: { row: any; fileName: string }
    */
   return (
     <Tooltip title={t('Download row data')} arrow disableInteractive>
-      <IconButton color="info" aria-label="Download" sx={{ width: '2.25rem' }} onClick={handleClick}>
+      <IconButton color="info" aria-label="Download" size={'small'} onClick={handleClick}>
         <Download />
       </IconButton>
     </Tooltip>

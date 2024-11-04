@@ -46,7 +46,7 @@ test.describe.parallel('Contract Verifier Page', () => {
     await page.getByLabel('Contract Address').click()
     await page.getByLabel('Contract Address').fill('f410fogpbj7ftms5qkze32us6w3ckfugu5ivx4eoycoi')
     await page.getByLabel('Contract Address').press('Enter')
-    await page.waitForURL('**/search/fil/mainnet/address/f410fogpbj7ftms5qkze32us6w3ckfugu5ivx4eoycoi', navigationOptions)
+    await page.waitForURL('**/fil/mainnet/address/f410fogpbj7ftms5qkze32us6w3ckfugu5ivx4eoycoi', navigationOptions)
 
     // Expect the form and tutorial are open
     const verifyTitle = page.getByRole('heading', { name: 'Verify contract' })

@@ -1,5 +1,6 @@
+import { act } from 'react'
+
 import { hookHelper } from '@/helpers/jest'
-import { act } from '@testing-library/react'
 
 import { useNatsStore } from './nats'
 

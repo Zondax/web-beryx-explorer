@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { LoadingStatus } from '@/config/config'
 import { downloadTxtFile } from '@/utils/download'
-import { Download, Help } from '@carbon/icons-react'
+import { Download, Help, Launch } from '@carbon/icons-react'
 import {
   Box,
   Card,
@@ -36,7 +36,7 @@ type rangeOptions = 'seven_days' | 'thirty_days' | 'one_year' | 'all'
  * @property thirty_days - Represents thirty days in milliseconds.
  * @property all - Represents one year in milliseconds.
  */
-const rangeValues: { [key in rangeOptions]: number } = {
+export const rangeValues: { [key in rangeOptions]: number } = {
   seven_days: 604800000,
   thirty_days: 2592000000,
   one_year: 31536000000,
@@ -76,6 +76,7 @@ const ItemTile = ({
   padding,
   defaultFilter = 'all',
   rightLabel,
+  href,
 }: {
   startIcon?: React.ReactNode
   title: string
@@ -92,6 +93,7 @@ const ItemTile = ({
   padding?: string
   defaultFilter?: rangeOptions
   rightLabel?: string
+  href?: string
 }) => {
   const theme = useTheme()
   const [dateFilter, setDateFilter] = useState<rangeOptions>(defaultFilter)
@@ -263,6 +265,11 @@ const ItemTile = ({
               <Typography variant="subtitle2" padding={'0.5rem 0.5rem 0 0'} width={'fit-content'}>
                 {t(rightLabel)}
               </Typography>
+            ) : null}
+            {href ? (
+              <IconButton size="small" color="info" aria-label="Download" href={href}>
+                <Launch color={theme.palette.text.primary} />
+              </IconButton>
             ) : null}
           </Box>
         }

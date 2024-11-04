@@ -6,12 +6,15 @@ import { amountFormat } from '@/config/config'
 import { useTransactions } from '@/data/beryx'
 import { ObjectType } from '@/routes/parsing'
 import { useSearchStore } from '@/store/data/search'
+import { formatBalanceBasedOnValue } from '@/utils/balance'
 import { formatBalance } from '@/utils/format'
-import { Tooltip, Typography } from '@mui/material'
+import { Box, Tooltip, Typography } from '@mui/material'
 import { captureException } from '@sentry/nextjs'
 import { FilEthAddress } from '@zondax/izari-filecoin/address'
 
+import TokenHoldings from 'components/common/TokenHoldings'
 import { LevelFilter } from 'components/widgets/SearchTables/config'
+import UnlockedBalance from 'components/widgets/UnlockedBalance'
 
 import { ActorTypeLabel, BeryxLink } from '../../../../../common'
 import FilecoinIcon from '../../../../../common/Icons/Filecoin'
@@ -27,7 +30,6 @@ import OverviewItem from './OverviewItem'
 const AddressOverview = () => {
   const { t } = useTranslation()
   const searchNetwork = useSearchStore(s => s.searchInputNetwork)
-
   const searchValue: string = useSearchStore(s => s.searchInputValue)
   const searchType = useSearchStore(s => s.searchType)
   const inputType = useSearchStore(s => s.searchInputType)
@@ -71,6 +73,7 @@ const AddressOverview = () => {
     sort: undefined,
     page: { page: 1 },
   })
+
   /**
    * Request the total number of outgoing transactions
    */
@@ -110,14 +113,11 @@ const AddressOverview = () => {
    */
   useEffect(() => {
     if (searchResultJson?.balances) {
-      const balance = BigNumber(formatBalance(searchResultJson?.balances))
-
-      if (balance.isLessThan(BigNumber(0.01))) {
-        setBalance(balance.toFormat(amountFormat))
-      } else {
-        setBalance(balance.dp(2, BigNumber.ROUND_DOWN).toFormat(2, amountFormat))
-      }
+      const rawBalance = BigNumber(formatBalance(searchResultJson?.balances))
+      setBalance(formatBalanceBasedOnValue(rawBalance))
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchResultJson])
 
   useEffect(() => {
@@ -130,6 +130,8 @@ const AddressOverview = () => {
       }
     }
   }, [searchNetwork, searchValue, searchResultJson?.eth_address])
+
+  const displayMultisigInfo = useMemo(() => searchResultJson?.actor_type === 'multisig' && searchResultJson?.state, [searchResultJson])
 
   return (
     <>
@@ -208,13 +210,101 @@ const AddressOverview = () => {
         />
       ) : null}
 
+      {searchResultJson?.tokenHoldings ? (
+        <OverviewItem
+          label={t('Token Holdings')}
+          content={<TokenHoldings tokenHoldings={searchResultJson?.tokenHoldings} />}
+          icon={undefined}
+        />
+      ) : null}
+
       {(txsResult?.total_txs && isSuccessTxsResult) || totalTxs ? (
         <OverviewItem
           label={t('Number of Transactions')}
           description={t(
             'Specifies the overall count of transactions sent and received by the address. Internal messages are not accounted for in this total.'
           )}
-          content={txsResult?.total_txs ?? totalTxs}
+          content={BigNumber(txsResult?.total_txs ?? totalTxs).toFormat(0, amountFormat)}
+          icon={undefined}
+        />
+      ) : null}
+
+      {displayMultisigInfo ? (
+        <OverviewItem
+          label={t('Signers')}
+          description={t('Addresses authorized to sign transactions in a multisig wallet.')}
+          content={
+            searchResultJson?.state.signers ? (
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                {searchResultJson?.state.signers.map((signer: string) => (
+                  <BeryxLink
+                    key={signer}
+                    limitCharacters={'auto'}
+                    disableTooltip
+                    inputType={ObjectType.ADDRESS}
+                    network={searchNetwork}
+                    value={signer}
+                    isColored
+                  />
+                ))}
+              </Box>
+            ) : (
+              '-'
+            )
+          }
+          icon={undefined}
+        />
+      ) : null}
+
+      {displayMultisigInfo && searchNetwork ? (
+        <OverviewItem
+          label={t('Locked Balance')}
+          description={t(
+            'The amount of funds restricted in a multisig wallet that cannot be spent until certain conditions are met. The specific block when funds are locked is called lock epoch.'
+          )}
+          content={searchResultJson?.state.locked_balance ? <UnlockedBalance lockedBalance={searchResultJson.state.locked_balance} /> : '-'}
+          icon={undefined}
+        />
+      ) : null}
+
+      {displayMultisigInfo ? (
+        <OverviewItem
+          label={t('Last Tipset Processed')}
+          description={t('Last seen activity.')}
+          content={
+            searchResultJson?.state.last_tipset_processed !== undefined ? (
+              <BeryxLink
+                limitCharacters={'auto'}
+                disableTooltip
+                inputType={ObjectType.TIPSET}
+                network={searchNetwork}
+                value={searchResultJson?.state.last_tipset_processed.toString()}
+              />
+            ) : (
+              '-'
+            )
+          }
+          icon={undefined}
+        />
+      ) : null}
+
+      {displayMultisigInfo ? (
+        <OverviewItem
+          label={t('Approvals Threshold')}
+          description={t('The minimum number of signers required to approve a transaction for it to be valid.')}
+          content={
+            searchResultJson?.state.num_approvals_threshold ? (
+              <BeryxLink
+                limitCharacters={'auto'}
+                disableTooltip
+                inputType={ObjectType.TIPSET}
+                network={searchNetwork}
+                value={searchResultJson?.state.num_approvals_threshold.toString()}
+              />
+            ) : (
+              '-'
+            )
+          }
           icon={undefined}
         />
       ) : null}

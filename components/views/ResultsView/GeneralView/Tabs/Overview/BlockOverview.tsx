@@ -1,7 +1,8 @@
+import BigNumber from 'bignumber.js'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { LoadingStatus } from '@/config/config'
+import { LoadingStatus, amountFormat } from '@/config/config'
 import { useTransactions } from '@/data/beryx'
 import { ObjectType } from '@/routes/parsing'
 import { useSearchStore } from '@/store/data/search'
@@ -132,7 +133,7 @@ const BlockOverview = () => {
       isLoading: isLoadingTxsResult,
       label: t('Number of Transactions'),
       description: t('Specifies the total count of transactions within the block. Internal messages are excluded from this count.'),
-      content: isSuccessTxsResult && txsResult?.total_txs ? txsResult.total_txs.toString() : '-',
+      content: isSuccessTxsResult && txsResult?.total_txs ? BigNumber(txsResult.total_txs).toFormat(0, amountFormat) : '-',
       icon: undefined,
     },
   ]

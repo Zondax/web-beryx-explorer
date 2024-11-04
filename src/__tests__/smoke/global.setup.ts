@@ -39,7 +39,7 @@ async function globalSetup() {
     console.log('[globalSetup] crawling')
 
     const browser = await chromium.launch()
-    const collector = new LinkCollector(browser, 'http://localhost:3000', ['https://beryx.zondax.ch', 'https://beryx.io'])
+    const collector = new LinkCollector(browser, 'http://localhost:3000', ['https://beryx.io'])
     let urlsToTest = await collector.load(initialLinks)
     // Clip the URLs if they exceed the maximum limit
     if (urlsToTest.length > maxUrls) {

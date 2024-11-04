@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { fetchTransactionDetails } from '@/api-client/beryx'
+import { fetchEventDetails, fetchTransactionDetails } from '@/api-client/beryx'
 import { useSearchStore } from '@/store/data/search'
 import { getContentType } from '@/utils/download'
 import { Close, Script } from '@carbon/icons-react'
@@ -11,6 +11,8 @@ import CodeBlock from '../widgets/CodeBlock'
 import Panel from '../widgets/Panel'
 import { NoRows } from '../widgets/Table'
 
+export type CodeViewTypes = 'transaction' | 'event'
+
 /**
  * Props for CodeView component
  */
@@ -18,6 +20,7 @@ interface CodeViewProps {
   content: {
     search_id: string
   }
+  type: CodeViewTypes
 }
 
 /**
@@ -26,7 +29,7 @@ interface CodeViewProps {
  * @param content - the content of the code to display
  * @returns the CodeView component
  */
-const CodeView = ({ content }: CodeViewProps) => {
+const CodeView = ({ content, type }: CodeViewProps) => {
   const theme = useTheme()
   const { t } = useTranslation()
   const [openCodeModal, setOpenCodeModal] = useState<boolean>(false)
@@ -37,7 +40,7 @@ const CodeView = ({ content }: CodeViewProps) => {
   const network = useSearchStore(s => s.searchInputNetwork)
 
   /**
-   * Opens the modal, fetches transaction details if a search id exists, sets error state if an error occurs
+   * Opens the modal, fetches transaction or event details if a search id exists, sets error state if an error occurs
    */
   const handleOpenModal = useCallback(async () => {
     setError(false)
@@ -48,7 +51,10 @@ const CodeView = ({ content }: CodeViewProps) => {
     }
     setLoading(true)
     try {
-      const res = await fetchTransactionDetails(content.search_id, network)
+      const res =
+        type === 'transaction'
+          ? await fetchTransactionDetails(content.search_id, network)
+          : await fetchEventDetails(content.search_id, network)
       if (res !== 'error') {
         setTxDetails(res)
       }
@@ -56,7 +62,7 @@ const CodeView = ({ content }: CodeViewProps) => {
       setError(true)
     }
     setLoading(false)
-  }, [content, network, setError, setTxDetails, setOpenCodeModal, setLoading])
+  }, [content, network, type, setError, setTxDetails, setOpenCodeModal, setLoading])
 
   /**
    * Closes the modal
@@ -87,8 +93,8 @@ const CodeView = ({ content }: CodeViewProps) => {
 
   return (
     <>
-      <Tooltip title={t('View complete transaction information')} arrow disableInteractive>
-        <IconButton color="info" sx={{ width: '2.25rem' }} onClick={handleOpenModal} data-testid="viewTransactionButton">
+      <Tooltip title={t(`View complete ${type} information`)} arrow disableInteractive>
+        <IconButton color="info" size={'small'} onClick={handleOpenModal} data-testid="viewTransactionButton">
           <Script />
         </IconButton>
       </Tooltip>
@@ -122,19 +128,15 @@ const CodeView = ({ content }: CodeViewProps) => {
               filter: `drop-shadow(${theme.palette.mode === 'light' ? theme.shadows[2] : theme.shadows[3]})`,
               display: 'flex',
               flexDirection: 'column',
-              gap: '0.1rem',
+              gap: '0.25rem',
               padding: '0.5rem',
             }}
           >
             <Grid container item xs={12} justifyContent={'space-between'} alignItems={'center'} padding={'0 0 0 1rem'}>
               <Typography variant="caption" color={'text.secondary'}>
-                {t('Transaction details')}
+                {t(`${type === 'transaction' ? 'Transaction' : 'Event'} details`)}
               </Typography>
-              <IconButton
-                color="info"
-                sx={{ width: '2.5rem', padding: '0.25rem', borderRadius: '8px', zIndex: 5 }}
-                onClick={handleOpenModal}
-              >
+              <IconButton color="info" size={'small'} onClick={handleOpenModal}>
                 <Close size={24} />
               </IconButton>
             </Grid>
@@ -151,8 +153,9 @@ const CodeView = ({ content }: CodeViewProps) => {
                   gap: '0.5rem',
                   height: '40rem',
                   maxHeight: '80vh',
-                  borderRadius: '8px',
+                  borderRadius: '6px',
                   border: `1px solid ${theme.palette.border?.level0}`,
+                  overflow: 'hidden',
                 }}
               >
                 <Panel noTopbar>{renderCode()}</Panel>

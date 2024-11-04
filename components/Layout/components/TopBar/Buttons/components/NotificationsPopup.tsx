@@ -91,7 +91,7 @@ const NotificationsPopup = () => {
               }}
             >
               {notifications.map(notification => (
-                <NotificationBody notification={notification} isFromStore key={notification.id} />
+                <NotificationBody notification={notification} isFromStore key={notification.id} shadow={false} />
               ))}
             </Box>
           </>

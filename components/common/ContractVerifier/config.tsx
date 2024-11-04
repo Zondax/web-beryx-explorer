@@ -1,6 +1,6 @@
 import { TFunction } from 'i18next'
 import React from 'react'
-import { array, boolean, mixed, number, object, string } from 'yup'
+import { array, boolean as booleanValidation, mixed, number, object, string } from 'yup'
 
 import { ContractVerifiedData } from '@/api-client/beryx.types'
 import { muifyHtml } from '@/utils/muifyHtml'
@@ -103,12 +103,12 @@ export const validationSchema = object().shape({
   file: mixed<File>()
     .required('Please upload a file')
     .test('FILE_SIZE', 'Uploaded file is too big. Limit: 1MB', value => value && value.size <= FILE_SIZE),
-  hasMetadataFile: boolean().oneOf([true, false], "You must check if you have or don't have a metadata .json file."),
+  hasMetadataFile: booleanValidation().oneOf([true, false], "You must check if you have or don't have a metadata .json file."),
   compilerVersion: string().trim().required('Please specify the compiler version'),
   address: string().required('Please specify the address'),
   licenses: array().required('Please specify the licenses'),
-  checkTerms: boolean().oneOf([true], 'You must accept the terms and conditions'),
-  optimize: boolean(),
+  checkTerms: booleanValidation().oneOf([true], 'You must accept the terms and conditions'),
+  optimize: booleanValidation(),
   numberOfRuns: number().when('optimize', {
     is: true,
     then: value => value.min(0).required('Please specify number of runs'),

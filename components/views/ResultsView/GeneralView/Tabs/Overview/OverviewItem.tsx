@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 
 import { Help } from '@carbon/icons-react'
-import { Box, CircularProgress, Unstable_Grid2 as Grid, Tooltip, Typography, useTheme } from '@mui/material'
+import { CircularProgress, Unstable_Grid2 as Grid, Tooltip, Typography, useTheme } from '@mui/material'
 
 /**
  * Types of the `OverviewItem` props
@@ -31,6 +31,10 @@ interface OverviewItemProps {
    * If true, the spinner will be displayed
    */
   isLoading?: boolean
+  /**
+   * If true, the padding left will be displayed
+   */
+  subitem?: boolean
 }
 
 /**
@@ -39,7 +43,15 @@ interface OverviewItemProps {
  *
  * @returns The rendered JSX element.
  */
-const OverviewItem: React.FC<OverviewItemProps> = ({ label, content, icon, description, verticalInMobile = false, isLoading = false }) => {
+const OverviewItem: React.FC<OverviewItemProps> = ({
+  label,
+  content,
+  icon,
+  description,
+  verticalInMobile = false,
+  isLoading = false,
+  subitem,
+}) => {
   const theme = useTheme()
 
   const renderContent = useMemo(() => {
@@ -74,11 +86,7 @@ const OverviewItem: React.FC<OverviewItemProps> = ({ label, content, icon, descr
     </Typography>
   )
 
-  const IconBox = !isLoading ? (
-    <Box sx={{ display: 'flex' }} data-testid="overview-item-icon">
-      {icon}
-    </Box>
-  ) : null
+  const IconBox = !isLoading ? icon : null
 
   return (
     <Grid
@@ -86,27 +94,48 @@ const OverviewItem: React.FC<OverviewItemProps> = ({ label, content, icon, descr
       alignItems={'center'}
       spacing={2}
       sx={{
-        borderBottom: `1px solid ${theme.palette.border?.level0}`,
-        padding: '0.1rem 0.5rem 0.1rem 0.5rem',
+        borderBottom: !subitem ? `1px solid ${theme.palette.border?.level0}` : 'none',
+        padding: subitem ? '0.1rem 0.5rem 0.1rem 0.5rem' : '0.1rem 0.5rem 0.1rem 0.5rem',
         maxHeight: 'max-content',
         height: 'max-content',
-        margin: '0',
+        margin: 0,
         ':last-of-type': {
           borderBottom: 'none',
+          '&::after': {
+            borderBottom: 'none',
+          },
         },
+        position: 'relative',
+        '&::after': subitem
+          ? {
+              content: '""',
+              position: 'absolute',
+              bottom: '-1px',
+              left: '2.75rem',
+              right: 0,
+              borderBottom: `1px solid ${theme.palette.border?.level0}`,
+            }
+          : {},
       }}
     >
       <Grid
         xs={verticalInMobile ? 12 : 5}
-        md={3.5}
+        md={4}
         gap={'0.5rem'}
-        sx={{ maxHeight: 'max-content', height: 'max-content', display: 'flex', alignItems: 'center', alignSelf: 'flex-start' }}
+        sx={{
+          maxHeight: 'max-content',
+          height: 'max-content',
+          display: 'flex',
+          alignItems: 'center',
+          alignSelf: 'flex-start',
+          padding: subitem ? '0.5rem 0.5rem 0.5rem 2.25rem' : '0.5rem',
+        }}
       >
-        {DescriptionTooltip}
         {LabelTypography}
+        {DescriptionTooltip}
       </Grid>
 
-      <Grid xs={verticalInMobile ? 12 : 7} md={8.5}>
+      <Grid xs={verticalInMobile ? 12 : 7} md={8}>
         <Grid container alignItems={'center'} sx={{ gap: '0.5rem', flexWrap: 'nowrap', width: '100%', height: 'fit-content' }}>
           {IconBox}
           {renderContent}

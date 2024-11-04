@@ -9,6 +9,11 @@ import {
   fetchContractsCreateByAddress,
   fetchContractsVerified,
   fetchEstimateFees,
+  fetchEventDetails,
+  fetchEventsByAddress,
+  fetchEventsByHash,
+  fetchEventsByHeight,
+  fetchEventsBySelector,
   fetchEvmTransactionsByAddress,
   fetchEvmTransactionsByBlock,
   fetchEvmTransactionsByHash,
@@ -16,9 +21,15 @@ import {
   fetchGasUsed,
   fetchGasUsedByAddress,
   fetchGlobalBaseFee,
+  fetchMultisigAddressProposals,
+  fetchMultisigAddressState,
+  fetchMultisigAddressStateTraces,
   fetchRichList,
   fetchSearchType,
+  fetchTokenHoldings,
+  fetchTokens,
   fetchTopAccountsByGasUsed,
+  fetchTopAccountsByValueExchanged,
   fetchTopContracts,
   fetchTopContractsByInvokes,
   fetchTransactionsByAddress,
@@ -30,7 +41,15 @@ import {
   postContractVerify,
 } from '@/api-client/beryx'
 import { fetchContractIPFS } from '@/api-client/beryx-clientonly'
-import { ContractVerifiedData, ContractsProps, GasUsedProps, GlobalBaseFee, StatsParams } from '@/api-client/beryx.types'
+import {
+  ContractVerifiedData,
+  ContractsProps,
+  GasUsedProps,
+  GlobalBaseFee,
+  StatsParams,
+  ValueExchangeActorType,
+  ValueExchangeDirection,
+} from '@/api-client/beryx.types'
 import { FrequencyType, InputType } from '@/config/config'
 import { NetworkType } from '@/config/networks'
 import { ObjectType } from '@/routes/parsing'
@@ -63,10 +82,14 @@ export const useContractIPFS = (network: NetworkType, input: string | undefined)
  * @param network - The network to fetch the rich list from.
  * @returns result - The result of the query.
  */
-export const useRichList = (network: NetworkType) => {
+export const useRichList = (network: NetworkType, actorType?: 'evm') => {
+  const queryParams = {
+    actor_type: actorType,
+  }
+
   return useQuery({
-    queryFn: () => fetchRichList(network),
-    queryKey: ['richlist', network.uniqueId],
+    queryFn: () => fetchRichList(network, queryParams),
+    queryKey: ['richlist', network.uniqueId, actorType],
     staleTime: 1000 * 60 * 5,
     retry: false,
   })
@@ -193,7 +216,7 @@ export const useMutationContractVerify = () => {
 }
 
 /**
- * useContractsVerified is a custom hook that uses the useQuery hook from React Query
+ * useSearchType is a custom hook that uses the useQuery hook from React Query
  * to fetch the the type of an input.
  * @param input - The input to fetch the type.
  * @param network - The network.
@@ -673,7 +696,7 @@ export const useGlobalBaseFee = (network: NetworkType | undefined, frequency: Fr
           let nextCursor: string | undefined
           let firstPage = true
           while ((nextCursor && nextCursor !== '') || firstPage) {
-            const currentPage = await fetchGlobalBaseFee(network, frequency, { ...params, cursor: nextCursor })
+            const currentPage = await fetchGlobalBaseFee(network, frequency, { ...params, cursor: nextCursor, limit: 830 })
             result = [...currentPage.results]
             nextCursor = allPages ? currentPage.next_cursor : undefined
             firstPage = false
@@ -739,5 +762,251 @@ export const useValueExchangeAtLatest = (network: NetworkType | undefined, contr
     staleTime: 1000 * 60 * 5,
     enabled: Boolean(network) && Boolean(contract),
     retry: false,
+  })
+}
+
+/**
+ * useEvents is a custom hook that uses the useQuery hook from React Query
+ * to fetch the events.
+ * @param input - What you're searching for.
+ * @param network - Which blockchain network you're diving into.
+ * @param inputType - The type of your input.
+ * @param objectType - The kind of object you're interested in.
+ * @param method - The method to filter events.
+ * @param sort - How you'd like your results sorted.
+ * @param page - Pagination details.
+ */
+export const useEvents = ({
+  input,
+  network,
+  inputType,
+  objectType,
+  sort,
+  page,
+}: {
+  input: string
+  network: NetworkType | undefined
+  objectType: ObjectType | undefined
+  inputType: InputType | undefined
+  sort: Sort[] | undefined
+  page: PagesProps
+}) => {
+  const formattedSort = sort && Object.keys(sort).length !== 0 ? sort.map(({ field, sort }) => `${field}:${sort}`).join(',') : undefined
+  const queryParams = {
+    cursor: page?.cursor,
+    limit: '100',
+    sort_by: formattedSort,
+  }
+  const queryKey = [
+    'search-transactions',
+    [network?.uniqueId, objectType, inputType, input, queryParams.sort_by?.toString() ?? '', queryParams.cursor ?? ''].join('-'),
+  ]
+
+  return useQuery({
+    queryFn: network
+      ? async () => {
+          switch (objectType) {
+            case ObjectType.ADDRESS:
+            case ObjectType.CONTRACT:
+              return await fetchEventsByAddress(input, network, queryParams)
+
+            case ObjectType.TIPSET:
+              return await fetchEventsByHeight(Number(input), network, queryParams)
+
+            case ObjectType.TXS:
+              return await fetchEventsByHash(input, network, queryParams)
+
+            case ObjectType.EVENT:
+              return await fetchEventsBySelector(input, network, queryParams)
+
+            default:
+              return await fetchEvmTransactionsByHash(input, network, queryParams)
+          }
+        }
+      : undefined,
+    queryKey,
+    staleTime: 1000 * 60 * 40,
+    retry: false,
+    enabled: Boolean(input) && input !== '' && Boolean(network) && Boolean(objectType),
+  })
+}
+
+/**
+ * useTopAccountsByValueExchanged is a custom hook that uses the useQuery hook from React Query
+ * to fetch the top contracts list by value exchanged.
+ * @param network - The network to fetch the list.
+ * @param direction - The value exchanged direction to fetch the list.
+ * @param actorType - The actor type to fetch the list.
+ * @returns result - The result of the query.
+ */
+export const useTopAccountsByValueExchanged = (
+  network: NetworkType,
+  direction: ValueExchangeDirection,
+  actorType: ValueExchangeActorType
+) => {
+  return useQuery({
+    queryFn: () => fetchTopAccountsByValueExchanged(network, direction, actorType),
+    queryKey: ['top-accounts-by-value-exchanged', network.uniqueId, direction, actorType],
+    staleTime: 1000 * 60 * 5,
+    retry: false,
+  })
+}
+
+/**
+ * useEvents is a custom hook that uses the useQuery hook from React Query
+ * to fetch the event details.
+ * @param id - What you're searching for.
+ * @param network - Which blockchain network you're diving into.
+ */
+export const useEventDetails = (id: string | undefined, network: NetworkType | undefined) => {
+  return useQuery({
+    queryFn: network && id ? () => fetchEventDetails(id, network) : undefined,
+    queryKey: ['event-details', network?.uniqueId, id],
+    staleTime: 1000 * 60 * 5,
+    retry: false,
+    enabled: Boolean(network) && Boolean(id),
+  })
+}
+
+/**
+ * useEventsBySelector is a custom hook that uses the useQuery hook from React Query
+ * to fetch the event details.
+ * @param id - What you're searching for.
+ * @param network - Which blockchain network you're diving into.
+ */
+export const useEventsBySelector = (id: string | undefined, network: NetworkType | undefined) => {
+  return useQuery({
+    queryFn: network && id ? () => fetchEventsBySelector(id, network) : undefined,
+    queryKey: ['events-by-selector', network?.uniqueId, id],
+    staleTime: 1000 * 60 * 5,
+    retry: false,
+    enabled: Boolean(network) && Boolean(id),
+  })
+}
+
+/**
+ * useMultisigAddressState is a custom hook that uses the useQuery hook from React Query
+ * to fetch the multisig address state.
+ * @param address - What you're searching for.
+ * @param network - Which blockchain network you're diving into.
+ */
+export const useMultisigAddressState = (address: string | undefined, network: NetworkType | undefined) => {
+  return useQuery({
+    queryFn: network && address ? () => fetchMultisigAddressState(network, address) : undefined,
+    queryKey: ['multisig-address-state', network?.uniqueId, address],
+    staleTime: 1000 * 60 * 5,
+    retry: false,
+    enabled: Boolean(network) && Boolean(address),
+  })
+}
+
+/**
+ *  * useMultisigAddressState is a useMultisigAddressStateTraces hook that uses the useQuery hook from React Query
+ is a custom hook that uses the useQuery hook from React Query
+ * to fetch the multisig address state trace.
+ * @param address - What you're searching for.
+ * @param network - Which blo
+ * @param sort - How you'd like your results sorted.ckchain network you're diving into.
+ * @param page - Pagination details.
+ */
+export const useMultisigAddressStateTraces = ({
+  address,
+  network,
+  sort,
+  page,
+}: {
+  address?: string
+  network?: NetworkType
+  sort: Sort[] | undefined
+  page: PagesProps
+}) => {
+  const formattedSort = sort && Object.keys(sort).length !== 0 ? sort.map(({ field, sort }) => `${field}:${sort}`).join(',') : undefined
+  const queryParams = {
+    cursor: page?.cursor,
+    sort_by: formattedSort,
+  }
+
+  return useQuery({
+    queryFn: network && address ? () => fetchMultisigAddressStateTraces(network, address, queryParams) : undefined,
+    queryKey: [
+      'multisig-address-state-traces',
+      network?.uniqueId,
+      address,
+      queryParams.sort_by?.toString() ?? '',
+      queryParams.cursor ?? '',
+    ],
+    staleTime: 1000 * 60 * 5,
+    retry: false,
+    enabled: Boolean(network) && Boolean(address),
+  })
+}
+
+/**
+ * useMultisigAddressProposals is a custom hook that uses the useQuery hook from React Query
+ * to fetch the multisig address proposals.
+ * @param address - What you're searching for.
+ * @param network - Which blockchain network you're diving into.
+ */
+export const useMultisigAddressProposals = ({
+  address,
+  network,
+  sort,
+  page,
+}: {
+  address?: string
+  network?: NetworkType
+  sort: Sort[] | undefined
+  page: PagesProps
+}) => {
+  const formattedSort = sort && Object.keys(sort).length !== 0 ? sort.map(({ field, sort }) => `${field}:${sort}`).join(',') : undefined
+  const queryParams = {
+    cursor: page?.cursor,
+    sort_by: formattedSort,
+  }
+
+  return useQuery({
+    queryFn: network && address ? () => fetchMultisigAddressProposals(network, address, queryParams) : undefined,
+    queryKey: ['multisig-address-proposals', network?.uniqueId, address, queryParams.sort_by?.toString() ?? '', queryParams.cursor ?? ''],
+    staleTime: 1000 * 60 * 5,
+    retry: false,
+    enabled: Boolean(network) && Boolean(address),
+  })
+}
+
+/**
+ * useTokens is a custom hook that uses the useQuery hook from React Query
+ * to fetch the ERC20 tokens from the network.
+ * @param network - The network to fetch the verified contracts from.
+ * @returns result - The result of the query.
+ */
+export const useTokens = (network: NetworkType) => {
+  const queryParams = {
+    sort: 'holders',
+    order: 'desc',
+  }
+  return useQuery({
+    queryFn: () => fetchTokens(network, queryParams),
+    queryKey: ['tokens-list', network.uniqueId],
+    staleTime: 1000 * 60 * 5,
+    retry: true,
+  })
+}
+
+/**
+ * useTokenHoldings is a custom hook that uses the useQuery hook from React Query
+ * to fetch the token holdings from the network.
+ * @param network - The network to fetch the verified contracts from.
+ * @returns result - The result of the query.
+ */
+export const useTokenHoldings = (network: NetworkType, address: string) => {
+  const queryParams = {
+    sort: 'holders',
+    order: 'desc',
+  }
+  return useQuery({
+    queryFn: () => fetchTokenHoldings(network, address, queryParams),
+    queryKey: ['token-holdings', network.uniqueId, address],
+    staleTime: 1000 * 60 * 5,
+    retry: true,
   })
 }

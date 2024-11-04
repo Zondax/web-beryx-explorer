@@ -6,7 +6,7 @@ import { useContractIPFS, useContractVerified } from '@/data/beryx'
 import { useSearchStore } from '@/store/data/search'
 import { useContractsStore } from '@/store/ui/contracts'
 import { FileSystemObject } from '@/utils/serialize'
-import { Checkmark } from '@carbon/icons-react'
+import { Checkmark, WarningAlt } from '@carbon/icons-react'
 import { Unstable_Grid2 as Grid, Typography, alpha, useTheme } from '@mui/material'
 
 /**
@@ -47,7 +47,23 @@ const Verified = () => {
   }, [setSourceCode, ipfsData, ipfsDataIsSuccess, ipfsDataIsFetching])
 
   if (!verificationData) {
-    return null
+    return (
+      <Grid
+        container
+        alignItems={'center'}
+        sx={{
+          gap: '0.25rem',
+          padding: '3px 6px 3px 5px',
+          borderRadius: '4px',
+          background: alpha(theme.palette.warning.light, theme.palette.mode === 'dark' ? 0.35 : 0.75),
+        }}
+      >
+        <WarningAlt style={{ color: theme.palette.warning.main }} />
+        <Typography variant="subtitle2" color={theme.palette.warning.main} fontWeight={600}>
+          {t('Not Verified')}
+        </Typography>
+      </Grid>
+    )
   }
 
   // render tooltip with success icon upon successful verification

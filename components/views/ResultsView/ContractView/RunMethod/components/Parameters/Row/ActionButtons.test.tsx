@@ -1,5 +1,5 @@
 import { FormikProps } from 'formik'
-import { act } from 'react-dom/test-utils'
+import { act } from 'react'
 
 import { renderWithProviders } from '@/helpers/jest-react'
 import { fireEvent, render, screen } from '@testing-library/react'

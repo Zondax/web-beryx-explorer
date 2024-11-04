@@ -2,6 +2,9 @@ import { Theme } from '@mui/material'
 
 import { DataChartProps } from 'components/common/Charts/config'
 
+import { convertAndFormatFilValue } from './dashboardFormatter'
+import { FilUnits, FilUnitsArray } from './numbers'
+
 /**
  * Function to get the common style of the tooltip.
  *
@@ -27,6 +30,15 @@ export const getCommonStyleTooltip = (theme: Theme) => ({
   zIndex: 9999,
 })
 
+/**
+ * Function to get the tooltip configuration for charts.
+ *
+ * @param data - The data object containing x and y values and optional formatter.
+ * @param theme - The theme object containing palette and other styling information.
+ * @param hour - Optional boolean indicating whether to include hour in the date format.
+ *
+ * @returns - An object with the tooltip configuration.
+ */
 export const getTooltip = (
   data: {
     x: {
@@ -35,7 +47,8 @@ export const getTooltip = (
     }
     y: DataChartProps
   },
-  theme: Theme
+  theme: Theme,
+  hour?: boolean
 ) => ({
   trigger: 'axis',
   formatter: (param: {
@@ -44,13 +57,29 @@ export const getTooltip = (
       marker: string
       data?: { value: any }
     }
-  }) =>
-    `${data.x.formatter ? data.x.formatter(param[0].name, 'MMM dd yyyy') : param[0].name} <br /> ${param[0].marker} ${
-      data.y.name ? `${data.y.name}:` : ''
-    } <b>${param[0].data?.value} ${data.y.unit ? data.y.unit : ''}</b>`,
+  }) => {
+    const dateFormat = `MMM dd yyyy${hour ? ' hh:mm' : ''}`
+    const formattedDate = data.x.formatter ? data.x.formatter(param[0].name, dateFormat) : param[0].name
+    const yName = data.y.name ? `${data.y.name}:` : ''
+    let yValue = param[0].data?.value
+    let yUnit = data.y.unit ? data.y.unit : ''
+
+    if (FilUnitsArray.includes(yUnit as FilUnits)) {
+      ;({ value: yValue, unit: yUnit } = convertAndFormatFilValue(parseFloat(yValue), yUnit as FilUnits, undefined, 2))
+    }
+    return `${formattedDate} <br /> ${param[0].marker} ${yName} <b>${yValue} ${yUnit}</b>`
+  },
   ...getCommonStyleTooltip(theme),
 })
 
+/**
+ * Function to get the data zoom configuration for charts.
+ *
+ * @param hideDataZoom - A boolean indicating whether to hide the data zoom feature.
+ * @param theme - The theme object containing palette and other styling information.
+ *
+ * @returns - An array of data zoom configuration objects or undefined if hideDataZoom is true.
+ */
 export const getDataZoom = (hideDataZoom: boolean, theme: Theme) =>
   !hideDataZoom
     ? [

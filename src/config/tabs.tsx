@@ -1,14 +1,19 @@
 import { ObjectType } from '@/routes/parsing'
 
 import RichList from 'components/views/Leaderboard/Tabs/RichList'
+import RichestContracts from 'components/views/Leaderboard/Tabs/RichestContracts'
 import TopAccounts from 'components/views/Leaderboard/Tabs/TopAccounts'
+import TopAccountsByValueExchanged from 'components/views/Leaderboard/Tabs/TopAccountsByValueExchanged'
 import TopContracts from 'components/views/Leaderboard/Tabs/TopContracts'
 import TopContractsByInvokes from 'components/views/Leaderboard/Tabs/TopContractsByInvokes'
+import TopContractsByValueExchanged from 'components/views/Leaderboard/Tabs/TopContractsByValueExchanged'
+import Events from 'components/views/ResultsView/GeneralView/Tabs/Events'
+import Proposals from 'components/views/ResultsView/GeneralView/Tabs/Proposals'
+import StateTrace from 'components/views/ResultsView/GeneralView/Tabs/Trace'
 
 import Blocks from '../../components/views/ResultsView/GeneralView/Tabs/Blocks'
 import ContractFiles from '../../components/views/ResultsView/GeneralView/Tabs/ContractFiles/ContractFiles'
 import Interact from '../../components/views/ResultsView/GeneralView/Tabs/Interact'
-import Logs from '../../components/views/ResultsView/GeneralView/Tabs/Logs'
 import { AddressMempool } from '../../components/views/ResultsView/GeneralView/Tabs/Mempool'
 import Overview from '../../components/views/ResultsView/GeneralView/Tabs/Overview/Overview'
 import AddressStats from '../../components/views/ResultsView/GeneralView/Tabs/Stats/AddressStats'
@@ -55,8 +60,8 @@ export const itemTabs: SearchedItemTabProps = {
     show: true,
   },
   code: {
-    id: 'code',
-    name: 'Code',
+    id: 'contract',
+    name: 'Contract',
     content: <ContractFiles />,
     show: true,
   },
@@ -72,12 +77,6 @@ export const itemTabs: SearchedItemTabProps = {
     content: <VerifiedContracts />,
     show: true,
   },
-  logs: {
-    id: 'logs',
-    name: 'Logs',
-    content: <Logs />,
-    show: true,
-  },
   stats: {
     id: 'stats',
     name: 'Stats',
@@ -88,6 +87,12 @@ export const itemTabs: SearchedItemTabProps = {
     id: 'rich-list',
     name: 'Rich List',
     content: <RichList />,
+    show: true,
+  },
+  richestContracts: {
+    id: 'richest-contracts',
+    name: 'Richest Contracts',
+    content: <RichestContracts />,
     show: true,
   },
   topAccounts: {
@@ -108,6 +113,39 @@ export const itemTabs: SearchedItemTabProps = {
     content: <TopContractsByInvokes />,
     show: true,
   },
+  topAccountsByValueExchanged: {
+    id: 'top-accounts-by-value-exchanged',
+    name: 'Top Accounts By Value Exchanged',
+    content: <TopAccountsByValueExchanged />,
+    show: true,
+  },
+  topContractsByValueExchanged: {
+    id: 'top-contracts-by-value-exchanged',
+    name: 'Top Contracts By Value Exchanged',
+    content: <TopContractsByValueExchanged />,
+    show: true,
+  },
+  events: {
+    id: 'events',
+    name: 'Events',
+    content: <Events />,
+    show: true,
+    beta: true,
+  },
+  proposals: {
+    id: 'proposals',
+    name: 'Proposals',
+    content: <Proposals />,
+    show: true,
+    beta: true,
+  },
+  stateTrace: {
+    id: 'state-trace',
+    name: 'State Trace',
+    content: <StateTrace />,
+    show: true,
+    beta: true,
+  },
 }
 
 /**
@@ -119,7 +157,15 @@ export const searchedItemTabs: { [key: string]: TabProps[] } = {
   /**
    * Tabs for address type items.
    */
-  address: [itemTabs.overview, itemTabs.transactions, itemTabs.mempool, itemTabs.stats],
+  address: [
+    itemTabs.overview,
+    itemTabs.transactions,
+    itemTabs.mempool,
+    itemTabs.stats,
+    itemTabs.events,
+    itemTabs.proposals,
+    itemTabs.stateTrace,
+  ],
   /**
    * Tabs for block type items.
    */
@@ -127,15 +173,23 @@ export const searchedItemTabs: { [key: string]: TabProps[] } = {
   /**
    * Tabs for tipset type items.
    */
-  tipset: [itemTabs.overview, itemTabs.transactions],
+  tipset: [itemTabs.overview, itemTabs.transactions, itemTabs.events],
   /**
    * Tabs for transaction type items.
    */
-  txs: [itemTabs.overview, itemTabs.internalMessages, itemTabs.logs],
+  txs: [itemTabs.overview, itemTabs.internalMessages, itemTabs.events],
   /**
    * Tabs for contract type items.
    */
-  contract: [itemTabs.overview, itemTabs.transactions, itemTabs.mempool, itemTabs.code, itemTabs.interact, itemTabs.stats],
+  contract: [itemTabs.overview, itemTabs.transactions, itemTabs.mempool, itemTabs.code, itemTabs.interact, itemTabs.stats, itemTabs.events],
+  /**
+   * Tabs for events type items.
+   */
+  event: [itemTabs.overview, itemTabs.events],
+  /**
+   * Tabs for ERC20 type items.
+   */
+  erc20: [itemTabs.overview, itemTabs.transactions, itemTabs.mempool, itemTabs.code, itemTabs.interact, itemTabs.stats],
   /**
    * Tabs for unknown type items.
    */
@@ -147,7 +201,19 @@ export const searchedItemTabs: { [key: string]: TabProps[] } = {
  * @param t - Translation function from i18next.
  * @returns An array of TabProps.
  */
-export const leaderboardTabs: TabProps[] = [itemTabs.richList, itemTabs.topAccounts, itemTabs.topContracts, itemTabs.topContractsByInvokes]
+export const leaderboardTabs: TabProps[] = [itemTabs.richList, itemTabs.topAccounts, itemTabs.topAccountsByValueExchanged]
+
+/**
+ * Function to generate tabs for contracts leaderboard.
+ * @param t - Translation function from i18next.
+ * @returns An array of TabProps.
+ */
+export const contractsLeaderboardTabs: TabProps[] = [
+  itemTabs.richestContracts,
+  itemTabs.topContracts,
+  itemTabs.topContractsByInvokes,
+  itemTabs.topContractsByValueExchanged,
+]
 
 /**
  * Function to generate tabs for contract verifier page.
@@ -159,6 +225,7 @@ export const contractVerifierTabs: TabProps[] = [itemTabs.verified_contracts]
 export const statsComponentsMap: { [key in ObjectType]?: React.ReactNode } = {
   [ObjectType.ADDRESS]: <AddressStats />,
   [ObjectType.CONTRACT]: <ContractStats />,
+  [ObjectType.ERC20]: <ContractStats />,
   [ObjectType.TXS]: null,
   [ObjectType.BLOCK]: null,
   [ObjectType.TIPSET]: null,

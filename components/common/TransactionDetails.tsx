@@ -170,7 +170,7 @@ const TransactionDetails = ({ content }: TransactionDetailsProps) => {
   return (
     <>
       <Tooltip title={t('View transaction parameters')} arrow disableInteractive>
-        <IconButton data-testid={'transaction-details-button'} color="info" sx={{ width: '2.25rem' }} onClick={handleOpenModal}>
+        <IconButton data-testid={'transaction-details-button'} color="info" size={'small'} onClick={handleOpenModal}>
           <Script />
         </IconButton>
       </Tooltip>

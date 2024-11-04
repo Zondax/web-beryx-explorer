@@ -15,10 +15,13 @@ import { Sort } from 'components/widgets/SearchTables/config'
 import TwoPanelHorizontal from '../../../../../Layout/variants/TwoPanelHorizontal'
 import SearchTables from '../../../../../widgets/SearchTables/SearchTables'
 import Blocks from '../Blocks'
+import Events from '../Events'
 import AddressOverview from './AddressOverview'
 import BalanceChart from './BalanceChart'
 import BlockOverview from './BlockOverview'
 import ContractOverview from './ContractOverview'
+import ERC20Overview from './ERC20Overview'
+import EventOverview from './EventOverview'
 import OverviewItem from './OverviewItem'
 import TipsetOverview from './TipsetOverview'
 import TransactionOverview from './TransactionOverview/TransactionOverview'
@@ -45,19 +48,39 @@ const Overview = () => {
   const hasMoreSections =
     searchItemType === ObjectType.ADDRESS ||
     searchItemType === ObjectType.CONTRACT ||
+    searchItemType === ObjectType.ERC20 ||
     searchItemType === ObjectType.TIPSET ||
-    searchItemType === ObjectType.BLOCK
+    searchItemType === ObjectType.BLOCK ||
+    searchItemType === ObjectType.EVENT
 
   const canDisplayTable = Boolean(network && inputValue !== undefined && inputValue !== null && searchItemType !== ObjectType.UNKNOWN)
-  const noRowsText = searchItemType === ObjectType.TXS ? t('No internal messages') : t('No transactions')
-  const tableTitle =
-    searchItemType === ObjectType.TIPSET
-      ? 'Transactions'
-      : searchItemType === ObjectType.BLOCK
-        ? 'Top transaction by amount'
-        : 'Latest Transactions'
-  const tablePreSort: Sort[] = searchItemType === ObjectType.BLOCK ? [{ field: 'amount', sort: 'desc' }] : []
-  const tableType = searchItemType === ObjectType.BLOCK ? TABLE_TYPE.BLOCK_TOP_TRANSACTIONS : TABLE_TYPE.TRANSACTIONS
+
+  let noRowsText = t('No transactions')
+  let tableTitle = t('Latest Transactions')
+  let tableType = TABLE_TYPE.TRANSACTIONS
+  let tablePreSort: Sort[] = []
+
+  switch (searchItemType) {
+    case ObjectType.TXS:
+      noRowsText = t('No internal messages')
+      tableType = TABLE_TYPE.TRANSACTIONS
+      break
+    case ObjectType.EVENT:
+      tableTitle = t('Latest Events')
+      noRowsText = t('No events')
+      tableType = TABLE_TYPE.EVENTS
+      break
+    case ObjectType.TIPSET:
+      tableTitle = t('Transactions')
+      tableType = TABLE_TYPE.TRANSACTIONS
+      break
+    case ObjectType.BLOCK:
+      tableTitle = t('Top transaction by amount')
+      tableType = TABLE_TYPE.BLOCK_TOP_TRANSACTIONS
+      tablePreSort = [{ field: 'amount', sort: 'desc' }]
+      break
+    default:
+  }
 
   /**
    * `useEffect` hook to dynamically set the component state based on the `searchItemType`.
@@ -75,8 +98,10 @@ const Overview = () => {
       [ObjectType.TXS]: <TransactionOverview />,
       [ObjectType.ADDRESS]: <AddressOverview />,
       [ObjectType.CONTRACT]: <ContractOverview />,
+      [ObjectType.ERC20]: <ERC20Overview />,
       [ObjectType.TIPSET]: <TipsetOverview />,
       [ObjectType.BLOCK]: <BlockOverview />,
+      [ObjectType.EVENT]: <EventOverview />,
       default: <OverviewItem label={t('Loading')} content={undefined} icon={undefined} isLoading />,
     }
     setComponent(
@@ -140,6 +165,7 @@ const Overview = () => {
     switch (searchItemType) {
       case ObjectType.ADDRESS:
       case ObjectType.CONTRACT:
+      case ObjectType.ERC20:
         return renderOverviewSection(BalanceChart)
       case ObjectType.TIPSET:
         return renderOverviewSection(Blocks)
@@ -169,16 +195,20 @@ const Overview = () => {
           }}
         >
           {canDisplayTable ? (
-            <SearchTables
-              tableType={tableType}
-              noRowsText={noRowsText}
-              noRowsIcon={<InspectData color={theme.palette.text.secondary} />}
-              title={tableTitle}
-              hideFooter
-              hideBorder
-              limitRows={10}
-              sort={tablePreSort}
-            />
+            tableType === TABLE_TYPE.EVENTS ? (
+              <Events hideFooter limitRows={10} title={tableTitle} />
+            ) : (
+              <SearchTables
+                tableType={tableType}
+                noRowsText={noRowsText}
+                noRowsIcon={<InspectData color={theme.palette.text.secondary} />}
+                title={tableTitle}
+                hideFooter
+                hideBorder
+                limitRows={10}
+                sort={tablePreSort}
+              />
+            )
           ) : null}
         </Box>
       ) : null}

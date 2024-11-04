@@ -6,38 +6,15 @@ import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { updateValues } from '@/refactor/contractUtils'
-import { CodeReference, Construction, HelpFilled, TableShortcut } from '@carbon/icons-react'
+import { CodeReference, HelpFilled, TableShortcut } from '@carbon/icons-react'
 import { Box, Button, Tooltip, Typography, useTheme } from '@mui/material'
+
+import BetaLabel from 'components/common/BetaLabel/BetaLabel'
 
 import { InternalInputProps } from '../../../config'
 import { RunMethodFormValues } from '../../config'
 import TableInput from './TableInput'
 import TextInput from './TextInput'
-
-/**
- * BetaBox functional component
- */
-export const BetaBox = () => {
-  const theme = useTheme()
-  return (
-    <Box
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.5rem',
-        bgcolor: 'background.level2',
-        p: '0 0.5rem',
-        borderRadius: '4px',
-        width: 'fit-content',
-      }}
-    >
-      <Construction width={12} height={12} color={theme.palette.text.secondary} />
-      <Typography variant="caption" color={'text.secondary'}>
-        beta
-      </Typography>
-    </Box>
-  )
-}
 
 /**
  * Props type declaration for Parameters
@@ -108,7 +85,7 @@ const Parameters = ({ formik }: ParametersProps) => {
           <Typography variant="caption" color={'text.primary'} fontWeight={600}>
             {t('Parameters Table')}
           </Typography>
-          {!activeTable ? <TooltipContent /> : <BetaBox />}
+          {!activeTable ? <TooltipContent /> : <BetaLabel />}
         </Box>
         <SwitchButton />
       </Box>

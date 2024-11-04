@@ -413,5 +413,7 @@
   "Ledger integration is in beta. Please report any issues you encounter using the feedback tool from the top bar.":"Ledger integration is in beta. Please report any issues you encounter using the feedback tool from the top bar.",
   "Choose a different address or swith to EVM native addresses.":"Choose a different address or swith to EVM native addresses.",
   "Account Address":"Account Address",
-  "Signing, please check Ledger...":"Signing, please check Ledger..."
+  "Signing, please check Ledger...":"Signing, please check Ledger...",
+  "Other files":"Other files",
+  "Source code is not available because the contract is not verified.":"Source code is not available because the contract is not verified."
 }

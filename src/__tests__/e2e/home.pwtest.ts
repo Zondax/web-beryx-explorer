@@ -21,7 +21,7 @@ test.describe.parallel('Home - Search Examples', () => {
     await page.getByRole('button', { name: 'Contract' }).click()
 
     // Wait to the navigation finishes
-    await page.waitForURL('**/search/fil/mainnet/address/*', navigationOptions)
+    await page.waitForURL('**/fil/mainnet/address/*', navigationOptions)
 
     // Expect the search type is visible
     const contractTitle = page.getByRole('heading', { name: /^contract$/ })
@@ -32,7 +32,7 @@ test.describe.parallel('Home - Search Examples', () => {
     await page.getByRole('button', { name: 'Address' }).click()
 
     // Wait to the navigation finishes
-    await page.waitForURL('**/search/fil/mainnet/address/*', navigationOptions)
+    await page.waitForURL('**/fil/mainnet/address/*', navigationOptions)
 
     // Expect the search type is visible
     const contractTitle = page.getByRole('heading', { name: /^address$/ })
@@ -43,7 +43,7 @@ test.describe.parallel('Home - Search Examples', () => {
     await page.getByRole('button', { name: 'Transaction' }).click()
 
     // Wait to the navigation finishes
-    await page.waitForURL('**/search/fil/mainnet/txs/*', navigationOptions)
+    await page.waitForURL('**/fil/mainnet/txs/*', navigationOptions)
 
     // Expect the search type is visible
     const contractTitle = page.getByRole('heading', { name: /^transaction$/ })
@@ -54,7 +54,7 @@ test.describe.parallel('Home - Search Examples', () => {
     await page.getByRole('button', { name: 'Tipset' }).click()
 
     // Wait to the navigation finishes
-    await page.waitForURL('**/search/fil/mainnet/tipset/*', navigationOptions)
+    await page.waitForURL('**/fil/mainnet/tipset/*', navigationOptions)
 
     // Expect the search type is visible
     const contractTitle = page.getByRole('heading', { name: /^tipset$/ })
@@ -65,7 +65,7 @@ test.describe.parallel('Home - Search Examples', () => {
     await page.getByRole('button', { name: 'Block' }).click()
 
     // Wait to the navigation finishes
-    await page.waitForURL('**/search/fil/mainnet/block-cid/*', navigationOptions)
+    await page.waitForURL('**/fil/mainnet/block-cid/*', navigationOptions)
 
     // Expect the search type is visible
     const contractTitle = page.getByRole('heading', { name: /^block$/ })

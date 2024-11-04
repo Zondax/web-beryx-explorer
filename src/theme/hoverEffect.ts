@@ -201,7 +201,7 @@ export const boxShadow = (theme: 'light' | 'dark') => {
  * @param theme - The theme of the application.
  * @returns The horizontal fading border style.
  */
-export const horizontalFadingBorder = (theme: Theme) => {
+export const horizontalFadingBorder = (theme: Theme, direction?: 'left' | 'right') => {
   return {
     backgroundColor: theme.palette.background?.level1,
     borderRadius: '12px',
@@ -210,8 +210,8 @@ export const horizontalFadingBorder = (theme: Theme) => {
     border: 'solid 1px transparent',
     background:
       theme.palette.mode === 'light'
-        ? `linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), linear-gradient(90deg, ${theme.palette.background.level1} 80%,  ${theme.palette.border?.level0} 100%)`
-        : `linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), linear-gradient(90deg, ${theme.palette.background.level1} 80%, ${theme.palette.border?.level0} 100%)`,
+        ? `linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), linear-gradient(to ${direction ?? 'right'}, ${theme.palette.background.level1} 80%,  ${theme.palette.border?.level1} 100%)`
+        : `linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), linear-gradient(to ${direction ?? 'right'}, ${theme.palette.background.level1} 80%, ${theme.palette.border?.level1} 100%)`,
     backgroundOrigin: 'border-box',
     backgroundClip: 'content-box, border-box',
     boxShadow: `inset 1px 100lvh 1px ${theme.palette.background.level1}`,

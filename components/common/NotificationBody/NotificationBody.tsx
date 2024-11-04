@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { ObjectType } from '@/routes/parsing'
 import { GenericNotification, TransactionNotification, useNotificationsStore } from '@/store/ui/notifications'
 import useAppSettingsStore from '@/store/ui/settings'
+import { boxShadow } from '@/theme/hoverEffect'
 import { CategoryNewEach, CheckmarkFilled, CloseFilled, Misuse, TrashCan } from '@carbon/icons-react'
 import { Box, Button, Divider, Grid, Typography, useTheme } from '@mui/material'
 import { Theme } from '@mui/material/styles'
@@ -48,9 +49,11 @@ const renderStatusIcon = (status: string | undefined, theme: Theme) => {
 const NotificationBody = ({
   notification,
   isFromStore,
+  shadow = true,
 }: {
   notification: TransactionNotification | GenericNotification
   isFromStore?: boolean
+  shadow?: boolean
 }) => {
   const theme = useTheme()
   const { t } = useTranslation()
@@ -95,7 +98,8 @@ const NotificationBody = ({
         border: `1px solid ${theme.palette.border?.level0}`,
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: 'background.level1',
+        backgroundColor: theme.palette.background.level1,
+        boxShadow: shadow ? boxShadow(theme.palette.mode) : undefined,
         width: { xs: '100%', md: '25rem' },
       }}
     >
@@ -163,7 +167,7 @@ const NotificationBody = ({
           {notification && isTransaction(notification) && notification.tx_hash ? (
             <Button
               id={'view-transaction-notification'}
-              href={`/search/fil/${notification.network?.name ?? network.name}/${ObjectType.TXS}/${notification.tx_hash}`}
+              href={`/fil/${notification.network?.name ?? network.name}/${ObjectType.TXS}/${notification.tx_hash}`}
               variant={'contained'}
               size="small"
               sx={{

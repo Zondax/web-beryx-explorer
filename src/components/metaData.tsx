@@ -156,8 +156,8 @@ export function getPageMetaData(page: PAGES): MetaDataProps {
     metaTitle: 'Beryx: Blockchain Explorer, Dashboards, Faucet and Tools',
     metaDescription:
       'Beryx is a platform developed by Zondax that includes public historical data, streaming data and metrics for Filecoin blockchain.',
-    metaImage: 'https://beryx.zondax.ch/main.png',
-    metaURL: 'https://beryx.zondax.ch',
+    metaImage: 'https://beryx.io/main.png',
+    metaURL: 'https://beryx.io',
   }
 
   const pageMeta = {
@@ -173,115 +173,130 @@ export function getPageMetaData(page: PAGES): MetaDataProps {
       metaTitle: 'Leaderboard: Track Top Filecoin Performers | Beryx',
       metaDescription:
         "See who's leading in the Filecoin network with Beryx Leaderboard. Rankings updated daily to reflect the most active and influential nodes.",
-      metaURL: 'https://beryx.zondax.ch/leaderboard',
-      metaImage: 'https://beryx.zondax.ch/leaderboard.png',
+      metaURL: 'https://beryx.io/leaderboard',
+      metaImage: 'https://beryx.io/leaderboard.png',
+    },
+    [PAGES.CONTRACTS_LEADERBOARD]: {
+      ...defaultMeta,
+      metaTitle: 'Contracts Leaderboard: Track Top Filecoin Performers | Beryx',
+      metaDescription:
+        "See who's leading in the Filecoin network with Beryx Leaderboard. Rankings updated daily to reflect the most active and influential nodes.",
+      metaURL: 'https://beryx.io/contracts_leaderboard',
+      metaImage: 'https://beryx.io/leaderboard.png',
     },
     [PAGES.DASHBOARD]: {
       ...defaultMeta,
       metaTitle: 'Dashboard: Filecoin Insights at a Glance | Beryx',
       metaDescription:
         'Access personalized insights and metrics on the Filecoin network with your Beryx Dashboard. Monitor performance, transactions, and more.',
-      metaURL: 'https://beryx.zondax.ch/dashboard',
-      metaImage: 'https://beryx.zondax.ch/dashboard.png',
+      metaURL: 'https://beryx.io/dashboard',
+      metaImage: 'https://beryx.io/dashboard.png',
     },
     [PAGES.MEMPOOL]: {
       ...defaultMeta,
       metaTitle: 'Mempool: Real-time Transaction Monitoring | Beryx',
       metaDescription:
         'Stay updated with real-time transaction monitoring in the Filecoin network with Beryx Mempool. Explore pending transactions and mempool status.',
-      metaURL: 'https://beryx.zondax.ch/mempool',
-      metaImage: 'https://beryx.zondax.ch/mempool.png',
+      metaURL: 'https://beryx.io/mempool',
+      metaImage: 'https://beryx.io/mempool.png',
     },
     [PAGES.FAUCET]: {
       ...defaultMeta,
       metaTitle: 'Faucet: Get Filecoin Test Tokens | Beryx',
       metaDescription:
         'Claim Filecoin test tokens with Beryx Faucet. A crucial tool for developers and users for testing and development on the Filecoin network.',
-      metaURL: 'https://beryx.zondax.ch/faucet',
-      metaImage: 'https://beryx.zondax.ch/faucet.png',
+      metaURL: 'https://beryx.io/faucet',
+      metaImage: 'https://beryx.io/faucet.png',
     },
     [PAGES.ADDRESS_CONVERTER]: {
       ...defaultMeta,
       metaTitle: 'Address Converter: Filecoin Ethereum compatible | Beryx',
       metaDescription:
         'Easily convert Filecoin addresses with Beryx Address Converter. Supports multiple formats for seamless integration and usage.',
-      metaURL: 'https://beryx.zondax.ch/address-converter',
-      metaImage: 'https://beryx.zondax.ch/converter.png',
+      metaURL: 'https://beryx.io/address-converter',
+      metaImage: 'https://beryx.io/converter.png',
     },
     [PAGES.CONTRACT_VERIFIER]: {
       ...defaultMeta,
       metaTitle: 'Contract Verifier: Ensure Smart Contract Integrity by verifying source code | Beryx',
       metaDescription:
         'Verify the integrity of Filecoin smart contracts with Beryx Contract Verifier. A step towards secure and reliable contract deployment.',
-      metaURL: 'https://beryx.zondax.ch/contract-verifier',
-      metaImage: 'https://beryx.zondax.ch/verifier.png',
+      metaURL: 'https://beryx.io/contract-verifier',
+      metaImage: 'https://beryx.io/verifier.png',
     },
     [PAGES.RPC]: {
       ...defaultMeta,
       metaTitle: 'Filecoin RPC Node: Access Filecoin Mainnet and Calibration Networks | Beryx',
       metaDescription:
         'Connect to the Filecoin network with Beryx Calibration Public RPC Node. Reliable access for developers and users alike.',
-      metaURL: 'https://beryx.zondax.ch/rpc',
-      metaImage: 'https://beryx.zondax.ch/rpc.png',
+      metaURL: 'https://beryx.io/rpc',
+      metaImage: 'https://beryx.io/rpc.png',
     },
     [PAGES.RECENT_ACTIVITY]: {
       ...defaultMeta,
       metaTitle: 'Recent Activity: Latest Filecoin Tipsets, Transactions and Contract Invokes | Beryx',
       metaDescription:
         'Keep up with the latest activity on the Filecoin network with Beryx. Real-time updates on transactions, tipsets, blocks, contracts and more.',
-      metaURL: 'https://beryx.zondax.ch/recent-activity',
-      metaImage: 'https://beryx.zondax.ch/activity.png',
+      metaURL: 'https://beryx.io/recent-activity',
+      metaImage: 'https://beryx.io/activity.png',
     },
     [PAGES.NOT_FOUND]: {
       ...defaultMeta,
       metaTitle: '404: Page Not Found | Beryx',
       metaDescription:
         'The page you are looking for might have been removed, had its name changed, or is temporarily unavailable on Beryx.',
-      metaURL: 'https://beryx.zondax.ch/404',
+      metaURL: 'https://beryx.io/404',
     },
     [PAGES.ERROR_500]: {
       ...defaultMeta,
       metaTitle: '500: Server Error | Beryx',
       metaDescription:
         "We're experiencing a server issue. Please try again later or contact support if the problem persists. Beryx is here to help.",
-      metaURL: 'https://beryx.zondax.ch/500',
+      metaURL: 'https://beryx.io/500',
     },
     [PAGES.INTERACT]: {
       ...defaultMeta,
       metaTitle: 'Interact with Filecoin Smart Contracts | Beryx',
       metaDescription:
         'Easily interact with Filecoin smart contracts using Beryx. A user-friendly interface for executing and testing smart contracts.',
-      metaURL: 'https://beryx.zondax.ch/interact',
-      metaImage: 'https://beryx.zondax.ch/interact.png',
+      metaURL: 'https://beryx.io/interact',
+      metaImage: 'https://beryx.io/interact.png',
     },
     [PAGES.ESTIMATE_GAS]: {
       ...defaultMeta,
       metaTitle: 'Gas Estimator: Optimize Your Transactions | Beryx',
       metaDescription:
         'Estimate gas costs for your Filecoin transactions with Beryx Gas Estimator. Optimize spending and improve transaction efficiency.',
-      metaURL: 'https://beryx.zondax.ch/estimate_gas',
-      metaImage: 'https://beryx.zondax.ch/estimate.png',
+      metaURL: 'https://beryx.io/estimate_gas',
+      metaImage: 'https://beryx.io/estimate.png',
     },
     [PAGES.TERMS_OF_SERVICE]: {
       ...defaultMeta,
       metaTitle: 'Terms of Service | Beryx',
       metaDescription:
         'Understand the terms and conditions for using Beryx. Our commitment to transparency and user trust outlined in our Terms of Service.',
-      metaURL: 'https://beryx.zondax.ch/terms-of-service',
+      metaURL: 'https://beryx.io/terms-of-service',
     },
     [PAGES.CHANGELOG]: {
       ...defaultMeta,
       metaTitle: 'Changelog: Stay Updated with New Features | Beryx',
       metaDescription:
         'Discover the latest updates, improvements, and new features on Beryx. Our changelog keeps you informed about our continuous development.',
-      metaURL: 'https://beryx.zondax.ch/changelog',
-      metaImage: 'https://beryx.zondax.ch/changelog.png',
+      metaURL: 'https://beryx.io/changelog',
+      metaImage: 'https://beryx.io/changelog.png',
     },
     [PAGES.RESOURCES]: {
       ...defaultMeta,
       metaTitle: 'Resources: Find the most relevant resources for Filecoin | Beryx',
       metaDescription:
         'Find the most relevant resources for Filecoin like documentation, events and social media. Beryx Resources is a collection of resources that are relevant to the Filecoin network.',
+    },
+    [PAGES.TOKENS]: {
+      ...defaultMeta,
+      metaTitle: 'Tokens: Explore Filecoin ERC20 Tokens | Beryx',
+      metaDescription: 'Discover Filecoin ERC20 token details, including creation date, total supply, holders count, and more.',
+      metaURL: 'https://beryx.zondax.ch/tokens',
+      metaImage: 'https://beryx.zondax.ch/tokens.png',
     },
   }
 

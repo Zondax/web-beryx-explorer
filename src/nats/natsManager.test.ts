@@ -1,4 +1,4 @@
-import { act } from 'react-dom/test-utils'
+import { act } from 'react'
 
 import { advanceTimersByTimeHelper } from '@/helpers/jest'
 import { DEBOUNCE_TIME } from '@/store/data/mempool'
