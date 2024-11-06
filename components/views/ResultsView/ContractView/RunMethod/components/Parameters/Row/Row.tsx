@@ -18,7 +18,7 @@ export interface RowParams {
   actions?: ActionTypes[]
 }
 
-export const rowHeight = 32
+export const rowHeight = 34
 export const rowGap = 10
 export const commonRowStyles = {
   bgcolor: 'background.level2',

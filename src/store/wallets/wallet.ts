@@ -318,7 +318,7 @@ const useWalletStore = create<WalletState & WalletActions>()(
           }
 
           const decodeRes = await decodeInput(address, searchTypeResult[0])
-          if (decodeRes.objectType !== ObjectType.ADDRESS) {
+          if (decodeRes.objectMainType !== ObjectType.ADDRESS) {
             set(s => ({ ...s, isLoading: false, error: 'Invalid address' }))
             return
           }

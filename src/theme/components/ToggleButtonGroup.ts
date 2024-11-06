@@ -22,14 +22,27 @@ export const toggleButtonGroupStyles = (palette: Palette): Components => {
           },
         },
         grouped: {
+          border: `1px solid ${palette.border?.level0}`,
+          '&.Mui-disabled': {
+            border: `1px solid ${palette.border?.level2}`,
+          },
           '&:first-of-type': {
             borderRight: `1px solid ${palette.border?.level0}`,
+            '&.Mui-disabled': {
+              borderRight: `1px solid ${palette.border?.level2}`,
+            },
           },
           '&:not(:first-of-type)': {
             border: `1px solid ${palette.border?.level0}`,
+            '&.Mui-disabled': {
+              border: `1px solid ${palette.border?.level2}`,
+            },
           },
           '&:last-of-type': {
             borderLeft: `1px solid ${palette.border?.level0}`,
+            '&.Mui-disabled': {
+              borderLeft: `1px solid ${palette.border?.level2}`,
+            },
           },
         },
       },

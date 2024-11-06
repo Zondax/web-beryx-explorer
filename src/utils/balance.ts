@@ -4,7 +4,7 @@
 import BigNumber from 'bignumber.js'
 
 import { ValueFlow } from '@/api-client/beryx.types'
-import { chainDecimals } from '@/config/config'
+import { amountFormat, chainDecimals } from '@/config/config'
 import { NetworkType } from '@/config/networks'
 import { captureException } from '@sentry/nextjs'
 
@@ -150,4 +150,17 @@ export const getBalanceOverTime = (
   }
 
   return downsampleDataMinMax(filterLastItemPerDay(formattedBalances), MAX_VALUE_COUNT)
+}
+
+/**
+ * Formats a balance based on its value.
+ *
+ * @param balance - The balance to format.
+ * @returns - The formatted balance as a string.
+ */
+export const formatBalanceBasedOnValue = (balance: BigNumber): string => {
+  if (balance.isLessThan(new BigNumber(0.01))) {
+    return balance.toFormat(amountFormat)
+  }
+  return balance.dp(2, BigNumber.ROUND_DOWN).toFormat(2, amountFormat)
 }

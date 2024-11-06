@@ -1,13 +1,13 @@
 import { useRouter } from 'next/router'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { InputErrors } from '@/config/inputErrors'
 import { Networks } from '@/config/networks'
 import { ObjectType } from '@/routes/parsing'
 import { useLatestStore } from '@/store/data/latest'
 import { useSearchStore } from '@/store/data/search'
 import useAppSettingsStore from '@/store/ui/settings'
-import { startsWithFAndNumber } from '@/utils/inputDetection'
 import { Edit } from '@carbon/icons-react'
 import { Box, Divider, Grid, Unstable_Grid2 as Grid2, Typography, alpha, useTheme } from '@mui/material'
 
@@ -21,18 +21,16 @@ import NotFoundTile from '../../common/NotFoundTile'
  *
  * @returns The rendered JSX element
  */
-const NotFoundView: React.FC = () => {
+const NotFoundView = ({ description }: { description?: InputErrors }) => {
   const theme = useTheme()
   const router = useRouter()
   const { t } = useTranslation()
 
-  const urlSearchType = useSearchStore(s => s.searchType)
+  const searchType = useSearchStore(s => s.searchType)
   const searchValue: string = useSearchStore(s => s.searchInputValue)
   const network = useAppSettingsStore(s => s.network)
   const foundInAnotherNetwork = useSearchStore(s => s.searchResult.foundInAnotherNetwork)
   const { latestTipsets } = useLatestStore(s => s)
-
-  const [searchType, setSearchType] = useState<ObjectType | undefined>(urlSearchType)
 
   const anotherNetwork = network.uniqueId === Networks.mainnet.uniqueId ? Networks.calibration : Networks.mainnet
 
@@ -40,22 +38,12 @@ const NotFoundView: React.FC = () => {
   let errorDescription: React.ReactNode
 
   /**
-   * Sets the search type based on the search value
-   */
-  useEffect(() => {
-    if (searchValue) {
-      const isAddress = startsWithFAndNumber(searchValue)
-      setSearchType(isAddress ? ObjectType.ADDRESS : urlSearchType)
-    }
-  }, [searchValue, urlSearchType])
-
-  /**
    * Generates a URL for refreshing the current page.
    * This function constructs a URL for the current search parameters and navigates to it, effectively refreshing the page.
    * @returns
    */
   const getRefreshUrl = useCallback(() => {
-    router.push(`/search/fil/${network.name}/${searchType}/${searchValue}`)
+    router.push(`/fil/${network.name}/${searchType}/${searchValue}`)
   }, [router, network, searchType, searchValue])
 
   /**
@@ -73,8 +61,17 @@ const NotFoundView: React.FC = () => {
    * @returns
    */
   const handleSearchValue = useCallback(() => {
-    router.push(`/search/fil/${anotherNetwork.name}/${searchType}/${searchValue}`)
+    router.push(`/fil/${anotherNetwork.name}/${searchType}/${searchValue}`)
   }, [router, anotherNetwork, searchType, searchValue])
+
+  /**
+   * Navigates to the search value.
+   * This function uses the router to navigate to the result page.
+   * @returns
+   */
+  const handleSearchTestnetValue = useCallback(() => {
+    router.push(`/fil/${network.name}/${searchType}/t${searchValue.slice(1)}`)
+  }, [router, network, searchType, searchValue])
 
   // Define the type and description that will be showed
   switch (searchType) {
@@ -82,11 +79,23 @@ const NotFoundView: React.FC = () => {
     case ObjectType.TXS:
       formatedSearchType = searchType === ObjectType.TXS ? 'transaction' : searchType
       errorDescription = (
-        <Typography variant={'subtitle1'} sx={{ mb: '1rem', color: theme.palette.text.primary, maxWidth: '75ch', textAlign: 'center' }}>
-          {foundInAnotherNetwork
-            ? t(`Good news! We found this ${formatedSearchType} in Filecoin ${anotherNetwork.name} network`)
-            : t(`We couldn’t find the ${formatedSearchType} in any network`)}
-        </Typography>
+        <Box display={'flex'} flexDirection={{ xs: 'column' }} gap={'0.5rem'} alignItems={'center'} mb={'1rem'} sx={{ maxWidth: '75ch' }}>
+          {description ? (
+            <Typography variant={'subtitle1'} sx={{ mb: '1rem', color: theme.palette.text.primary, textAlign: 'center' }}>
+              {t(foundInAnotherNetwork ? `${description.split('.')[0]}.` : description)}
+            </Typography>
+          ) : null}
+          {foundInAnotherNetwork ? (
+            <Typography variant={'subtitle1'} sx={{ mb: '1rem', color: theme.palette.text.primary, textAlign: 'center' }}>
+              {t(`Good news! We found this ${formatedSearchType} in Filecoin ${anotherNetwork.name} network.`)}
+            </Typography>
+          ) : null}
+          {!description && !foundInAnotherNetwork ? (
+            <Typography variant={'subtitle1'} sx={{ mb: '1rem', color: theme.palette.text.primary, textAlign: 'center' }}>
+              {t(`We couldn't find the ${formatedSearchType} in any network`)}
+            </Typography>
+          ) : null}
+        </Box>
       )
       break
 
@@ -133,7 +142,21 @@ const NotFoundView: React.FC = () => {
                 formatedType: formatedSearchType,
               }}
               action={handleSearchValue}
-              key={'transaction-action-tile'}
+              key={'transaction-action-another-network'}
+            />
+          )
+        }
+        if (description === InputErrors.USE_TESTNET_ADDRESS) {
+          actions.push(
+            <NotFoundTile
+              transaction={{
+                network,
+                type: searchType,
+                value: `t${searchValue.slice(1)}`,
+                formatedType: formatedSearchType,
+              }}
+              action={handleSearchTestnetValue}
+              key={'transaction-action-testnet'}
             />
           )
         }

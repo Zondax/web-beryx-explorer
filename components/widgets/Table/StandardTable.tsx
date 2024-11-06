@@ -99,6 +99,8 @@ const StandardTable = ({
   onSortModelChange,
   collapse,
   selectedRowIndex,
+  toolbar,
+  getRowId,
 }: TableProps) => {
   const apiRef = useGridApiRef()
   const theme = useTheme()
@@ -117,6 +119,10 @@ const StandardTable = ({
       return []
     }
 
+    if (getRowId) {
+      return rowData
+    }
+
     return rowData
       .filter(elem => !elem.hide)
       .map((elem: { id?: string }, index: number) => {
@@ -125,7 +131,7 @@ const StandardTable = ({
         }
         return elem
       })
-  }, [rowData])
+  }, [rowData, getRowId])
 
   /**
    * @description Event handler for key up event on a cell
@@ -280,7 +286,7 @@ const StandardTable = ({
         display: 'flex',
         flexDirection: 'column',
         width: '100%',
-        height: fixedHeight ? '40rem' : '100%',
+        height: fixedHeight ?? '100%',
         borderRadius: noBorderRadius ? 0 : '12px',
         overflow: 'hidden',
       }}
@@ -298,7 +304,7 @@ const StandardTable = ({
           onRowClick={handleRowFocus}
           loading={loading}
           slots={{
-            toolbar: renderToolbar,
+            toolbar: toolbar ?? renderToolbar,
             loadingOverlay: LinearProgress,
             noResultsOverlay: renderNoResultsOverlay,
             noRowsOverlay: renderNoResultsOverlay,
@@ -320,6 +326,7 @@ const StandardTable = ({
           sortModel={sortModel ?? undefined}
           sortingMode={sortingMode ?? 'client'}
           onSortModelChange={onSortModelChange ?? undefined}
+          getRowId={getRowId}
         />
       </StyledBox>
     </Box>

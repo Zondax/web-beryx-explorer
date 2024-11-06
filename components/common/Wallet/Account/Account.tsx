@@ -49,13 +49,9 @@ const Account = () => {
   const handleSeeMore = useCallback(
     (e: React.MouseEvent, type: string) => {
       e.preventDefault()
-      return router.push(
-        `/search/fil/${network?.name.toLowerCase()}/${ObjectType.ADDRESS}/${filAddr}?type=${type}&tab=transactions`,
-        undefined,
-        {
-          shallow: true,
-        }
-      )
+      return router.push(`/fil/${network?.name.toLowerCase()}/${ObjectType.ADDRESS}/${filAddr}?type=${type}&tab=transactions`, undefined, {
+        shallow: true,
+      })
     },
     [router, network, filAddr]
   )

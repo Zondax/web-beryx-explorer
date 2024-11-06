@@ -6,7 +6,7 @@
 const commonContentSecurityPolicy = {
   'default-src': "'self' https://zondax.ch",
   'img-src':
-    "'self' https://zondax.ch https://zondax.dev https://opengraph.githubassets.com https://ethglobal.com https://static-production.npmjs.com https://user-images.githubusercontent.com blob: data: https://media.marker.io https://app.marker.io https://edge.marker.io https://storage.googleapis.com https://www.cookbook.dev https://github.githubassets.com https://plabs-assets.s3.us-west-1.amazonaws.com https://devconnect.org https://ethindia.co https://linktr.ee/filecoinio https://docs.filecoin.io https://filecoin.io https://avatars.githubusercontent.com https://social-images.lu.ma https://img.evbuc.com",
+    "'self' https://zondax.ch https://zondax.dev https://opengraph.githubassets.com https://static-production.npmjs.com https://user-images.githubusercontent.com blob: data: https://media.marker.io https://app.marker.io https://edge.marker.io https://storage.googleapis.com https://www.cookbook.dev https://github.githubassets.com https://plabs-assets.s3.us-west-1.amazonaws.com https://devconnect.org https://ethindia.co https://linktr.ee/filecoinio https://docs.filecoin.io https://filecoin.io https://avatars.githubusercontent.com https://social-images.lu.ma https://img.evbuc.com https://ethglobal.com",
   'media-src': "'self'  https://media.marker.io https://app.marker.io https://edge.marker.io",
   'script-src':
     "'self' 'unsafe-eval' 'unsafe-inline' https://challenges.cloudflare.com https://edge.marker.io https://app.marker.io https://api.zondax.ch https://www.google-analytics.com https://cdn.jsdelivr.net",
@@ -126,8 +126,13 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'img.evbuc.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'ethglobal.b-cdn.net',
+      },
     ],
   },
+  staticPageGenerationTimeout: 120,
   // eslint-disable-next-line require-await
   async headers() {
     return [
@@ -189,6 +194,47 @@ const nextConfig = {
         source: '/v1/mempool',
         destination: '/mempool',
         permanent: true,
+      },
+      {
+        source: '/search/fil/:network*/:type/:value*',
+        destination: '/fil/:network*/:type/:value*',
+        permanent: true,
+      },
+      {
+        source: '/leaderboard',
+        destination: '/contracts_leaderboard?tab=top-contracts',
+        permanent: true,
+        has: [
+          {
+            type: 'query',
+            key: 'tab',
+            value: 'top-contracts',
+          },
+        ],
+      },
+      {
+        source: '/leaderboard',
+        destination: '/contracts_leaderboard?tab=top-contracts-by-invokes',
+        permanent: true,
+        has: [
+          {
+            type: 'query',
+            key: 'tab',
+            value: 'top-contracts-by-invokes',
+          },
+        ],
+      },
+      {
+        source: '/leaderboard',
+        destination: '/contracts_leaderboard?tab=top-contracts-by-value-exchanged',
+        permanent: true,
+        has: [
+          {
+            type: 'query',
+            key: 'tab',
+            value: 'top-contracts-by-value-exchanged',
+          },
+        ],
       },
     ]
   },

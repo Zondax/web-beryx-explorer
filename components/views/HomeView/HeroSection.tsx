@@ -195,6 +195,7 @@ const HeroSection = () => {
           </Box>
           <Box width={'100%'} mb={'0.5rem'} maxWidth={'70ch'} sx={{ marginBottom: { xs: '2rem', md: '4rem' } }}>
             <Typography
+              data-testid="hero-section-title"
               variant="h1"
               component={'h1'}
               fontSize={{ xs: '1.75rem', sm: '2.5rem', md: '3rem' }}

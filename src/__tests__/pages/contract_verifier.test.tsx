@@ -50,7 +50,7 @@ beforeAll(async () => {
 describe('Contract Verifier Page', () => {
   it('renders without crashing', async () => {
     await renderWithProviders(<ContractVerifyController />)
-    const elements = screen.getAllByText('Contract Verifier')
+    const elements = screen.getAllByText('Verify your Smart Contract')
     expect(elements.length).toBeGreaterThan(0)
   })
 })

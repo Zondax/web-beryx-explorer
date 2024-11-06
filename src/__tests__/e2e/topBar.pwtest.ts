@@ -37,7 +37,7 @@ test.describe.parallel('TopBar', () => {
 
     // Expect to redirect to Latest Tipsets page
     await expect(page).toHaveURL(/\/recent_activity\?tab=tipsets$/)
-    expect(page.getByRole('button', { name: 'Recent Activity', exact: true })).toBeDefined()
+    expect(page.getByRole('button', { name: 'Latest Tipsets', exact: true })).toBeDefined()
   })
 
   test('Go to Recent Activity - Latest Transactions', async ({ page }) => {
@@ -53,24 +53,13 @@ test.describe.parallel('TopBar', () => {
 
   test('Go to Recent Activity - Latest Contracts', async ({ page }) => {
     await page.getByRole('button', { name: 'Recent Activity', exact: true }).click()
-    await page.getByRole('menuitem', { name: 'Contracts' }).click()
+    await page.getByRole('menuitem', { name: 'Contract Invokes' }).click()
     // Wait to the navigation finishes
     await page.waitForURL('**/recent_activity?tab=contracts', navigationOptions)
 
     // Expect to redirect to Latest Contracts page
     await expect(page).toHaveURL(/\/recent_activity\?tab=contracts$/)
     expect(page.getByRole('button', { name: 'Latest Contracts Invokes', exact: true })).toBeDefined()
-  })
-
-  test('Go to Insights - Rich List', async ({ page }) => {
-    await page.getByRole('button', { name: 'Insights', exact: true }).click()
-    await page.getByRole('menuitem', { name: 'Rich List' }).click()
-    // Wait to the navigation finishes
-    await page.waitForURL('**/leaderboard?tab=rich-list', navigationOptions)
-
-    // Expect to redirect to Recent Activity page
-    await expect(page).toHaveURL(/\/leaderboard\?tab=rich-list$/)
-    expect(page.getByRole('tab', { name: 'Rich List' })).toBeDefined()
   })
 
   test('Go to Insights - Gas Stats', async ({ page }) => {

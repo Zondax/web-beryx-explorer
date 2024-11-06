@@ -75,7 +75,7 @@ const customJestConfig = {
   },
   testEnvironment: 'jest-environment-jsdom',
   testEnvironmentOptions: {
-    url: 'https://beryx.zondax.ch/',
+    url: 'https://beryx.io/',
   },
   roots: ['./src/', './components/'],
   setupFilesAfterEnv: ['@testing-library/jest-dom', '<rootDir>/jest.setup.js'],

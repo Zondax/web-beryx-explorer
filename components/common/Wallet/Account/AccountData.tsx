@@ -10,8 +10,8 @@ import { hoverEffect } from '@/theme/hoverEffect'
 import { WarningAltFilled } from '@carbon/icons-react'
 import { Box, Button, Skeleton, Tooltip, Typography, useTheme } from '@mui/material'
 
+import BetaLabel from 'components/common/BetaLabel/BetaLabel'
 import { Filecoin } from 'components/common/Icons'
-import { BetaBox } from 'components/views/ResultsView/ContractView/RunMethod/components/Parameters/Parameters'
 
 import BeryxLink from '../../BeryxLink'
 
@@ -102,7 +102,7 @@ const AccountData = () => {
           }}
         >
           <Box sx={{ display: 'flex', flexShrink: 0, alignItems: 'center' }}>
-            <BetaBox />
+            <BetaLabel />
           </Box>
           <Typography variant="body2" color={theme.palette.text.secondary}>
             {t('Ledger integration is in beta. Please report any issues you encounter using the feedback tool from the top bar.')}

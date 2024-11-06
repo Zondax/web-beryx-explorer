@@ -1,5 +1,5 @@
 import { FormikProps } from 'formik'
-import { act } from 'react-dom/test-utils'
+import { act } from 'react'
 
 import { Networks } from '@/config/networks'
 import { hookHelper } from '@/helpers/jest'

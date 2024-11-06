@@ -68,7 +68,7 @@ const InteractView: React.FC = () => {
     if (inputValue?.startsWith('0x')) {
       try {
         const filAddr = FilEthAddress.fromEthAddress(NetworkPrefix.Mainnet, inputValue)
-        router.push(`/search/fil/${network.name}/address/${filAddr}?tab=interact`, undefined, {
+        router.push(`/fil/${network.name}/address/${filAddr}?tab=interact`, undefined, {
           shallow: true,
         })
         return
@@ -80,7 +80,7 @@ const InteractView: React.FC = () => {
 
     try {
       FilEthAddress.fromString(inputValue).toEthAddressHex(true)
-      router.push(`/search/fil/${network.name}/address/${inputValue}?tab=interact`, undefined, {
+      router.push(`/fil/${network.name}/address/${inputValue}?tab=interact`, undefined, {
         shallow: true,
       })
     } catch {

@@ -11,12 +11,22 @@ import {
   ContractVerificationList,
   ContractVerifiedData,
   ContractsProps,
+  EventDetails,
+  Events,
   GasUsedProps,
   GlobalBaseFee,
+  MultisigAddressInfo,
+  MultisigState,
+  Proposal,
   SearchType,
   ServiceConfig,
   StatsParams,
   Tipset,
+  TokenHolding,
+  TokenInfo,
+  TopValueExchanged,
+  ValueExchangeActorType,
+  ValueExchangeDirection,
   ValueExchangedByTipset,
   ValueFlow,
 } from './beryx.types'
@@ -339,6 +349,99 @@ export const fetchEvmTransactionsByBlock = async (
 //////////////////////////////////////////////////////////////////////////////
 
 /**
+ * @description Function to get the tipset events.
+ * @param height - The height string.
+ * @param network - The network type.
+ * @returns The response data.
+ */
+export const fetchEventsByHeight = async (
+  height: number,
+  network: NetworkType,
+  queryParams?: { [key: string]: string | undefined }
+): Promise<{ events: Events[] }> => {
+  const restAPI = await authenticatedREST()
+  const myUrl = `${getBeryxUrl(network.chainSlug, network.name).data}/events/height/${height}`
+  const res = await restAPI.get(myUrl, { params: { ...queryParams } })
+  return res.data
+}
+
+/**
+ * @description Function to get the address transactions.
+ * @param address - The input string.
+ * @param network - The network type.
+ * @param methodType
+ * @returns The response data.
+ */
+export const fetchEventsByAddress = async (
+  address: string,
+  network: NetworkType,
+  queryParams?: { [key: string]: string | undefined }
+): Promise<{ events: Events[] }> => {
+  const restAPI = await authenticatedREST()
+  const myUrl = `${getBeryxUrl(network.chainSlug, network.name).data}/events/address/${address}`
+  const res = await restAPI.get(myUrl, { params: { ...queryParams } })
+  return res.data
+}
+
+/**
+ * @description Function to get the transactions.
+ * @param txHash - The input string.
+ * @param network - The network type.
+ * @returns The response data.
+ */
+export const fetchEventsByHash = async (
+  txCid: string,
+  network: NetworkType,
+  queryParams?: { [key: string]: string | undefined }
+): Promise<{ events: Events[] }> => {
+  const restAPI = await authenticatedREST()
+  const myUrl = `${getBeryxUrl(network.chainSlug, network.name).data}/events/tx-cid/${txCid}`
+  const res = await restAPI.get(myUrl, { params: { ...queryParams } })
+  return res.data
+}
+
+/**
+ * @description Function to get the event details.
+ * @param input - The input string.
+ * @param network - The network type.
+ * @returns The response data.
+ */
+export const fetchEventDetails = async (id: string, network: NetworkType): Promise<EventDetails> => {
+  const restAPI = await authenticatedREST()
+  const myUrl = `${getBeryxUrl(network.chainSlug, network.name).data}/events/id/${id}`
+  const res = await restAPI.get(myUrl)
+  return res.data
+}
+
+/**
+ * @description Function to get the event details by selector.
+ * @param input - The input string.
+ * @param network - The network type.
+ * @returns The response data.
+ */
+export const fetchEventsBySelector = async (
+  selectorId: string,
+  network: NetworkType,
+  queryParams?: { [key: string]: string | undefined }
+): Promise<{ events: Events[]; total_items: number; next_cursor: string }> => {
+  const restAPI = await authenticatedREST()
+  const myUrl = `${getBeryxUrl(network.chainSlug, network.name).data}/events/selector/${selectorId}`
+  const res = await restAPI.get(myUrl, { params: { ...queryParams } })
+  return res.data
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+/**
  * @description Function to get the account information.
  * @param address - The input string.
  * @param network - The network type.
@@ -642,10 +745,10 @@ export const fetchEstimateFees = async (network: NetworkType, method: string): P
  * @param network - The network type.
  * @returns The response data.
  */
-export const fetchRichList = async (network: NetworkType) => {
+export const fetchRichList = async (network: NetworkType, queryParams?: { [key: string]: string | undefined }) => {
   const restAPI = await authenticatedREST()
   const myUrl = `${getBeryxUrl(network.chainSlug, network.name).stats}/rich-list/100`
-  const res = await restAPI.get(myUrl)
+  const res = await restAPI.get(myUrl, { params: queryParams })
   return res.data
 }
 
@@ -753,6 +856,24 @@ export const fetchValueExchangeAtLatest = async (
   return res.data
 }
 
+/**
+ * @description Function to get the top accounts by unique users.
+ * @param network - The network type.
+ * @returns The response data.
+ */
+export const fetchTopAccountsByValueExchanged = async (
+  network: NetworkType,
+  direction: ValueExchangeDirection,
+  actorType: ValueExchangeActorType
+): Promise<{ results: TopValueExchanged[] }> => {
+  const restAPI = await authenticatedREST()
+  let path = direction === 'all' ? '' : `/${direction}`
+  path += `/${actorType}`
+  const myUrl = `${getBeryxUrl(network.chainSlug, network.name).stats}/value-exchanged/top${path}/50`
+  const res = await restAPI.get(myUrl)
+  return res.data
+}
+
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -811,4 +932,102 @@ export const fetchConfig = async (network: NetworkType): Promise<ServiceConfig> 
   const myUrl = `${getBeryxUrl(network.chainSlug, network.name).data}/dynamic-config`
   const res = await restAPI.get(myUrl)
   return res.data
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @description Function to get multisig address state
+ * @returns The response data.
+ */
+export const fetchMultisigAddressState = async (network: NetworkType, address: string): Promise<MultisigState> => {
+  const restAPI = await authenticatedREST()
+  const myUrl = `${getBeryxUrl(network.chainSlug, network.name).data}/multisig/address/${address}/state`
+  const res = await restAPI.get(myUrl)
+  return res.data
+}
+
+/**
+ * @description Function to get the trace of the multisig address state
+ * @returns The response data.
+ */
+export const fetchMultisigAddressStateTraces = async (
+  network: NetworkType,
+  address: string,
+  queryParams?: { [key: string]: string | undefined }
+): Promise<{ next_cursor: string; total_items: number; traces: MultisigAddressInfo[] }> => {
+  const restAPI = await authenticatedREST()
+  const myUrl = `${getBeryxUrl(network.chainSlug, network.name).data}/multisig/address/${address}/state/traces`
+  const res = await restAPI.get(myUrl, { params: { limit: '100', ...queryParams } })
+  return res.data
+}
+
+/**
+ * @description Function to get multisig address info
+ * @returns The response data.
+ */
+export const fetchMultisigAddressProposals = async (
+  network: NetworkType,
+  address: string,
+  queryParams?: { [key: string]: string | undefined }
+): Promise<{ proposals: Proposal[]; next_cursor: string; total_items: number }> => {
+  const restAPI = await authenticatedREST()
+  const myUrl = `${getBeryxUrl(network.chainSlug, network.name).data}/multisig/address/${address}/proposals`
+  const res = await restAPI.get(myUrl, { params: { limit: '100', ...queryParams } })
+  return res.data
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Fetches verification status for a given input and network.
+ * @param network - The network value.
+ * @returns - A promise that resolves to the verification status or 'error'.
+ */
+export const fetchTokens = async (
+  network: NetworkType,
+  queryParams?: { [key: string]: string | undefined }
+): Promise<{ tickers: TokenInfo[]; total_items: number; next_cursor: string }> => {
+  const restAPI = await authenticatedREST()
+  const myUrl = `${getBeryxUrl(network.chainSlug, network.name).data}/erc20/contracts`
+  const res = await restAPI.get(myUrl, { params: { ...queryParams } })
+
+  return res.data
+}
+
+/**
+ * Fetches a list of all ERC20 tokens that an address holds.
+ * @param network - The network from which to fetch the tokens.
+ * @param address - The address to fetch the tokens for.
+ * @param queryParams - Optional query parameters to refine the search.
+ * @returns - A promise that resolves to an array of tokens or throws an error if the fetch fails.
+ */
+export const fetchTokenHoldings = async (
+  network: NetworkType,
+  address: string,
+  queryParams?: { [key: string]: string | undefined }
+): Promise<{ tokenHoldings: TokenHolding[] }> => {
+  const restAPI = await authenticatedREST()
+  const myUrl = `${getBeryxUrl(network.chainSlug, network.name).stats}/balance/erc20/all/${address}/latest`
+  const res = await restAPI.get(myUrl, { params: { ...queryParams } })
+
+  return { tokenHoldings: res.data.results }
 }

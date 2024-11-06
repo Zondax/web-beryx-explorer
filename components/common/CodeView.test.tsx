@@ -1,4 +1,4 @@
-import { act } from 'react-dom/test-utils'
+import { act } from 'react'
 
 import { renderWithProviders } from '@/helpers/jest-react'
 import '@testing-library/jest-dom'
@@ -14,7 +14,7 @@ describe('CodeView', () => {
   // Test Case: Check if CodeView component renders without crashing
   it('renders without crashing', async () => {
     // Render CodeView Component within Provider and ThemeProvider context
-    await renderWithProviders(<CodeView content={{ search_id: 'XSXSSXS' }} />)
+    await renderWithProviders(<CodeView content={{ search_id: 'XSXSSXS' }} type={'transaction'} />)
     // Check button with testId='viewTransactionButton' is in the document
     expect(screen.getByTestId('viewTransactionButton')).toBeInTheDocument()
 

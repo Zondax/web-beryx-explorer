@@ -92,14 +92,10 @@ const Interact = () => {
   /* Otherwise - return Two Panel grid */
   return (
     <TwoPanelHorizontal sizes={[60, 40]} minSizes={[600, 300]}>
-      <Grid container height={'100%'} width={'100%'} sx={{ overflowY: 'auto', ...horizontalFadingBorder(theme) }}>
+      <Grid container height={'100%'} width={'100%'} sx={{ overflowY: 'auto', ...horizontalFadingBorder(theme, 'right') }}>
         <RunMethod abi={contractCode.functions} ETHAddress={ethAddress} status={decodingStatus} />
       </Grid>
-      <Grid
-        container
-        height={'100%'}
-        sx={{ border: `1px solid ${theme.palette.border?.level0}`, borderRadius: '12px', overflow: 'hidden' }}
-      >
+      <Grid container height={'100%'} sx={{ borderRadius: '12px', overflow: 'hidden' }}>
         <Panel
           contentToDownload={''}
           initialTab={response ? '0' : '1'}

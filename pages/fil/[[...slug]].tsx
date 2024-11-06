@@ -2,8 +2,11 @@ import { NextPageContext } from 'next'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
+import { fetchSearchType } from '@/api-client/beryx'
 import { getMetadataDescriptionForItem, getPageMetaData, metaTags } from '@/components/metaData'
 import { InputType } from '@/config/config'
+import { InputErrors } from '@/config/inputErrors'
+import { Networks } from '@/config/networks'
 import { useSearchType } from '@/data/beryx'
 import { subscribeNatsSync } from '@/nats/useSubscribeNats'
 import { searchValue } from '@/refactor/search'
@@ -16,6 +19,8 @@ import useAppSettingsStore from '@/store/ui/settings'
 import { decodeInput } from '@/utils/inputDetection'
 import { truncateMiddleOfString } from '@/utils/text'
 import { captureException } from '@sentry/nextjs'
+
+import NotFoundView from 'components/views/NotFoundView'
 
 import Layout from '../../components/Layout/Layout'
 import { PAGES } from '../../components/Layout/components/Sidebar'
@@ -44,6 +49,8 @@ SearchController.getInitialProps = (context: NextPageContext) => {
  */
 function SearchController(props: { slug: string | string[] | undefined }) {
   const { network, setNetwork } = useAppSettingsStore(state => ({ network: state.network, setNetwork: state.setNetwork }))
+  const [notFound, setNotFound] = useState(false)
+  const [error, setError] = useState<InputErrors | undefined>(undefined)
 
   const router = useRouter()
   const [parsedPath, setParsedPath] = useState<SearchPath | undefined>(undefined)
@@ -60,6 +67,7 @@ function SearchController(props: { slug: string | string[] | undefined }) {
     setSearchInputNetwork,
     setSearchType,
     setSearchInputType,
+    setSearchItemType,
   } = useSearchStore()
 
   const { asPath } = router
@@ -79,9 +87,9 @@ function SearchController(props: { slug: string | string[] | undefined }) {
   // If slug properties exists and slug is an array, metadata is updated.
   if (props.slug && Array.isArray(props.slug)) {
     let title = ''
-    const input = truncateMiddleOfString(props.slug[3], 16)
+    const input = truncateMiddleOfString(props.slug[2], 16)
 
-    switch (props.slug[2].toLowerCase()) {
+    switch (props.slug[1].toLowerCase()) {
       case 'address':
         title = 'Address'
         break
@@ -106,14 +114,14 @@ function SearchController(props: { slug: string | string[] | undefined }) {
         break
     }
 
-    const description = getMetadataDescriptionForItem(props.slug[2].toLowerCase(), props.slug[3], props.slug[1])
+    const description = getMetadataDescriptionForItem(props.slug[1].toLowerCase(), props.slug[2], props.slug[0])
 
     metaData = {
-      metaTitle: `${title} ${input} in Filecoin ${props.slug[1]} | Beryx`,
+      metaTitle: `${title} ${input} in Filecoin ${props.slug[0]} | Beryx`,
       metaDescription: description,
-      metaImage: `https://beryx.zondax.ch/api/og?chain=${props.slug[0]}&network=${props.slug[1]}&inputType=${props.slug[2]}&input=${props.slug[3]}`,
-      metaURL: `https://beryx.zondax.ch/search/${props.slug[0]}/${props.slug[1]}/${props.slug[2]}/${props.slug[3]}`,
-      canonicalURL: `https://beryx.zondax.ch/search/${props.slug[0]}/${props.slug[1]}/${props.slug[2]}/${props.slug[3]}`,
+      metaImage: `https://beryx.io/api/og?chain=fil&network=${props.slug[0]}&inputType=${props.slug[1]}&input=${props.slug[2]}`,
+      metaURL: `https://beryx.io/fil/${props.slug[0]}/${props.slug[1]}/${props.slug[2]}`,
+      canonicalURL: `https://beryx.io/fil/${props.slug[0]}/${props.slug[1]}/${props.slug[2]}`,
     }
   }
 
@@ -136,19 +144,16 @@ function SearchController(props: { slug: string | string[] | undefined }) {
       // Clean Code tabs
       cleanOpenedFiles()
 
-      let slugArray = router.query?.slug
-      if (slugArray === undefined || !Array.isArray(router.query.slug)) {
-        slugArray = currentPath?.replace('/search/', '').split('/')
-      }
+      const slugArray = router.query?.slug
 
       if (!Array.isArray(slugArray)) {
         return
       }
 
       try {
-        setParsedPath(parseSearchUrl(slugArray))
+        setParsedPath(parseSearchUrl(slugArray, 'fil'))
       } catch (error) {
-        router.push('/404')
+        setNotFound(true)
         return
       }
     }
@@ -169,6 +174,13 @@ function SearchController(props: { slug: string | string[] | undefined }) {
   // end up being modified from the store when we press on our custom Link component.
   useEffect(() => {
     if (!parsedPath) {
+      return
+    }
+    setError(undefined)
+    setNotFound(false)
+
+    if (parsedPath?.network && parsedPath?.network?.uniqueId !== network.uniqueId) {
+      setNetwork(parsedPath.network)
       return
     }
 
@@ -200,26 +212,46 @@ function SearchController(props: { slug: string | string[] | undefined }) {
   async function handleInputDecodingAndDispatch() {
     let input = parsedPath?.arguments
     let inputType: InputType | undefined
-
     if (!input || input === '' || !parsedPath?.objectType) {
-      router.push('/404')
+      setNotFound(true)
       return
-    }
-
-    if (parsedPath?.network) {
-      setNetwork(parsedPath.network)
     }
 
     if (searchTypeResult && searchTypeResult.length !== 0) {
       const decodedInput = await decodeInput(input ?? '', searchTypeResult[0])
+
       if (decodedInput.error) {
+        const isInAnotherNetwork = await fetchSearchType(
+          input,
+          network.uniqueId === Networks.mainnet.uniqueId ? Networks.calibration : Networks.mainnet
+        )
+        const decodedInputInAnotherNetwork = await decodeInput(input ?? '', isInAnotherNetwork[0])
+        if (!decodedInputInAnotherNetwork.error) {
+          setFoundInAnotherNetwork(true)
+        }
+        setSearchInputValue(input)
+        setSearchInputNetwork(network)
+        setSearchType(parsedPath?.objectType)
+        setNotFound(true)
+        setError(decodedInput.error)
         return
       }
       if (decodedInput.ethForm) {
         setEthAddress(decodedInput.ethForm)
       }
-      input = (decodedInput.filForm ?? '').toLowerCase()
+      if (decodedInput.objectType === ObjectType.ERC20) {
+        setSearchItemType(ObjectType.ERC20)
+      }
+
+      input = decodedInput.filForm ? decodedInput.filForm.toLowerCase() : decodedInput.ethForm ?? ''
       inputType = decodedInput.inputType
+    } else {
+      setSearchInputValue(input)
+      setSearchInputNetwork(network)
+      setSearchType(parsedPath?.objectType)
+      setNotFound(true)
+      setError(InputErrors.NOT_FOUND)
+      return
     }
 
     addItemToHistory({
@@ -237,15 +269,14 @@ function SearchController(props: { slug: string | string[] | undefined }) {
     setSearchInputType(inputType)
 
     try {
-      const { error, foundAnotherNetwork } = await searchValue(network, input, inputType, parsedPath?.objectType)
+      const { error } = await searchValue(network, input, inputType, parsedPath?.objectType)
+
       if (error) {
-        if (foundAnotherNetwork) {
-          setFoundInAnotherNetwork(true)
-        }
-        await router.push('/404')
+        setNotFound(true)
       }
     } catch (err) {
       captureException(err)
+      setNotFound(true)
       throw err
     }
   }
@@ -258,7 +289,7 @@ function SearchController(props: { slug: string | string[] | undefined }) {
         key={`Results view for ${parsedPath?.network}/${parsedPath?.objectType}/${parsedPath?.arguments} `}
         activeTab={PAGES.EXPLORE}
       >
-        <GeneralView />
+        {notFound ? <NotFoundView description={error} /> : <GeneralView />}
       </Layout>
     </>
   )

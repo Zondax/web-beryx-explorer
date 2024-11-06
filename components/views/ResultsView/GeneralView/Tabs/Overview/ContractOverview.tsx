@@ -5,9 +5,12 @@ import { useTranslation } from 'react-i18next'
 import { amountFormat } from '@/config/config'
 import { ObjectType } from '@/routes/parsing'
 import { useSearchStore } from '@/store/data/search'
+import { formatBalanceBasedOnValue } from '@/utils/balance'
 import { newDateFormat } from '@/utils/dates'
 import { formatBalance } from '@/utils/format'
 import { Tooltip, Typography, useMediaQuery, useTheme } from '@mui/material'
+
+import TokenHoldings from 'components/common/TokenHoldings'
 
 import { ActorTypeLabel, BeryxLink } from '../../../../../common'
 import FilecoinIcon from '../../../../../common/Icons/Filecoin'
@@ -41,13 +44,8 @@ const ContractOverview = () => {
    */
   useEffect(() => {
     if (searchResultJson?.balances) {
-      const balance = BigNumber(formatBalance(searchResultJson?.balances))
-
-      if (balance.isLessThan(BigNumber(0.01))) {
-        setBalance(balance.toFormat(amountFormat))
-      } else {
-        setBalance(balance.dp(2, BigNumber.ROUND_DOWN).toFormat(2, amountFormat))
-      }
+      const rawBalance = BigNumber(formatBalance(searchResultJson?.balances))
+      setBalance(formatBalanceBasedOnValue(rawBalance))
     }
   }, [searchResultJson])
 
@@ -113,7 +111,8 @@ const ContractOverview = () => {
           icon={undefined}
         />
       ) : null}
-      {balance ? (
+
+      {balance !== undefined ? (
         <OverviewItem
           label={`${t('Balance')} (FIL)`}
           content={
@@ -124,6 +123,14 @@ const ContractOverview = () => {
             </Tooltip>
           }
           icon={<FilecoinIcon size={16} />}
+        />
+      ) : null}
+
+      {searchResultJson?.tokenHoldings ? (
+        <OverviewItem
+          label={t('Token Holdings')}
+          content={<TokenHoldings tokenHoldings={searchResultJson?.tokenHoldings} />}
+          icon={undefined}
         />
       ) : null}
 
@@ -162,7 +169,7 @@ const ContractOverview = () => {
           description={t(
             'Represents the overall count of transactions associated with the contract. This count excludes internal messages.'
           )}
-          content={totalCount.toString()}
+          content={BigNumber(totalCount).toFormat(0, amountFormat)}
           icon={undefined}
         />
       ) : null}

@@ -8,11 +8,11 @@ import { Transaction } from '@zondax/beryx/dist/filecoin/api/types'
 import ContractActions from '../ContractActions'
 
 /**
- * @ItemStatsProps
+ * @ItemActionsProps
  * @type
  * @property searchItemType - The type of the search item
  */
-interface ItemStatsProps {
+interface ItemActionsProps {
   searchItemType: ObjectType
 }
 
@@ -23,7 +23,7 @@ interface ItemStatsProps {
  *
  * @returns - The ItemStats component or null if the search item type is not a contract.
  */
-const ItemStats = ({ searchItemType }: ItemStatsProps): JSX.Element | null => {
+const ItemActions = ({ searchItemType }: ItemActionsProps): JSX.Element | null => {
   const theme = useTheme()
   const searchResultTxs = useSearchStore(s => s.searchResult.transactions)
   const [_, setFeeTx] = useState<Transaction | undefined>(undefined)
@@ -34,15 +34,15 @@ const ItemStats = ({ searchItemType }: ItemStatsProps): JSX.Element | null => {
     setFeeTx(feeTx)
   }, [searchResultTxs])
 
-  if (searchItemType !== ObjectType.CONTRACT) {
-    return null
+  if (searchItemType === ObjectType.CONTRACT || searchItemType === ObjectType.ERC20) {
+    return (
+      <Grid container width={upMd ? 'unset' : '100%'} alignItems={'center'} sx={{ gap: '1.5rem' }}>
+        <ContractActions />
+      </Grid>
+    )
   }
 
-  return (
-    <Grid container width={upMd ? 'unset' : '100%'} alignItems={'center'} sx={{ gap: '1.5rem' }}>
-      <ContractActions />
-    </Grid>
-  )
+  return null
 }
 
-export default ItemStats
+export default ItemActions

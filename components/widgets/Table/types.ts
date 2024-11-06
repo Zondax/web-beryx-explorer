@@ -1,3 +1,4 @@
+import { GridRowIdGetter } from '@/components/muigrid/types'
 import { TABLE_TYPE } from '@/config/tables'
 import { GridCallbackDetails, GridFeatureMode, GridSortModel } from '@mui/x-data-grid-pro'
 
@@ -23,7 +24,7 @@ export interface TableProps {
   tableType: TABLE_TYPE
   onRowsScrollEnd?: () => void
   handleRowFocusChange?: (row: any) => void
-  fixedHeight?: boolean
+  fixedHeight?: string
   hideBorder?: boolean
   noBorderRadius?: boolean
   getRowClassName?: (row: any) => string
@@ -51,4 +52,8 @@ export interface TableProps {
   getDetailPanelHeight?: (row: any) => number | 'auto'
   getDetailPanelContent?: (row: any) => JSX.Element
   selectedRowIndex?: number
+  getRowId?: GridRowIdGetter
+  toolbar?: () => JSX.Element
+  detailPanelExpandedRowIds?: any
+  onDetailPanelExpandedRowIdsChange?: any
 }

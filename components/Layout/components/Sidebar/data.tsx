@@ -26,6 +26,7 @@ export enum PAGES {
   HOME = 'Home',
   EXPLORE = 'Explore',
   LEADERBOARD = 'Leaderboard',
+  CONTRACTS_LEADERBOARD = 'Contracts Leaderboard',
   RECENT_ACTIVITY = 'Recent Activity',
   DASHBOARD = 'Dashboard',
   MEMPOOL = 'Mempool',
@@ -40,6 +41,7 @@ export enum PAGES {
   TERMS_OF_SERVICE = 'Terms Of Service',
   CHANGELOG = 'Changelog',
   RESOURCES = 'Resources',
+  TOKENS = 'Tokens',
 }
 
 /**

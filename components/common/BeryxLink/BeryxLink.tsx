@@ -74,20 +74,9 @@ const BeryxLink = ({
     return null
   }
 
-  if (
-    inputType &&
-    inputType === ObjectType.ADDRESS &&
-    network &&
-    network.isTestnet &&
-    typeof value === 'string' &&
-    value.charAt(0) === 'f'
-  ) {
-    value = 't' + value.slice(1)
-  }
-
   const ActiveLink = (
     <Tooltip disableHoverListener={disableTooltip} title={tooltipText ?? value} arrow disableInteractive>
-      <Link href={`/search/fil/${network?.name}/${inputType}/${value}`} data-testid={'beryx-active-link'}>
+      <Link href={`/fil/${network?.name}/${inputType}/${value}`} data-testid={'beryx-active-link'}>
         <Typography
           variant="captionMono"
           component={'p'}

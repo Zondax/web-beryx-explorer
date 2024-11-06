@@ -21,12 +21,13 @@ export enum dataType {
  */
 export enum InputType {
   FILECOIN_ADDRESS = 'filecoin_address',
+  FILECOIN_EVENT = 'filecoin_event',
   ETHEREUM_ID = 'ethereum_id',
   HEIGHT = 'height',
   HASH = 'hash',
   UNKNOWN = 'unknown',
 }
-export type BeryxInputTypes = 'address' | 'height' | 'hash' | 'block-cid'
+export type BeryxInputTypes = 'address' | 'height' | 'hash' | 'block-cid' | 'event'
 
 /**
  * @enum inputType
@@ -34,10 +35,12 @@ export type BeryxInputTypes = 'address' | 'height' | 'hash' | 'block-cid'
  */
 export const beryxInputType: { [key in ObjectType]: BeryxInputTypes } = {
   contract: 'address',
+  erc20: 'address',
   address: 'address',
   tipset: 'height',
   txs: 'hash',
   'block-cid': 'block-cid',
+  event: 'event',
   unknown: 'hash',
 }
 
@@ -74,7 +77,7 @@ export const cookieAuthTokenPreName = 'beryxAuthTokenPre'
 export const amountFormat = {
   prefix: '',
   decimalSeparator: '.',
-  groupSeparator: ' ',
+  groupSeparator: ',',
   groupSize: 3,
   secondaryGroupSize: 0,
   fractionGroupSeparator: ' ',

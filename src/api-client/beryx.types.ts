@@ -168,7 +168,7 @@ export interface SearchType {
   chain: 'fil'
   network: (typeof networksName)[number]
   type: 'cid' | 'height' | 'address' | 'eth_address' | 'eth_hash'
-  sub_type?: 'tx_cid' | 'tipset_cid' | 'block_cid'
+  sub_type?: 'tx_cid' | 'tipset_cid' | 'block_cid' | 'eth_event_hash' | 'eth_tx_hash'
   indexed: boolean
 }
 
@@ -278,4 +278,153 @@ export interface ValueExchangedByTipset {
   inbound: string
   outbound: string
   height: number
+}
+
+/**
+ * Represents the direction of a value exchange transaction.
+ * - 'inbound': Indicates transactions where value is received.
+ * - 'outbound': Indicates transactions where value is sent.
+ * - 'all': Indicates all transactions, regardless of direction.
+ */
+export type ValueExchangeDirection = 'inbound' | 'outbound' | 'all'
+
+/**
+ * Represents the type of actor involved in a value exchange transaction.
+ * - 'evm': Indicates transactions involving an Ethereum Virtual Machine (EVM) actor.
+ * - 'all': Indicates all types of actors, regardless of type.
+ */
+export type ValueExchangeActorType = 'evm' | 'all'
+
+/**
+ * Represents the top value exchanged.
+ */
+export interface TopValueExchanged {
+  height: number
+  unified_account: string
+  actor_type?: string
+  inbound?: number
+  outbound?: number
+  exchanged?: number
+}
+
+/**
+ * Represents the events .
+ */
+export interface Events {
+  height: number
+  tipset_cid: string
+  id: string
+  tx_cid: string
+  log_index: number
+  emitter: string
+  type: string
+  selector_id: string
+  selector_sig: string
+  reverted: boolean
+  canonical: boolean
+  search_id: string
+}
+
+/**
+ * Represents the evm event details.
+ */
+export interface EvmEventDetails {
+  data: string
+  topics: string[]
+}
+
+/**
+ * Represents the evm event details.
+ */
+export interface NativeEventDetails {
+  [key: string]: {
+    flags: number
+    key: string
+    value: string
+  }
+}
+
+/**
+ * Represents the event details.
+ */
+export interface EventDetails extends Events {
+  metadata: EvmEventDetails | NativeEventDetails
+}
+
+/**
+ * Represents the proposal.
+ */
+export interface Proposal {
+  multisig_address: string
+  proposal_id: number
+  height: number
+  tx_cid: string
+  signer: string
+  action_type: string
+  value: { [key: string]: string }
+  create_timestamp: string
+  id: string
+  tx_type_to_executed: string
+}
+
+/**
+ * Represents the LockedBalance.
+ */
+export interface LockedBalance {
+  amount: string
+  lock_epoch: number
+  unlock_epoch: number
+}
+
+/**
+ * Represents the MultisigState.
+ */
+export interface MultisigState {
+  signers: string[]
+  num_approvals_threshold: number
+  locked_balance: LockedBalance
+  last_tipset_processed: number
+}
+
+/**
+ * Represents the MultisigAddressInfo.
+ */
+export interface MultisigAddressInfo {
+  signers: string
+  locked_balance: LockedBalance
+  last_tipset_processed: number
+  id: string
+  multisig_address: string
+  tx_cid: string
+  action_type: string
+  height: number
+  create_timestamp: string
+  value: { [key: string]: string }
+}
+
+/**
+ * Represents the ERC20 tokens.
+ * @interface
+ */
+export interface TokenInfo {
+  ticker: string
+  contract_address: string
+  description: string
+  decimals: number
+  total_supply: number
+  creation_date: string
+  holders_count: number
+}
+
+/**
+ * Represents the balance of an account for a token.
+ * @interface
+ */
+export interface TokenHolding {
+  balance: string
+  ticker: string
+  contract_address: string
+  height: number
+  decimals: number
+  description: string
 }

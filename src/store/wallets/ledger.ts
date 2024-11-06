@@ -1,8 +1,6 @@
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
 import { Signature as EthersSignature, Transaction } from 'ethers'
-// @ts-ignore
-import { base64 } from 'iso-base/rfc4648'
 import { Address, Message, RPC, Signature } from 'iso-filecoin'
 import { IAddress } from 'iso-filecoin/address'
 import { create } from 'zustand'
@@ -18,7 +16,8 @@ import { encode } from '@ipld/dag-cbor'
 import Transport from '@ledgerhq/hw-transport'
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
 import { captureException } from '@sentry/nextjs'
-import { FilEthAddress, NetworkPrefix } from '@zondax/izari-filecoin'
+import { FilEthAddress } from '@zondax/izari-filecoin/address'
+import { NetworkPrefix } from '@zondax/izari-filecoin/artifacts'
 import FilecoinApp from '@zondax/ledger-filecoin'
 
 import { RunMethodFormValues, availableUnits } from '../../../components/views/ResultsView/ContractView/RunMethod/config'
@@ -35,6 +34,7 @@ export enum LedgerWalletError {
   DEVICE_LOCKED = 'Device Locked',
   APP_NOT_OPENED = 'App not opened',
   WRONG_APP = 'Wrong app',
+  TRANSPORT_NO_DEVICE_SELECTED = 'No device selected',
   UNKNOWN_TRANSPORT_ERROR = 'Transport error',
   UNKNOWN_APP_ERROR = 'App error',
   UNKNOWN_ERROR = 'Unknown error',
@@ -330,7 +330,11 @@ export const useLedgerWalletStore = create<LedgerWalletState & LedgerWalletActio
         deviceConnection = { transport, filApp }
         set(s => ({ ...s, deviceConnection, error: undefined, isLoading: false }))
         return deviceConnection
-      } catch (e) {
+      } catch (e: any) {
+        if (e && e.message && e.message.includes('No device selected')) {
+          set(s => ({ ...s, isLoading: false, error: LedgerWalletError.TRANSPORT_NO_DEVICE_SELECTED }))
+          return
+        }
         set(s => ({ ...s, isLoading: false, error: LedgerWalletError.UNKNOWN_ERROR }))
         return
       }
@@ -353,6 +357,7 @@ export const useLedgerWalletStore = create<LedgerWalletState & LedgerWalletActio
             set(s => ({ ...s, isLoading: false }))
             return {
               connectionError: true,
+              error: { message: get().error },
             }
           }
         }
@@ -490,12 +495,12 @@ export const useLedgerWalletStore = create<LedgerWalletState & LedgerWalletActio
         }
 
         // serialize invoke data
-        let serialisedParams, buffer, encodedParamsBuffer, base64encodedParams
+        let serialisedParams, buffer, encodedCBORParams, base64encodedParams
         try {
           serialisedParams = serializeMessageBody(invokeData).slice(2)
           buffer = Buffer.from(serialisedParams, 'hex')
-          encodedParamsBuffer = encode(buffer)
-          base64encodedParams = base64.encode(encodedParamsBuffer, true)
+          encodedCBORParams = encode(buffer)
+          base64encodedParams = Buffer.from(encodedCBORParams).toString('base64')
         } catch (e) {
           errorMessage = 'Failed to serialize the invoke data'
           throw e
@@ -548,6 +553,7 @@ export const useLedgerWalletStore = create<LedgerWalletState & LedgerWalletActio
             data: signedMessage.signature_compact,
           })
           const authToken = await fetchBeryxApiToken()
+          const base64encodedSignature = Buffer.from(signature.data).toString('base64')
 
           const response = await axios.post(
             `${getBeryxUrl(network.chainSlug, network.name).mempool}/push`,
@@ -565,7 +571,7 @@ export const useLedgerWalletStore = create<LedgerWalletState & LedgerWalletActio
               },
               Signature: {
                 Type: 1,
-                Data: base64.encode(signature.data, true),
+                Data: base64encodedSignature,
               },
             },
             {

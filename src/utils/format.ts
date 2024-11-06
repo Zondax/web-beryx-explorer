@@ -18,3 +18,19 @@ export const formatBalance = (balanceArray: Balance[]): string => {
 
   return formattedBalance
 }
+
+/**
+ * Function to format balance
+ * @param value - The value to format
+ * @param decimals - The decimals to use
+ * @returns The formatted balance as a string
+ */
+export const formatOneBalance = (value: number | string, decimals: number): string => {
+  let formattedBalance = ''
+
+  const bigNumValue = new BigNumber(value)
+  const tempDecimals = new BigNumber(Math.pow(10, decimals))
+  formattedBalance = bigNumValue.div(tempDecimals).toFixed()
+
+  return formattedBalance
+}

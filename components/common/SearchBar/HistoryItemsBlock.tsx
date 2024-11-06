@@ -15,7 +15,7 @@ import { Box } from '@mui/system'
  * @param selected - Boolean indicating if the current history item is selected.
  */
 const HistoryItemBlock = ({ item, isDesktop, selected = false }: { item: HistoryItem; isDesktop: boolean; selected?: boolean }) => {
-  const href = `/search/${item.network.slug}/${item.type}/${item.value}`
+  const href = `/${item.network.slug}/${item.type}/${item.value}`
   const icon = projectIcons[item.network.project] ? projectIcons[item.network.project]({ size: 16 }) : null
   const itemDetails = isDesktop ? `${item.network.name} • ${item.type}` : `${item.network.name}`
   const theme = useTheme()

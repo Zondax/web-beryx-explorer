@@ -3,6 +3,7 @@ import { GridColDef } from '@mui/x-data-grid-pro'
 import {
   BeryxLinkColumnProps,
   BoxColumnProps,
+  CodeViewParams,
   GenericColumnProps,
   MinerColumnProps,
   NumberColumnProps,
@@ -18,6 +19,8 @@ import {
   compilerColumn,
   downloadColumn,
   downloadIpfs,
+  expandEventColumn,
+  expandProposalColumn,
   licenseColumn,
   mempoolTransactionStatusColumn,
   methodTypeColumn,
@@ -30,6 +33,8 @@ import {
   stringColumn,
   timeColumn,
   timeSinceColumn,
+  tokenNameColumn,
+  totalSupplyColumn,
   transactionDetailsColumn,
   transactionStatusColumn,
   transactionTypeColumn,
@@ -240,8 +245,8 @@ export const boxColumnPro = (props: BoxColumnProps): GridColDef => {
  * Function to create a column for code view of data grid pro
  * @returns A column definition for the grid
  */
-export const codeViewColumnPro = (): GridColDef => {
-  return codeViewColumn() as GridColDef
+export const codeViewColumnPro = (props: CodeViewParams): GridColDef => {
+  return codeViewColumn(props) as GridColDef
 }
 /**
  * Function to create a column for transaction details of data grid pro
@@ -380,4 +385,52 @@ export const treeColumnPro = (props: GenericColumnProps): GridColDef => {
  */
 export const valueExchangeBalanceColumnPro = (props: GenericColumnProps): GridColDef => {
   return valueExchangeBalanceColumn(props) as GridColDef
+}
+
+/**
+ * This function expands a given column for an event in a grid, casting the result to a GridColDef type.
+ *
+ * @param {GenericColumnProps} props - The properties for the generic column that will be expanded.
+ * @returns {GridColDef} - The expanded column definition, cast to GridColDef type.
+ */
+export const expandEventColumnPro = (props: GenericColumnProps): GridColDef => {
+  return expandEventColumn(props) as GridColDef
+}
+
+/**
+ * This function expands a given column for a proposal in a grid, casting the result to a GridColDef type.
+ *
+ * @param {GenericColumnProps} props - The properties for the generic column that will be expanded.
+ * @returns {GridColDef} - The expanded column definition, cast to GridColDef type.
+ */
+export const expandProposalColumnPro = (props: GenericColumnProps): GridColDef => {
+  return expandProposalColumn(props) as GridColDef
+}
+
+/**
+ * TokenNameColumn component
+ *
+ * @param props - The properties passed to the component
+ * @param props.field - The field of the column
+ * @param props.label - The label of the column
+ * @param props.headerIcon - The icon of the header
+ * @param props.sortable - Whether the column is sortable
+ * @returns A GridColDef object
+ */
+export const tokenNameColumnPro = (props: GenericColumnProps): GridColDef => {
+  return tokenNameColumn(props) as GridColDef
+}
+
+/**
+ * TotalSupplyColumnPro component
+ *
+ * @param props - The properties passed to the component
+ * @param props.field - The field of the column
+ * @param props.label - The label of the column
+ * @param props.headerIcon - The icon of the header
+ * @param props.sortable - Whether the column is sortable
+ * @returns A GridColDef object
+ */
+export const totalSupplyColumnPro = (props: GenericColumnProps): GridColDef => {
+  return totalSupplyColumn(props) as GridColDef
 }

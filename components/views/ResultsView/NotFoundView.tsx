@@ -25,7 +25,7 @@ const NotFoundView = () => {
    * A method to retry the last search from the history
    */
   const handleRetryClick = useCallback(() => {
-    router.push(`/search/fil/${history[0].network}/${history[0].type}/${history[0].value}`, undefined, {
+    router.push(`/fil/${history[0].network}/${history[0].type}/${history[0].value}`, undefined, {
       shallow: true,
     })
   }, [router, history])

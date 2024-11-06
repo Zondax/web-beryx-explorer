@@ -30,6 +30,8 @@ interface LineChartProps {
   cumulative?: boolean
   onChartClick?: (params: any) => void
   hideDataZoom?: boolean
+  basicChart?: boolean
+  tooltipHour?: boolean
 }
 
 /**
@@ -40,7 +42,7 @@ interface LineChartProps {
  *
  * @returns - The JSX element of the LineChart component.
  */
-const LineChart = ({ data, onChartClick, color, cumulative, hideDataZoom = false }: LineChartProps) => {
+const LineChart = ({ data, onChartClick, color, cumulative, hideDataZoom = false, basicChart, tooltipHour }: LineChartProps) => {
   /**
    * @type {Theme} theme - The theme of the component.
    */
@@ -115,7 +117,7 @@ const LineChart = ({ data, onChartClick, color, cumulative, hideDataZoom = false
 
   const chartOptions = {
     grid: {
-      top: '15%',
+      top: basicChart ? '80%' : '15%',
       right: upLg ? '8%' : '5%',
       left: upLg ? '12%' : '11%',
     },
@@ -129,12 +131,14 @@ const LineChart = ({ data, onChartClick, color, cumulative, hideDataZoom = false
         zIndex: 200,
         formatter: (param: string) => (data.x.formatter ? data.x.formatter(param, 'MMM dd') : '{value}'),
       },
+      show: !basicChart,
     },
     yAxis: {
       zIndex: 200,
       type: 'value',
       name: data.y.unit ? data.y.unit : '',
       nameLocation: 'end',
+      show: !basicChart,
       nameTextStyle: {
         align: 'right',
         fontWeight: 600,
@@ -143,6 +147,7 @@ const LineChart = ({ data, onChartClick, color, cumulative, hideDataZoom = false
         lineStyle: {
           color: theme.palette.background.level2,
         },
+        show: !basicChart,
       },
       axisLabel: {
         formatter: (value: number) => {
@@ -165,7 +170,7 @@ const LineChart = ({ data, onChartClick, color, cumulative, hideDataZoom = false
         },
       },
     },
-    tooltip: getTooltip(data, theme),
+    tooltip: getTooltip(data, theme, tooltipHour),
     dataZoom: getDataZoom(hideDataZoom, theme),
     series,
     darkMode: true,

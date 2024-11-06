@@ -1,0 +1,15 @@
+export enum InputErrors {
+  NOT_FOUND = "Sorry! We don't recognize it. Please double check, there might be a typo.",
+  USE_TESTNET_ADDRESS = 'Please use an address that starts with “t” when searching in Calibration because it is a testnet. Did you actually mean to look for',
+  ETH_ADDRESS_NOT_RECOGNIZED = 'ETH address not recognized',
+  VALID_ETH_ADDRESS_BUT_UNSEEN_ON_NETWORK = 'Valid ETH address, but unseen on the network',
+  VALID_FIL_ADDRESS_BUT_UNSEEN_ON_NETWORK = 'Valid Filecoin address, but unseen on the network',
+  NO_INPUT = 'Please enter a value to search',
+  ADDRESS_NOT_FOUND = 'Address Not Found',
+  TXS_NOT_FOUND = 'Transaction Not Found',
+  BLOCK_NOT_FOUND = 'Block Not Found',
+  EVENT_NOT_FOUND = 'Event Not Found',
+  TIPSET_NOT_FOUND = 'Tipset Not Found',
+  CONTRACT_NOT_FOUND = 'Contract Not Found',
+  INPUT_NOT_FOUND = 'Input Not Found',
+}

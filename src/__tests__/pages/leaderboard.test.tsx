@@ -6,7 +6,7 @@ import LeaderboardController from '../../../pages/leaderboard'
 describe('Leaderboard Page', () => {
   it('renders without crashing', async () => {
     await renderWithProviders(<LeaderboardController />)
-    const elements = screen.getAllByText('Leaderboard')
+    const elements = screen.getAllByText('Rich List')
     expect(elements.length).toBeGreaterThan(0)
   })
 })

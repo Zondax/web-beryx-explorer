@@ -1,7 +1,7 @@
 import { SnackbarProvider } from 'notistack'
 import React, { useMemo } from 'react'
 
-import { Box, GlobalStyles, NoSsr, darken, useMediaQuery, useTheme } from '@mui/material'
+import { Box, GlobalStyles, NoSsr, lighten, useMediaQuery, useTheme } from '@mui/material'
 
 import { ConsentBlock } from 'components/consent/ConsentBlock'
 
@@ -98,7 +98,7 @@ const Layout = ({ children, hasSearchBar = true, pageTitle }: LayoutProps) => {
         height: '8px',
       },
       '*::-webkit-scrollbar-thumb': {
-        backgroundColor: darken(`${theme.palette.border?.level2}55`, 0.3),
+        backgroundColor: lighten(`${theme.palette.border?.level3}55`, 0.4),
         borderRadius: '8px',
       },
       '*::-webkit-scrollbar-track': {

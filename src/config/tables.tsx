@@ -2,10 +2,14 @@ import columnDefinitions from '@/components/muigrid/columnsDefs'
 import { ObjectType } from '@/routes/parsing'
 import {
   Calendar,
+  CharacterDecimal,
   Cube,
+  Currency,
   DataCategorical,
   DoubleInteger,
+  Events,
   EventsAlt,
+  Flag,
   GasStationFilled,
   Hashtag,
   IbmCloudVpcEndpoints,
@@ -15,7 +19,9 @@ import {
   License,
   Login,
   Logout,
+  Parameter,
   Percentage,
+  PiggyBankSlot,
   Policy,
   TransformBinary,
   Trophy,
@@ -50,7 +56,52 @@ const {
   transactionStatusColumn,
   transactionTypeColumn,
   valueExchangeBalanceColumn,
+  expandProposalColumn,
+  expandEventColumn,
+  tokenNameColumn,
+  totalSupplyColumn,
 } = columnDefinitions
+
+const accountsByValueExchangedColumns = [
+  rankColumn({ field: 'id', label: 'Rank', showPrize: true }),
+  actorTypeColumn({ field: 'actor_type', label: 'Actor Type', headerIcon: <DataCategorical /> }),
+  beryxLinkColumn({
+    field: 'unified_account',
+    label: 'Unified Account',
+    inputType: ObjectType.ADDRESS,
+    hasCopyButton: false,
+    headerIcon: <WatsonHealth3DSoftware />,
+    minWidth: 130,
+  }),
+  beryxLinkColumn({
+    field: 'height',
+    label: 'Height',
+    inputType: ObjectType.TIPSET,
+    hasCopyButton: false,
+    headerIcon: <Cube />,
+    minWidth: 130,
+  }),
+]
+
+const contractByValueExchangedColumns = [
+  rankColumn({ field: 'id', label: 'Rank', showPrize: true }),
+  beryxLinkColumn({
+    field: 'unified_account',
+    label: 'Contract',
+    inputType: ObjectType.ADDRESS,
+    hasCopyButton: false,
+    headerIcon: <WatsonHealth3DSoftware />,
+    minWidth: 130,
+  }),
+  beryxLinkColumn({
+    field: 'height',
+    label: 'Height',
+    inputType: ObjectType.TIPSET,
+    hasCopyButton: false,
+    headerIcon: <Cube />,
+    minWidth: 130,
+  }),
+]
 
 /**
  * Enum for table types
@@ -85,6 +136,8 @@ export enum TABLE_TYPE {
   TRANSACTIONS_LOGS = 'transactions_logs',
   /** Leaderboard table type */
   LEADERBOARD = 'leaderboard',
+  /** Richest contracts table type */
+  RICHEST_CONTRACTS = 'richest_contracts',
   /** Latest transactions table type */
   LATEST_TRANSACTIONS = 'latest_transactions',
   /** Dashboard top accounts by gas table type */
@@ -115,6 +168,29 @@ export enum TABLE_TYPE {
   GAS_STATISTICS_BY_METHOD = 'gas_statistics_by_method',
   /** Value exchanged by height */
   VALUE_EXCHANGED_BY_HEIGHT = 'value_exchanged_by_height',
+  /** Events */
+  EVENTS = 'events',
+  /** Accounts by value exchanged */
+  ACCOUNTS_BY_VALUE_EXCHANGED = 'accounts_by_value_exchanged',
+  /** Accounts by value exchanged by inbound */
+  ACCOUNTS_BY_VALUE_EXCHANGED_BY_INBOUND = 'accounts_by_value_exchanged_by_inbound',
+  /** Accounts by value exchanged by outbound */
+  ACCOUNTS_BY_VALUE_EXCHANGED_BY_OUTBOUND = 'accounts_by_value_exchanged_by_outbound',
+  /** Native events metadata */
+  /** Contracts by value exchanged */
+  CONTRACTS_BY_VALUE_EXCHANGED = 'contracts_by_value_exchanged',
+  /** Contracts by value exchanged by inbound */
+  CONTRACTS_BY_VALUE_EXCHANGED_BY_INBOUND = 'contracts_by_value_exchanged_by_inbound',
+  /** Contracts by value exchanged by outbound */
+  CONTRACTS_BY_VALUE_EXCHANGED_BY_OUTBOUND = 'contracts_by_value_exchanged_by_outbound',
+  /** Native events metadata */
+  NATIVE_EVENTS_METADATA = 'native_events_metadata',
+  /** Proposals */
+  PROPOSALS = 'proposals',
+  /** State trace */
+  STATE_TRACE = 'state_trace',
+  /** Tokens table type */
+  TOKENS = 'tokens',
 }
 
 /**
@@ -157,7 +233,7 @@ export const columnDefsNormal = {
       sortable: false,
     }),
     minerColumn({ field: 'blocks_info', label: 'Miners Count', minWidth: 120, maxWidth: 120, headerIcon: <EventsAlt />, sortable: false }),
-    codeViewColumn(),
+    codeViewColumn({}),
     downloadColumn({ fileName: 'tipset' }),
   ],
   tipset_transactions: [
@@ -406,7 +482,7 @@ export const columnDefsNormal = {
       sortable: true,
       decimals: 0,
     }),
-    codeViewColumn(),
+    codeViewColumn({}),
     downloadColumn({ fileName: 'mempool_transaction' }),
   ],
   contracts: [
@@ -437,14 +513,14 @@ export const columnDefsNormal = {
       sortable: true,
       decimals: 0,
     }),
-    codeViewColumn(),
+    codeViewColumn({}),
     downloadColumn({ fileName: 'contract' }),
   ],
   contracts_invokes: [
     timeColumn({ field: 'bucket', label: 'Date' }),
     beryxLinkColumn({ field: 'tx_to', label: 'To', inputType: ObjectType.ADDRESS }),
     numberColumn({ field: 'count', label: 'Count' }),
-    codeViewColumn(),
+    codeViewColumn({}),
   ],
   contracts_invokes_home: [
     transactionStatusColumn({ field: 'status', label: 'Status' }),
@@ -459,19 +535,19 @@ export const columnDefsNormal = {
     timeColumn({ field: 'bucket', label: 'Date' }),
     beryxLinkColumn({ field: 'tx_from', label: 'From', inputType: ObjectType.ADDRESS }),
     numberColumn({ field: 'count', label: 'Count' }),
-    codeViewColumn(),
+    codeViewColumn({}),
   ],
   gas_used: [
     timeColumn({ field: 'bucket', label: 'Date' }),
     beryxLinkColumn({ field: 'tx_from', label: 'From', inputType: ObjectType.ADDRESS }),
     numberColumn({ field: 'count', label: 'Gas Used' }),
-    codeViewColumn(),
+    codeViewColumn({}),
   ],
   rich_list: [
     rankColumn({ field: 'id', label: 'Rank', headerIcon: <Trophy />, showPrize: true }),
     beryxLinkColumn({ field: 'account', label: 'Account', inputType: ObjectType.ADDRESS, headerIcon: <DoubleInteger />, maxWidth: 150 }),
     amountColumn({ field: 'balance', label: 'Balance (FIL)', headerIcon: <FilecoinIcon size={15} color1="#e2ebfe49" color2="#000" /> }),
-    codeViewColumn(),
+    codeViewColumn({}),
     downloadColumn({ fileName: 'account' }),
   ],
   verified_contracts: [
@@ -506,7 +582,7 @@ export const columnDefsNormal = {
     }),
     stringColumn({ field: 'logIndex', label: 'Log Index' }),
     booleanColumn({ field: 'removed', label: 'Removed', sortable: true }),
-    codeViewColumn(),
+    codeViewColumn({}),
     downloadColumn({ fileName: 'account' }),
   ],
   dashboard_top_accounts_by_gas: [
@@ -588,6 +664,39 @@ export const columnDefsNormal = {
       headerIcon: <Cube />,
     }),
     actorTypeColumn({ field: 'actor_type', label: 'Actor Type', headerIcon: <DataCategorical /> }),
+    amountColumn({
+      field: 'balance',
+      label: 'Balance (FIL)',
+      minWidth: 150,
+      headerIcon: <FilecoinIcon size={15} color1="#e2ebfe49" color2="#000" />,
+    }),
+    numberColumn({
+      field: 'ratio',
+      label: 'Ratio',
+      minWidth: 150,
+      headerIcon: <Percentage />,
+      headerTooltip: "Represents the account's balance as a percentage of the total system balance.",
+      decimals: 2,
+    }),
+  ],
+  richest_contracts: [
+    rankColumn({ field: 'id', label: 'Rank', showPrize: true }),
+    beryxLinkColumn({
+      field: 'unified_account',
+      label: 'Contract',
+      inputType: ObjectType.ADDRESS,
+      headerIcon: <DoubleInteger />,
+      sortable: true,
+    }),
+    timeColumn({ field: 'first_seen', label: 'First Seen', headerIcon: <Calendar /> }),
+    timeColumn({ field: 'last_seen', label: 'Last Seen', headerIcon: <Calendar /> }),
+    beryxLinkColumn({
+      field: 'last_seen_height',
+      label: 'Last seen Height',
+      inputType: ObjectType.TIPSET,
+      minWidth: 150,
+      headerIcon: <Cube />,
+    }),
     amountColumn({
       field: 'balance',
       label: 'Balance (FIL)',
@@ -709,6 +818,202 @@ export const columnDefsNormal = {
       headerIcon: <FilecoinIcon size={15} color1="#e2ebfe49" color2="#000" />,
       maxWidth: 200,
     }),
+  ],
+  events: [
+    expandEventColumn({ field: 'expand', label: 'Expand' }),
+    beryxLinkColumn({
+      field: 'tx_cid',
+      label: 'Transaction CID',
+      inputType: ObjectType.TXS,
+      minWidth: 200,
+      headerIcon: <Cube />,
+      sortable: true,
+    }),
+    beryxLinkColumn({
+      field: 'emitter',
+      label: 'Emitter',
+      inputType: ObjectType.ADDRESS,
+      minWidth: 200,
+      headerIcon: <Cube />,
+      sortable: true,
+    }),
+    beryxLinkColumn({
+      field: 'height',
+      label: 'Height',
+      inputType: ObjectType.TIPSET,
+      minWidth: 120,
+      headerIcon: <Cube />,
+      sortable: true,
+    }),
+    actorTypeColumn({ field: 'type', label: 'Type', headerIcon: <DataCategorical /> }),
+    numberColumn({
+      field: 'log_index',
+      label: 'Log Index',
+      minWidth: 100,
+      sortable: true,
+      decimals: 0,
+    }),
+    booleanColumn({ field: 'canonical', label: 'Canonical', headerIcon: <InProgressWarning />, sortable: true }),
+    booleanColumn({ field: 'reverted', label: 'Reverted', headerIcon: <InProgressWarning />, sortable: true }),
+    beryxLinkColumn({
+      field: 'selector_id',
+      label: 'Selector ID',
+      inputType: ObjectType.EVENT,
+      minWidth: 200,
+      headerIcon: <Cube />,
+    }),
+    codeViewColumn({ type: 'event' }),
+    downloadColumn({ fileName: 'tipset' }),
+  ],
+  accounts_by_value_exchanged: [
+    ...accountsByValueExchangedColumns,
+    amountColumn({
+      field: 'exchanged',
+      label: 'Exchanged (FIL)',
+      headerIcon: <FilecoinIcon size={15} color1="#e2ebfe49" color2="#000" />,
+      maxWidth: 200,
+    }),
+  ],
+  accounts_by_value_exchanged_by_inbound: [
+    ...accountsByValueExchangedColumns,
+    amountColumn({
+      field: 'inbound',
+      label: 'Inbound (FIL)',
+      headerIcon: <FilecoinIcon size={15} color1="#e2ebfe49" color2="#000" />,
+      maxWidth: 200,
+    }),
+  ],
+  accounts_by_value_exchanged_by_outbound: [
+    ...accountsByValueExchangedColumns,
+    amountColumn({
+      field: 'outbound',
+      label: 'Outbound (FIL)',
+      headerIcon: <FilecoinIcon size={15} color1="#e2ebfe49" color2="#000" />,
+      maxWidth: 200,
+    }),
+  ],
+  contracts_by_value_exchanged: [
+    ...contractByValueExchangedColumns,
+    amountColumn({
+      field: 'exchanged',
+      label: 'Exchanged (FIL)',
+      headerIcon: <FilecoinIcon size={15} color1="#e2ebfe49" color2="#000" />,
+      maxWidth: 200,
+    }),
+  ],
+  contracts_by_value_exchanged_by_inbound: [
+    ...contractByValueExchangedColumns,
+    amountColumn({
+      field: 'inbound',
+      label: 'Inbound (FIL)',
+      headerIcon: <FilecoinIcon size={15} color1="#e2ebfe49" color2="#000" />,
+      maxWidth: 200,
+    }),
+  ],
+  contracts_by_value_exchanged_by_outbound: [
+    ...contractByValueExchangedColumns,
+    amountColumn({
+      field: 'outbound',
+      label: 'Outbound (FIL)',
+      headerIcon: <FilecoinIcon size={15} color1="#e2ebfe49" color2="#000" />,
+      maxWidth: 200,
+    }),
+  ],
+  native_events_metadata: [
+    numberColumn({
+      field: 'flags',
+      label: 'Flags',
+      minWidth: 150,
+      headerIcon: <Flag />,
+      sortable: true,
+      decimals: 0,
+      align: 'left',
+      headerAlign: 'left',
+    }),
+    stringColumn({ field: 'key', label: 'Key', headerIcon: <DataCategorical />, sortable: false }),
+    stringColumn({
+      field: 'value',
+      label: 'Value',
+      headerIcon: <Parameter />,
+    }),
+  ],
+  proposals: [
+    expandProposalColumn({ field: 'expand', label: 'Expand' }),
+    beryxLinkColumn({
+      field: 'height',
+      label: 'Height',
+      inputType: ObjectType.TIPSET,
+      minWidth: 120,
+      headerIcon: <Cube />,
+      sortable: true,
+    }),
+    numberColumn({
+      field: 'proposal_id',
+      label: 'Proposal ID',
+      minWidth: 100,
+      sortable: true,
+      decimals: 0,
+    }),
+    beryxLinkColumn({
+      field: 'tx_cid',
+      label: 'Transaction CID',
+      inputType: ObjectType.TXS,
+      minWidth: 200,
+      headerIcon: <Cube />,
+      sortable: true,
+    }),
+    beryxLinkColumn({
+      field: 'signer',
+      label: 'Signer',
+      inputType: ObjectType.ADDRESS,
+      minWidth: 200,
+      headerIcon: <Cube />,
+      sortable: true,
+    }),
+    methodTypeColumn({ field: 'action_type', label: 'Action Type', headerIcon: <DataCategorical /> }),
+    timeColumn({ field: 'create_timestamp', label: 'When', headerIcon: <Calendar />, sortable: true }),
+    codeViewColumn({ type: 'event' }),
+    downloadColumn({ fileName: 'tipset' }),
+  ],
+  state_trace: [
+    expandProposalColumn({ field: 'expand', label: 'Expand' }),
+    methodTypeColumn({ field: 'action_type', label: 'Action Type', headerIcon: <DataCategorical /> }),
+    timeColumn({ field: 'create_timestamp', label: 'When', headerIcon: <Calendar />, sortable: true }),
+    beryxLinkColumn({
+      field: 'height',
+      label: 'Height',
+      inputType: ObjectType.TIPSET,
+      minWidth: 120,
+      headerIcon: <Cube />,
+      sortable: true,
+    }),
+    beryxLinkColumn({
+      field: 'signer',
+      label: 'Signer',
+      inputType: ObjectType.ADDRESS,
+      minWidth: 200,
+      headerIcon: <Cube />,
+      sortable: true,
+    }),
+    beryxLinkColumn({
+      field: 'tx_cid',
+      label: 'Transaction CID',
+      inputType: ObjectType.TXS,
+      minWidth: 200,
+      headerIcon: <Cube />,
+      sortable: true,
+    }),
+    codeViewColumn({ type: 'event' }),
+    downloadColumn({ fileName: 'state-trace' }),
+  ],
+  tokens: [
+    tokenNameColumn({ field: 'description', label: 'Token', headerIcon: <Currency /> }),
+    stringColumn({ field: 'ticker', label: 'Ticker', headerIcon: <Currency />, minWidth: 150 }),
+    beryxLinkColumn({ field: 'contract_address', label: 'Token Address', inputType: ObjectType.ADDRESS, headerIcon: <Hashtag /> }),
+    timeColumn({ field: 'creation_date', label: 'Creation Date', headerIcon: <Calendar />, minWidth: 200 }),
+    numberColumn({ field: 'decimals', label: 'Decimals', headerIcon: <CharacterDecimal />, decimals: 0 }),
+    totalSupplyColumn({ field: 'total_supply', label: 'Total Supply', headerIcon: <PiggyBankSlot />, minWidth: 150 }),
+    numberColumn({ field: 'holders_count', label: 'Users Count', headerIcon: <Events />, decimals: 0, minWidth: 150 }),
   ],
 }
 

@@ -5,14 +5,16 @@ import {
   fetchAccountInfo,
   fetchBlockByHash,
   fetchContractDecoded,
+  fetchEventsBySelector,
   fetchHashEthForm,
   fetchTipsetByHash,
   fetchTipsetByHeight,
+  fetchTokenHoldings,
   fetchTransactionsByHash,
 } from '@/api-client/beryx'
 import { AbiItem } from '@/api-client/beryx.types'
 import { InputType, LoadingStatus } from '@/config/config'
-import { NetworkType, Networks } from '@/config/networks'
+import { NetworkType } from '@/config/networks'
 import { ObjectType } from '@/routes/parsing'
 import { useMempoolStore } from '@/store/data/mempool'
 import { useSearchStore } from '@/store/data/search'
@@ -26,11 +28,9 @@ import { DecodedABI } from 'components/views/ResultsView/ContractView/config'
  * Interface for the response of the searchValue function.
  * @interface SearchValueResponse
  * @property error - Indicates if there was an error during the search.
- * @property [foundAnotherNetwork] - Indicates if the value was found on another network.
  */
 interface SearchValueResponse {
   error: boolean
-  foundAnotherNetwork?: boolean
 }
 
 /**
@@ -46,7 +46,8 @@ const makeRequest = async (
   inputValue: string,
   inputType: InputType | undefined,
   objectType: ObjectType | undefined,
-  networkName: NetworkType
+  networkName: NetworkType,
+  ethForm?: string
 ): Promise<{ error: boolean; response?: any }> => {
   const type = `${inputType}-${objectType}`
 
@@ -54,16 +55,23 @@ const makeRequest = async (
     case `${InputType.ETHEREUM_ID}-${ObjectType.ADDRESS}`:
     case `${InputType.FILECOIN_ADDRESS}-${ObjectType.ADDRESS}`: {
       try {
-        const accountInfoPromise = fetchAccountInfo(inputValue, networkName)
         const accountBalancePromise = fetchAccountBalance(inputValue, networkName)
+        const accountInfoPromise = fetchAccountInfo(inputValue, networkName)
+        let tokenHoldingsPromise
 
-        const response = await Promise.allSettled([accountInfoPromise, accountBalancePromise])
+        if (ethForm) {
+          tokenHoldingsPromise = fetchTokenHoldings(networkName, ethForm)
+        } else {
+          tokenHoldingsPromise = Promise.resolve(null) // Do not make the request if there is no ethForm
+        }
+
+        const response = await Promise.allSettled([accountBalancePromise, accountInfoPromise, tokenHoldingsPromise])
 
         const account = {}
         response.forEach(response => {
-          if (response.status === 'fulfilled') {
+          if (response.status === 'fulfilled' && response.value !== null) {
             Object.assign(account, response.value)
-          } else {
+          } else if (response.status === 'rejected') {
             captureException(response.reason)
           }
         })
@@ -148,6 +156,20 @@ const makeRequest = async (
         return { error: true }
       }
     }
+    case `${InputType.FILECOIN_EVENT}-${ObjectType.EVENT}`:
+    case `${InputType.HASH}-${ObjectType.EVENT}`: {
+      try {
+        // Send the transaction to Beryx API
+        const result = await fetchEventsBySelector(inputValue, networkName)
+        if (Array.isArray(result.events) && result.events.length !== 0) {
+          return { error: false, response: result.events }
+        }
+
+        return { error: true }
+      } catch (error) {
+        return { error: true }
+      }
+    }
     default:
       return { error: true }
   }
@@ -156,7 +178,7 @@ const makeRequest = async (
 /**
  * Searches for a value based on the input value and type.
  * @param network
- * @param inputValue - The value to search for.
+ * @param inputValue - The value to search for, should always be in FIL format.
  * @param inputType - The type of the input value.
  * @returns A promise that resolves to a SearchValueResponse object.
  * @deprecated move to backend generic search and react-query
@@ -181,8 +203,16 @@ export const searchValue = async (
       useSearchStore.getState().setLoadingStatus('loading')
       useSearchStore.getState().setJsonLoadingStatus(LoadingStatus.Loading)
 
+      if (!ethForm) {
+        try {
+          ethForm = FilEthAddress.fromString(inputValue).toEthAddressHex(true)
+        } catch {
+          // continue
+        }
+      }
+
       try {
-        const { error, response } = await makeRequest(inputValue, inputType, objectType, network)
+        const { error, response } = await makeRequest(inputValue, inputType, objectType, network, ethForm)
 
         if (!error) {
           useSearchStore.getState().setSearchResultJson(response) // saving the account
@@ -192,14 +222,6 @@ export const searchValue = async (
       } catch (error) {
         captureException(error)
         searchResult.error = true
-      }
-
-      if (!ethForm) {
-        try {
-          ethForm = FilEthAddress.fromString(inputValue).toEthAddressHex(true)
-        } catch {
-          // continue
-        }
       }
 
       break
@@ -267,14 +289,6 @@ export const searchValue = async (
           }
         } else {
           searchResult.error = true
-          const { error } = await makeRequest(
-            inputValue,
-            inputType,
-            objectType,
-            network === Networks.calibration ? Networks.mainnet : Networks.calibration
-          )
-          searchResult.foundAnotherNetwork = !error
-
           useSearchStore.getState().setJsonLoadingStatus(LoadingStatus.Error)
         }
       } catch (error) {
@@ -307,14 +321,28 @@ export const searchValue = async (
           useSearchStore.getState().setJsonLoadingStatus(LoadingStatus.Success)
         } else {
           searchResult.error = true
-          const { error } = await makeRequest(
-            inputValue,
-            inputType,
-            objectType,
-            network === Networks.calibration ? Networks.mainnet : Networks.calibration
-          )
-          searchResult.foundAnotherNetwork = !error
+          useSearchStore.getState().setJsonLoadingStatus(LoadingStatus.Error)
+        }
+      } catch (error) {
+        useSearchStore.getState().setJsonLoadingStatus(LoadingStatus.Error)
+        searchResult.error = true
+        captureException(error)
+      }
+      break
+    }
+    case ObjectType.EVENT: {
+      useSearchStore.getState().setLoadingStatus('loading')
+      useSearchStore.getState().setJsonLoadingStatus(LoadingStatus.Loading)
 
+      try {
+        const { error, response } = await makeRequest(inputValue, inputType, objectType, network)
+
+        if (!error) {
+          useSearchStore.getState().setSearchResultJson(response[0]) // saving the account
+          useSearchStore.getState().setLoadingStatus(undefined)
+          useSearchStore.getState().setJsonLoadingStatus(LoadingStatus.Success)
+        } else {
+          searchResult.error = true
           useSearchStore.getState().setJsonLoadingStatus(LoadingStatus.Error)
         }
       } catch (error) {
@@ -333,7 +361,7 @@ export const searchValue = async (
     setEthAddress(ethForm)
   }
 
-  if (objectTypeDetected === ObjectType.ADDRESS && inputValue.toLocaleLowerCase().startsWith('f4')) {
+  if (objectTypeDetected === ObjectType.ADDRESS) {
     setDecodingStatus(LoadingStatus.Loading)
     try {
       const decoded = await fetchContractDecoded(inputValue, network)

@@ -30,10 +30,10 @@ const InteractUpdate = () => {
     setTestInteract(true)
     switch (network.uniqueId) {
       case Networks.calibration.uniqueId:
-        router.push(`/search/${network.slug}/address/f410fc4oqz4o47leiyhmo5ynji2k4iyxmuxozj4urctq?tab=interact`)
+        router.push(`/${network.slug}/address/f410fc4oqz4o47leiyhmo5ynji2k4iyxmuxozj4urctq?tab=interact`)
         break
       case Networks.mainnet.uniqueId:
-        router.push(`/search/${network.slug}/address/f410fg6dyyyr5q7k6tg7kmavzw4uimz3phxxqmfk2mky?tab=interact`)
+        router.push(`/${network.slug}/address/f410fg6dyyyr5q7k6tg7kmavzw4uimz3phxxqmfk2mky?tab=interact`)
         break
       default:
         break

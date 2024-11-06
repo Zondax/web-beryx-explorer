@@ -24,8 +24,8 @@ export default function MempoolController() {
     metaTitle: 'Beryx - Mempool',
     metaDescription:
       'Beryx is a platform developed by Zondax that includes public historical data, streaming data and metrics for Filecoin blockchain.',
-    metaImage: 'https://beryx.zondax.ch/beryx-og.png',
-    metaURL: 'https://beryx.zondax.ch',
+    metaImage: 'https://beryx.io/beryx-og.png',
+    metaURL: 'https://beryx.io',
   }
 
   /**

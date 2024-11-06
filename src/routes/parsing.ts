@@ -11,9 +11,11 @@ export type InputSlug = Array<string>
 export enum ObjectType {
   ADDRESS = 'address',
   CONTRACT = 'contract',
+  ERC20 = 'erc20',
   TXS = 'txs',
   TIPSET = 'tipset',
   BLOCK = 'block-cid',
+  EVENT = 'event',
   UNKNOWN = 'unknown',
 }
 
@@ -23,9 +25,11 @@ export enum ObjectType {
 export const formattedObjectType: { [key in ObjectType]: string } = {
   address: 'address',
   contract: 'contract',
+  erc20: 'ERC20 Token',
   txs: 'transaction',
   tipset: 'tipset',
   'block-cid': 'block',
+  event: 'event',
   unknown: 'unknown',
 }
 
@@ -43,6 +47,7 @@ const ObjectTypeMapping: { [key: string]: ObjectType } = {
   height: ObjectType.TIPSET,
   address: ObjectType.ADDRESS,
   account: ObjectType.ADDRESS,
+  event: ObjectType.EVENT,
 }
 
 /**
@@ -59,30 +64,30 @@ export class SearchPath {
  * @param slug - The input slug to parse
  * @returns The parsed search path
  */
-export const parseSearchUrl = (slug: InputSlug): SearchPath => {
+export const parseSearchUrl = (slug: InputSlug, chainSlug: string): SearchPath => {
   const parsedPath = new SearchPath()
 
-  if (slug.length < 2 || slug.length > 4) {
+  if (slug.length < 2 || slug.length > 3) {
     throw new Error('invalid slug')
   }
 
   // get chain+network
-  const slugNetwork = `${slug[0]}/${slug[1]}`.toLowerCase()
+  const slugNetwork = `${chainSlug}/${slug[0]}`.toLowerCase()
   parsedPath.network = NetworkFindBySlug(slugNetwork)
   if (parsedPath.network === undefined) {
     throw new Error(`chain/network [${slugNetwork}] is not supported`)
   }
 
   // now obtain the object type
-  const lowerSlug2 = slug[2].toLowerCase()
+  const lowerSlug2 = slug[1].toLowerCase()
   if (ObjectTypeMapping[lowerSlug2] === undefined) {
-    throw new Error(`object type [${slug[2]}] is not supported`)
+    throw new Error(`object type [${slug[1]}] is not supported`)
   }
   parsedPath.objectType = ObjectTypeMapping[lowerSlug2]
 
   /////////////
   // Keep arguments in the original format
-  parsedPath.arguments = slug[3]
+  parsedPath.arguments = slug[2]
 
   return parsedPath
 }

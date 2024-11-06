@@ -1,10 +1,12 @@
 /**
  * @file This file contains the AddressConverterView component which is used to convert addresses between Filecoin and Ethereum.
  */
+import BigNumber from 'bignumber.js'
+import Link from 'next/link'
 import { HTMLAttributes, SyntheticEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { LoadingStatus } from '@/config/config'
+import { LoadingStatus, amountFormat } from '@/config/config'
 import { useEstimateGasByMethod, useServiceConfig } from '@/data/beryx'
 import useAppSettingsStore from '@/store/ui/settings'
 import { sortArray } from '@/utils/arrays'
@@ -88,14 +90,14 @@ const EstimateGasView = () => {
             {t(title)} {`(${unit})`}
           </Typography>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={6} sx={{ textAlign: 'end' }}>
           <Typography
             variant="captionMono"
             color="text.primary"
             textAlign={'right'}
             sx={{ whitSspace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontSize: 16 }}
           >
-            {value}
+            {BigNumber(value).toFormat(0, amountFormat)}
           </Typography>
         </Grid>
       </>
@@ -151,6 +153,57 @@ const EstimateGasView = () => {
     ),
     [isLoadingServiceConfig, isLoadingGasEstimation, isSuccessGasEstimation, theme.palette, gasEstimation, renderRow, t]
   )
+
+  /**
+   * Renders the footer section of the Estimate Gas View.
+   * This includes informational text about mempool transactions and links to additional resources.
+   *
+   * @returns {JSX.Element} The footer section of the Estimate Gas View.
+   */
+  const renderFooter = () => (
+    <Grid
+      item
+      container
+      spacing={0}
+      width={'100%'}
+      maxWidth={{ xs: '100%', md: '40rem' }}
+      marginTop={{ xs: '1rem', md: '0' }}
+      justifyContent={'center'}
+      p={{ xs: '0 1rem 4rem 1rem', md: '0 0 4rem 0' }}
+    >
+      <Typography
+        variant={upMd ? 'body1' : 'body2'}
+        component={'p'}
+        color={'text.secondary'}
+        mt={1}
+        mb={'2.5rem'}
+        textAlign={upMd ? 'center' : 'left'}
+      >
+        {t(
+          'We track all mempool transactions and keep an 8-day history. This lets us analyze data for different time frames (current, 1 hour, 1 day, 1 week). When new transactions come in, we update our statistics for each time frame.'
+        )}
+      </Typography>
+      <Typography
+        variant={upMd ? 'body1' : 'body2'}
+        component={'p'}
+        color={'text.secondary'}
+        mt={1}
+        mb={'2.5rem'}
+        textAlign={upMd ? 'center' : 'left'}
+        sx={{
+          '& a': {
+            color: theme.palette.main,
+          },
+        }}
+      >
+        {t('For more information visit ')}
+        <Link href={'/dashboard#gas-used-stats'}>{t('Gas Statistics')}</Link>
+        {t(' or ')}
+        <Link href={'/mempool?tab=stats'}>{t('Mempool Statistics')}</Link>.
+      </Typography>
+    </Grid>
+  )
+
   /**
    * useEffect hook to set the default selected method when the service configuration is available.
    * It sets the selected method to 'Send' if available, otherwise, it selects the first available method.
@@ -162,11 +215,54 @@ const EstimateGasView = () => {
     }
   }, [serviceConfig])
 
+  /**
+   * Renders the header section of the Estimate Gas View.
+   * This includes the title and a description, as well as an Autocomplete component
+   * for selecting a method.
+   *
+   * @returns {JSX.Element} The header section of the Estimate Gas View.
+   */
+  const renderHeader = () => (
+    <Grid item container spacing={0} width={'100%'} maxWidth={{ xs: '100%', md: '30rem' }} marginTop={{ xs: '1rem', md: '0' }} pb={'4rem'}>
+      <Grid item xs={12} p={{ xs: '0 1rem', md: 0 }}>
+        <Typography variant={upMd ? 'h3' : 'h5'} component={'h1'} textAlign={upMd ? 'center' : 'left'}>
+          {t('Gas Estimator')}
+        </Typography>
+      </Grid>
+      <Grid item xs={12} p={{ xs: '0 1rem', md: 0 }}>
+        <Typography
+          variant={upMd ? 'body1' : 'body2'}
+          component={'p'}
+          color={'text.secondary'}
+          mt={1}
+          mb={'2.5rem'}
+          textAlign={upMd ? 'center' : 'left'}
+        >
+          {t(
+            'Find out what are the chances to get in the next block. Please choose a method as gas prices vary depending on the method. A block is created every 30 seconds.'
+          )}
+        </Typography>
+        <Grid item xs={12}>
+          <Autocomplete
+            disablePortal
+            id="combo-box-demo"
+            options={methods}
+            size="large"
+            onChange={handleMethod}
+            PaperComponent={getPaperComponent}
+            popupIcon={<ExpandMore />}
+            renderInput={renderAutocompleteInput}
+            noOptionsText={t('No available methods')}
+          />
+        </Grid>
+      </Grid>
+    </Grid>
+  )
+
   return (
     <Box
       sx={{
         // Eliminate the topbar and header height
-        height: { xs: 'fit-content', md: 'calc(100dvh - 6rem - 1.75rem)' },
         minHeight: '40rem',
         transition: { xs: 'height 0.2s ease-in-out', md: 'none' },
         width: '100%',
@@ -175,7 +271,7 @@ const EstimateGasView = () => {
         gap: upMd ? '1rem' : '3rem',
         borderRadius: '8px',
         background: theme.palette.background.level1,
-        padding: upMd ? '1rem' : '1rem 0.5rem 0.5rem 0.5rem',
+        padding: upMd ? '5rem 1rem 1rem' : '1rem 0.5rem 0.5rem 0.5rem',
         alignItems: 'center',
         justifyContent: 'center',
       }}
@@ -192,48 +288,7 @@ const EstimateGasView = () => {
           minHeight: '16rem',
         }}
       >
-        <Grid
-          item
-          container
-          spacing={0}
-          width={'100%'}
-          maxWidth={{ xs: '100%', md: '30rem' }}
-          marginTop={{ xs: '1rem', md: '0' }}
-          pb={'4rem'}
-        >
-          <Grid item xs={12} p={{ xs: '0 1rem', md: 0 }}>
-            <Typography variant={upMd ? 'h3' : 'h5'} component={'h1'} textAlign={upMd ? 'center' : 'left'}>
-              {t('Gas Estimator')}
-            </Typography>
-          </Grid>
-          <Grid item xs={12} p={{ xs: '0 1rem', md: 0 }}>
-            <Typography
-              variant={upMd ? 'body1' : 'body2'}
-              component={'p'}
-              color={'text.secondary'}
-              mt={1}
-              mb={'2.5rem'}
-              textAlign={upMd ? 'center' : 'left'}
-            >
-              {t(
-                'Find out what are the chances to get in the next block. Please choose a method as gas prices vary depending on the method. A block is created every 30 seconds.'
-              )}
-            </Typography>
-            <Grid item xs={12}>
-              <Autocomplete
-                disablePortal
-                id="combo-box-demo"
-                options={methods}
-                size="large"
-                onChange={handleMethod}
-                PaperComponent={getPaperComponent}
-                popupIcon={<ExpandMore />}
-                renderInput={renderAutocompleteInput}
-                noOptionsText={t('No available methods')}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
+        {renderHeader()}
         {selectedMethod ? (
           <Grid container gap={'0.5rem'} justifyContent={'center'} pb={'0.5rem'}>
             <Typography variant="body2" pt={'3px'}>
@@ -245,15 +300,18 @@ const EstimateGasView = () => {
         <Typography variant="h5" component={'h3'} data-testid={'item-tile-heading'} pb={6} fontSize={18} textAlign={'center'}>
           {t('Probability to get in the next block')}
         </Typography>
-        <Grid container spacing={'1rem'} maxWidth={{ md: '95%', lg: '80%' }}>
+        <Grid container spacing={'1rem'} maxWidth={{ md: '95%', lg: '80%' }} pb={'4rem'}>
           {[
             { probability: 0.5, category: 'Low' },
             { probability: 0.7, category: 'Medium' },
             { probability: 0.9, category: 'High' },
           ].map(({ probability, category }) => getCategoryItem(probability, category))}
         </Grid>
+        {renderFooter()}
       </Grid2>
     </Box>
   )
 }
+
 export default EstimateGasView
+//

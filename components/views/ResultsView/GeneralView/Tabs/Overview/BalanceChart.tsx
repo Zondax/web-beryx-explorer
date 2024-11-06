@@ -47,10 +47,10 @@ const BalanceChart = ({ title }: { title?: string }) => {
      */
     const getBalancesOverTime = () => {
       if (!network || !isSuccessAddressValueFlow || !addressValueFlow) {
+        setLoadingStatus(LoadingStatus.Error)
         return
       }
       const balanceOverTime = getBalanceOverTime(searchValue, network, addressValueFlow.results)
-      // const balanceOverTime = 'error'
 
       if (balanceOverTime !== 'error') {
         setBalances(balanceOverTime)
