@@ -7,7 +7,6 @@ import promise from 'eslint-plugin-promise'
 import react from 'eslint-plugin-react'
 import tsdoc from 'eslint-plugin-tsdoc'
 import unusedImports from 'eslint-plugin-unused-imports'
-import globals from 'globals'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -43,10 +42,6 @@ export default [
     },
 
     languageOptions: {
-      globals: {
-        ...globals.browser,
-      },
-
       parser: tsParser,
     },
 
