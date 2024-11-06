@@ -50,7 +50,7 @@ describe('blobToArrayBuffer', () => {
 
 describe('serializeZipFiles', () => {
   it('Serialize zip files', async () => {
-    var zip = new JSZip()
+    const zip = new JSZip()
 
     // The text file shouldn't be shown
     zip.file('test1.txt', 'It is a test\n')
@@ -58,7 +58,7 @@ describe('serializeZipFiles', () => {
     // The json and sol files should be shown
     zip.file('test2.json', JSON.stringify({ key: 'It is a test' }))
 
-    var messages = zip.folder('messages')
+    const messages = zip.folder('messages')
     messages?.file('test3.sol', 'It is a test\n')
     const blob = await zip.generateAsync({ type: 'blob' })
 
@@ -83,7 +83,7 @@ describe('serializeZipFiles', () => {
   })
 
   it('If the file has not extension or the file name starts with __MACOSX/, it should be shown', async () => {
-    var zip = new JSZip()
+    const zip = new JSZip()
 
     // The file without extension shouldn't be shown
     zip.file('test1', 'It is a test\n')
