@@ -39,7 +39,7 @@ jobs:
         CI: true
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Disable shallow clone
       - name: Install dependencies
@@ -57,7 +57,7 @@ jobs:
           CLOUDFLARE_PROTECTED_API_CLIENT_ID: ${{ secrets.CLOUDFLARE_PROTECTED_API_CLIENT_ID }}
           CLOUDFLARE_PROTECTED_API_CLIENT_SECRET: ${{ secrets.CLOUDFLARE_PROTECTED_API_CLIENT_SECRET }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report

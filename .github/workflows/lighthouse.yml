@@ -31,7 +31,7 @@ jobs:
         NEXT_PUBLIC_MUI_GRID_LICENSE: ${{ secrets.NEXT_PUBLIC_MUI_GRID_LICENSE }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0 # Perform a deep clone (fetch all history)
